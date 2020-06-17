@@ -7,10 +7,16 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: () => import('../components/HelloWorld.vue')   
+      name: 'login',
+      component: () => import('../page/Login')
     }
   ]
 })
 
+router.beforeEach((to, from, next) => {
+  next()
+})
+router.afterEach((to, from) => {
+
+})
 export default router

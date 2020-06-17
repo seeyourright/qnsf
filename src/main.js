@@ -3,13 +3,25 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'
+import http from './api/http'
+import url from './api/url'
+import util from './utils/util'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
+Vue.use(ElementUI)
 Vue.config.productionTip = false
+
+Vue.prototype.$http = http
+Vue.prototype.$url = url
+Vue.prototype.$util = util
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

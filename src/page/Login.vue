@@ -1,13 +1,14 @@
 <template>
-    <div></div>
+  <div>1</div>
 </template>
 
 <script>
 export default {
-  name: 'Login'
+  name: 'Login',
+  created () {
+  }
 }
 </script>
 
 <style lang='stylus' scoped>
-
 </style>
