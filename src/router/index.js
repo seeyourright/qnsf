@@ -19,7 +19,40 @@ const router = new Router({
     {
       path: '/home',
       name: 'home',
-      component: () => import('../page/Home')
+      component: () => import('../page/Home'),
+      redirect: '/home/welcome',
+      children: [
+        {
+          path: 'welcome',
+          name: 'welcome',
+          component: () => import('../page/Welcome')
+        },
+        {
+          path: 'app',
+          name: 'app',
+          component: () => import('../page/system/App')
+        },
+        {
+          path: 'role',
+          name: 'role',
+          component: () => import('../page/system/Role')
+        },
+        {
+          path: 'administrator',
+          name: 'administrator',
+          component: () => import('../page/system/Administrator')
+        },
+        {
+          path: 'user',
+          name: 'user',
+          component: () => import('../page/system/User')
+        }
+      ]
+    },
+    {
+      path: '/*',
+      name: '404',
+      component: () => import('../page/404')
     }
   ]
 })

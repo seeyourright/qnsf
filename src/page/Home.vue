@@ -1,22 +1,24 @@
 <template>
-  <el-container style="height: 100%">
-    <el-header>
-      <Header></Header>
-    </el-header>
-    <el-container class="center">
-      <el-aside>
-        <Sider></Sider>
-      </el-aside>
-      <el-main style="padding: 0" v-if="$route.meta.fullScreen">
-        <router-view></router-view>
-      </el-main>
-      <el-main v-else>
-        <div class="main-box">
+  <div class="container">
+    <el-container style="height: 100%">
+      <el-header>
+        <Header></Header>
+      </el-header>
+      <el-container class="center">
+        <el-aside width="auto">
+          <Sider></Sider>
+        </el-aside>
+        <el-main style="padding: 0" v-if="$route.meta.fullScreen">
           <router-view></router-view>
-        </div>
-      </el-main>
+        </el-main>
+        <el-main v-else>
+          <div class="main-box">
+            <router-view></router-view>
+          </div>
+        </el-main>
+      </el-container>
     </el-container>
-  </el-container>
+  </div>
 </template>
 
 <script>
@@ -54,7 +56,7 @@ export default {
     font-size 14px
   .el-main
     background-color:#ECF0F5
-    padding: 50px 12px 30px
+    padding: 20px 12px 30px
     position relative
     height 100%
     max-height 100%
