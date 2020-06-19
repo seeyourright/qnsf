@@ -4,7 +4,7 @@
       <Header></Header>
     </el-header>
     <el-container class="center">
-      <el-aside width="220px">
+      <el-aside>
         <Sider></Sider>
       </el-aside>
       <el-main style="padding: 0" v-if="$route.meta.fullScreen">
