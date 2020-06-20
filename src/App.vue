@@ -80,4 +80,35 @@ a{
   text-decoration: none;
 }
 input:-webkit-autofill { box-shadow: 0 0 0px 1000px white inset !important;}
+
+
+  .el-table th.gutter {
+  display: table-cell !important;
+}
+
+.el-table td,
+.el-table th.is-leaf,
+.el-table--border,
+.el-table--group {
+  border-color: rgba(190, 190, 190, 0.5);
+}
+.el-table--border::after,
+.el-table--group::after,
+.el-table::before {
+  background-color: rgba(190, 190, 190, 0.5);
+}
+
+/deep/ .el-table--border td,
+/deep/ .el-table--border th,
+/deep/
+  .el-table__body-wrapper
+  .el-table--border.is-scrolling-left
+  ~ .el-table__fixed {
+  border-right: 1px solid rgba(190, 190, 190, 0.5);
+}
+
+/deep/ .el-table td,
+/deep/ .el-table th.is-leaf {
+  border-bottom: 1px solid rgba(190, 190, 190, 0.5);
+}
 </style>

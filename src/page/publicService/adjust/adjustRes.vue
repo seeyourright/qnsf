@@ -1,5 +1,5 @@
 <template>
-<!-- 签署文件 -->
+<!-- 调解结果 -->
     <div class="signFile">
         <!-- 线上 -->
         <div class="step0_up_yes" v-if="isUp === true">
@@ -33,8 +33,8 @@
           </div>
 
 
-          <!-- 文件签署 -->
-          <div class="sf_file">
+          <!--  线上、线下调解成功（文件签署）-->
+          <div class="sf_file"   v-if="isPass == true" >
              <div>
                   <span class="add_key">双方签署调解协议:</span>
                   <img src="../../../../static/img/file.png" alt="">
@@ -46,31 +46,33 @@
              </div>
           </div>
 
-           <div  style="width:100%;margin:40px 0;">
-                <span class="add_key">协议签署进度:</span>
-                <span class="add_value"  v-for="(item,index) in fileProgress" :key="index">{{item.name}}  
-                    <span style="color:green;" v-if="item.isSign == true"  >（已签署）、</span>
-                    <span style="color:red;" v-else>（未签署）、</span>
-                </span>
-           </div>  
+           <!-- 线上、线下调解失败（失败原因） -->
+            <p class="add_key" v-if="isPass == false">拒绝原因</p>
+            <el-input v-if="isPass == false"  :disabled="true" style="margin:10px 0 30px;"  v-model = 'lowReason' type="textarea" :rows="5"></el-input>
 
-           <div class="step0_up_button" v-if="isSign == true"  >
-                <el-button type="primary" >完成调解</el-button>
-            </div>   
+
+
+          <p  style="margin:30px 0;">
+              <span class="add_key">完成时间:</span>
+              <span class="add_value">2020-02-02 10:00:00</span>
+          </p>
+             
     </div>
 </template>
 
 <script>
 export default {
-    props: ['upDown'],
+    props: ['upDown','obj'],
     data() {
         return {
           isUp:true,  //true线上审批  false 线下审批
+          isPass:false,  //true完成调解  false调解失败
           fileProgress:[{name:'调解员',isSign:true},{name:'申请人',isSign:false},{name:'对方',isSign:false}],
         };
     },
     created() {
         this.init()
+        console.log(this.obj)
     },
     computed:{
         isSign(){

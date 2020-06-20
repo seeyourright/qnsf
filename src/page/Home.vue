@@ -66,4 +66,6 @@ export default {
       background-color #fff
       min-width 900px
       box-shadow:0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+
+ 
 </style>

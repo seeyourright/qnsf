@@ -182,7 +182,7 @@ export default {
     width: 100%;
     height: 50px;
     display: flex;
-    justify-content: space-around;
+    /* justify-content: space-around; */
     align-items: center;
      margin-top: 40px;
      margin-bottom:30px;

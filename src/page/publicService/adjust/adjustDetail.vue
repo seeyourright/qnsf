@@ -138,6 +138,9 @@
     
     <!-- 文件签署 -->
     <signFile :upDown = 'isUp' v-if = "step == 3"></signFile>
+
+    <!-- 调解结果 -->
+    <adjustRes :upDown = 'isUp' v-if = "step == 4"  :obj="{a:1,b:2}" ></adjustRes>
   </div>
 </template>
 
@@ -145,14 +148,16 @@
 import waitAppr from './waitAppr'
 import adjusting from './adjusting'
 import signFile from './signFile'
+import adjustRes from './adjustRes'
+
 export default {
-  components: {waitAppr,adjusting,signFile},
+  components: {waitAppr,adjusting,signFile,adjustRes},
   data() {
     return {
       status:'调解中',   //审批状态
       isUp:true,    //线上线下
       role:"",   //用户角色
-      step:3,   //1待审批  2调解中   3签署协议  4完成
+      step:4,   //1待审批  2调解中   3签署协议  4完成
       show1: false,
       show2: false,
       applyList:['','','','','','',''],
