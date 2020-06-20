@@ -54,9 +54,41 @@ const menu = [
         icon: '',
         path: '/home/lawConsult',
         permission: ''
-      },
+      }
     ]
-  }
+  },
+  {
+    title: '内容管理',
+    icon: 'icon-xitong',
+    path: '3',
+    permission: '',
+    children: [
+      {
+        title: 'Banner管理',
+        icon: '',
+        path: '/home/banner',
+        permission: ''
+      },
+      {
+        title: '系统推送',
+        icon: '',
+        path: '/home/role',
+        permission: ''
+      },
+      {
+        title: '法制政府',
+        icon: '',
+        path: '/home/administrator',
+        permission: ''
+      },
+      {
+        title: '法制宣传',
+        icon: '',
+        path: '/home/user',
+        permission: ''
+      }
+    ]
+  },
 ]
 
 export default menu

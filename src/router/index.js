@@ -79,6 +79,19 @@ const router = new Router({
             ppath: '/home/user'
           }
         },
+        {
+          path: 'banner',
+          name: 'banner',
+          component: () => import('../page/content/banner/Banner')
+        },
+        {
+          path: 'bannerAdd',
+          name: 'bannerAdd',
+          component: () => import('../page/content/banner/BannerAdd'),
+          meta: {
+            ppath: '/home/banner'
+          }
+        },
         // ---------------------------ly------------------------------------
         {
           path: 'adjust',
