@@ -111,7 +111,11 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  next()
+  if (to.fullPath === '/login' || to.fullPath === '/404' || localStorage.getItem('token')) {
+    next()
+  } else {
+    next('/login')
+  }
 })
 router.afterEach((to, from) => {
 

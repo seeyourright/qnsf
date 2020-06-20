@@ -6,7 +6,7 @@ vue.use(Vuex)
 const userInfo = localStorage.getItem('userInfo')
 const config = {
   state: {
-    userInfo: userInfo ? JSON.stringify(userInfo) : {}
+    userInfo: userInfo ? JSON.parse(userInfo) : {}
   }
 }
 

@@ -64,6 +64,7 @@ export default {
       }
       const userInfo = {username: this.username}
       localStorage.setItem('userInfo', JSON.stringify(userInfo))
+      localStorage.setItem('token', '1')
       this.$store.state.userInfo = userInfo
       this.$router.push('home')
     }
