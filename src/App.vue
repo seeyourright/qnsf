@@ -72,7 +72,7 @@ table {
 }
 ::-webkit-scrollbar-thumb {
   border-radius: 3px;
-  background: rgba(0,0,0,0.12);
+  background: rgba(0,150,250,1);
   -webkit-box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
 }
 /*a标签*/
