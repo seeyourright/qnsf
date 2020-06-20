@@ -37,12 +37,16 @@
               ></el-switch>
             </el-form-item>
             <div class="id-img">
-              <el-upload>
+              <el-upload
+                action="#"
+              >
                 <div>
                   <i class="el-icon-plus"></i>
                 </div>
               </el-upload>
-              <el-upload>
+              <el-upload
+                action="#"
+              >
                 <div>
                   <i class="el-icon-plus"></i>
                 </div>

@@ -1,7 +1,7 @@
 <template>
     <div>
       <div class="hhh">
-        <div>欢迎您，{{username}}</div>
+        <div>欢迎您，{{$store.state.userInfo.username}}</div>
         <div style="margin-left: 100px">当前时间：{{time}}</div>
       </div>
     </div>
@@ -12,7 +12,6 @@ export default {
   name: 'Welcome',
   data () {
     return {
-      username: localStorage.getItem('username'),
       time: ''
     }
   },

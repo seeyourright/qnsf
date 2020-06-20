@@ -40,7 +40,10 @@ const router = new Router({
         {
           path: 'roleAdd',
           name: 'roleAdd',
-          component: () => import('../page/system/role/RoleAdd')
+          component: () => import('../page/system/role/RoleAdd'),
+          meta: {
+            ppath: '/home/role'
+          }
         },
         {
           path: 'administrator',
@@ -50,12 +53,18 @@ const router = new Router({
         {
           path: 'administratorAdd',
           name: 'administratorAdd',
-          component: () => import('../page/system/administrator/AdministratorAdd')
+          component: () => import('../page/system/administrator/AdministratorAdd'),
+          meta: {
+            ppath: '/home/administrator'
+          }
         },
         {
           path: 'administratorEdit',
           name: 'administratorEdit',
-          component: () => import('../page/system/administrator/AdministratorAdd')
+          component: () => import('../page/system/administrator/AdministratorAdd'),
+          meta: {
+            ppath: '/home/administrator'
+          }
         },
         {
           path: 'user',
@@ -65,7 +74,10 @@ const router = new Router({
         {
           path: 'userEdit',
           name: 'userEdit',
-          component: () => import('../page/system/user/UserEdit')
+          component: () => import('../page/system/user/UserEdit'),
+          meta: {
+            ppath: '/home/user'
+          }
         },
         // ---------------------------ly------------------------------------
         {

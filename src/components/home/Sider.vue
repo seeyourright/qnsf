@@ -80,9 +80,7 @@ export default {
   },
   computed: {
     onRoutes () {
-      const path = this.$route.path
-      if (path.indexOf('/home/user/') > -1) return '/home/user'
-      return path
+      return this.$route.meta.ppath || this.$route.path
     }
   }
 }

@@ -62,7 +62,9 @@ export default {
         this.$refs.code.changeCode()
         return false
       }
-      localStorage.setItem('username', this.username)
+      const userInfo = {username: this.username}
+      localStorage.setItem('userInfo', JSON.stringify(userInfo))
+      this.$store.state.userInfo = userInfo
       this.$router.push('home')
     }
   }
