@@ -3,9 +3,9 @@
     :collapse="collapse"
     router
     :style="{height: '100%', overflow: 'auto', width: menuWidth}"
-    background-color="#202227"
-    active-text-color="rgba(255,255,255,1)"
-    text-color="rgba(255,255,255,.4)"
+    background-color="#fff"
+    active-text-color="rgba(0,0,0,1)"
+    text-color="rgba(0,0,0,.4)"
     :default-active="onRoutes"
   >
     <el-menu-item index="/home/welcome">
@@ -15,7 +15,7 @@
     <template v-for="(menu1,index1) in menu">
       <el-submenu v-if="menu1.children && permissions.indexOf(menu1.permission) > -1" :key="index1" :index="menu1.path">
         <template slot="title">
-          <i v-if="menu1.icon" :class="'iconfont '+menu1.icon"></i>
+          <i v-if="menu1.icon" :class="'iconfont '+ menu1.icon"></i>
           <span>{{menu1.title}}</span>
         </template>
         <template v-for="(menu2,index2) in menu1.children">
@@ -81,7 +81,7 @@ export default {
   computed: {
     onRoutes () {
       const path = this.$route.path
-      if (path.indexOf('/home/space/') > -1) return '/home/space'
+      if (path.indexOf('/home/user/') > -1) return '/home/user'
       return path
     }
   }
@@ -89,5 +89,5 @@ export default {
 </script>
 
 <style lang='stylus' scoped>
-
+  //
 </style>

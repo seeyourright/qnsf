@@ -1,6 +1,6 @@
 const menu = [
   {
-    title: '页面内容管理',
+    title: '系统管理',
     icon: 'icon-xitong',
     path: '1',
     permission: '',
