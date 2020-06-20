@@ -15,6 +15,10 @@
           >
           </el-tree>
         </el-form-item>
+        <div style="text-align: center;letter-spacing: 50px;margin-top: 30px">
+          <el-button>取消</el-button>
+          <el-button type="primary" @click="submit">保存</el-button>
+        </div>
       </el-form>
     </div>
 </template>

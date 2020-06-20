@@ -43,7 +43,7 @@ const util = {
       .replace('ss', plus0(date.getSeconds())).replace('SSS', date.getMilliseconds())
   },
   tableLoading (el) {
-    let table = document.querySelector('.el-table__body-wrapper')
+    let table = document.querySelector('.el-table')
     if (el) {
       table = el
     }

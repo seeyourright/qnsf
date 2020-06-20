@@ -4,7 +4,7 @@
     router
     :style="{height: '100%', overflow: 'auto', width: menuWidth}"
     background-color="#fff"
-    active-text-color="rgba(0,0,0,1)"
+    active-text-color="#006DF0"
     text-color="rgba(0,0,0,.4)"
     :default-active="onRoutes"
   >

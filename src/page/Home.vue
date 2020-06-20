@@ -44,7 +44,7 @@ export default {
     padding 0
     background-color #fff
     height 70px
-    box-shadow 0px 4px 8px 0px rgba(0, 0, 0, 0.07)
+    box-shadow 0px 4px 8px 0px rgba(0, 0, 0, 0.3)
     overflow visible
     z-index 1999
     .header
@@ -54,6 +54,8 @@ export default {
     flex 1
   .el-aside
     font-size 14px
+    z-index 1999
+    box-shadow 4px 0px 8px 0px rgba(0, 0, 0, 0.2)
   .el-main
     background-color:#ECF0F5
     padding: 20px 12px 30px
@@ -65,7 +67,7 @@ export default {
       overflow hidden
       background-color #fff
       min-width 900px
-      box-shadow:0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+      box-shadow:4px 4px 8px 0px rgba(0, 0, 0, 0.2);
 /*页面*/
   /deep/.mm
     padding 30px 2.5% 40px
