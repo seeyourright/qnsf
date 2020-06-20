@@ -52,7 +52,7 @@
                 </div>
               </el-upload>
             </div>
-            <el-form-item label="户籍所在地" prop="c" label-width="auto" style="padding-left: 70px">
+            <el-form-item label="户籍所在地" prop="c" label-width="none" style="padding-left: 70px">
               <el-input v-model="form.i"></el-input>
             </el-form-item>
           </el-col>
