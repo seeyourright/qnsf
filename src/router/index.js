@@ -46,7 +46,28 @@ const router = new Router({
           path: 'user',
           name: 'user',
           component: () => import('../page/system/User')
-        }
+        },
+        // ---------------------------ly------------------------------------
+        {
+          path: 'adjust',
+          name: 'adjust',
+          component: () => import('../page/publicService/adjust/adjust')
+        },
+        {
+          path: 'adjustDetail',
+          name: 'adjustDetail',
+          component: () => import('../page/publicService/adjust/adjustDetail')
+        },
+        {
+          path: 'lawHelp',
+          name: 'lawHelp',
+          component: () => import('../page/publicService/lawHelp/lawHelp')
+        },
+        {
+          path: 'lawConsult',
+          name: 'lawConsult',
+          component: () => import('../page/publicService/lawConsult/lawConsult')
+        },
       ]
     },
     {

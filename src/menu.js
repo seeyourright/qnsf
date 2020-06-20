@@ -30,6 +30,32 @@ const menu = [
         permission: ''
       }
     ]
+  },
+  {
+    title: '公共服务',
+    icon: 'icon-fuwu',
+    path: '2',
+    permission: '',
+    children: [
+      {
+        title: '人民调解',
+        icon: '',
+        path: '/home/adjust',
+        permission: ''
+      },
+      {
+        title: '法律援助',
+        icon: '',
+        path: '/home/lawHelp',
+        permission: ''
+      },
+      {
+        title: '法律咨询',
+        icon: '',
+        path: '/home/lawConsult',
+        permission: ''
+      },
+    ]
   }
 ]
 
