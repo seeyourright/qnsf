@@ -30,22 +30,42 @@ const router = new Router({
         {
           path: 'app',
           name: 'app',
-          component: () => import('../page/system/App')
+          component: () => import('../page/system/app/App')
         },
         {
           path: 'role',
           name: 'role',
-          component: () => import('../page/system/Role')
+          component: () => import('../page/system/role/Role')
+        },
+        {
+          path: 'roleAdd',
+          name: 'roleAdd',
+          component: () => import('../page/system/role/RoleAdd')
         },
         {
           path: 'administrator',
           name: 'administrator',
-          component: () => import('../page/system/Administrator')
+          component: () => import('../page/system/administrator/Administrator')
+        },
+        {
+          path: 'administratorAdd',
+          name: 'administratorAdd',
+          component: () => import('../page/system/administrator/AdministratorAdd')
+        },
+        {
+          path: 'administratorEdit',
+          name: 'administratorEdit',
+          component: () => import('../page/system/administrator/AdministratorAdd')
         },
         {
           path: 'user',
           name: 'user',
-          component: () => import('../page/system/User')
+          component: () => import('../page/system/user/User')
+        },
+        {
+          path: 'userEdit',
+          name: 'userEdit',
+          component: () => import('../page/system/user/UserEdit')
         },
         // ---------------------------ly------------------------------------
         {

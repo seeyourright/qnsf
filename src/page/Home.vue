@@ -66,6 +66,13 @@ export default {
       background-color #fff
       min-width 900px
       box-shadow:0px 1px 3px 0px rgba(0, 0, 0, 0.08);
-
- 
+/*页面*/
+  /deep/.mm
+    padding 30px 2.5% 40px
+  /deep/ .y-page
+    text-align center
+    margin-top 20px
+/*按钮*/
+  /deep/ .text-danger
+    color red
 </style>

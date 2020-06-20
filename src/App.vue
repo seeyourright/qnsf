@@ -81,7 +81,7 @@ a{
 }
 input:-webkit-autofill { box-shadow: 0 0 0px 1000px white inset !important;}
 
-
+/*表格*/
   .el-table th.gutter {
   display: table-cell !important;
 }

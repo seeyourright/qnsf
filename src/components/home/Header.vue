@@ -2,7 +2,6 @@
   <div class="h">
     <div class="title">黔南司法后台管理</div>
     <div>
-      <img src="" alt="">
     </div>
   </div>
 </template>
