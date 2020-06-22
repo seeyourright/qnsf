@@ -1,14 +1,8 @@
 <template>
   <div class="mm">
     <div class="condition">
-      <div>系统管理—用户管理</div>
+      <div>系统管理—房间管理</div>
       <el-form size="small" inline>
-        <el-form-item>
-          <el-input placeholder="输入名称"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button @click="getData(1)">查询</el-button>
-        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="addHandler">新增</el-button>
         </el-form-item>
@@ -39,22 +33,22 @@
         align="center"
         :show-overflow-tooltip="true"
         prop="a"
-        label="姓名"
+        label="名称"
       ></el-table-column>
       <el-table-column
         align="center"
         prop="a"
-        label="联系电话"
+        label="账号"
       ></el-table-column>
       <el-table-column
         align="center"
         prop="a"
-        label="注册时间"
+        label="房间号"
       ></el-table-column>
       <el-table-column
         align="center"
         prop="a"
-        label="用户角色"
+        label="状态"
       ></el-table-column>
       <el-table-column
         align="center"
@@ -82,26 +76,13 @@
       width="700px"
     >
       <el-form ref="form" class="form" label-width="100px" :rules="rules" :model="form">
-        <el-form-item label="姓名" prop="a">
-          <el-input v-model="form.a"></el-input>
+        <el-form-item label="县/市" prop="a">
+          <el-select v-model="form.a">
+            <el-option v-for="area in areas" :label="area" :value="area" :key="area"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="联系电话" prop="b">
-          <el-input v-model="form.b"></el-input>
-        </el-form-item>
-        <el-form-item label="身份证号" prop="c">
-          <el-input v-model="form.c"></el-input>
-        </el-form-item>
-        <el-form-item label="登录密码" prop="d">
-          <el-input v-model="form.d"></el-input>
-        </el-form-item>
-        <el-form-item label="选择角色">
-          <el-radio-group v-model="form.e">
-            <el-radio label="1">普通用户</el-radio>
-            <el-radio label="2">调解员</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item v-if="form.e==='2'" label="所属地区" prop="f">
-          <el-select v-model="form.f">
+        <el-form-item label="视讯房间号" prop="b">
+          <el-select v-model="form.b">
             <el-option v-for="area in areas" :label="area" :value="area" :key="area"></el-option>
           </el-select>
         </el-form-item>
@@ -140,20 +121,10 @@ export default {
       },
       rules: {
         a: [
-          {required: true, message: '姓名不能为空', trigger: 'blur'}
+          {required: true, message: '县/市不能为空', trigger: 'blur'}
         ],
         b: [
-          {required: true, message: '联系电话不能为空', trigger: 'blur'},
-          {pattern: this.$util.phoneReg, message: '联系电话格式错误', trigger: 'blur'}
-        ],
-        c: [
-          {validator: this.validateIdNumber}
-        ],
-        d: [
-          {required: true, message: '不能为空', trigger: 'blur'}
-        ],
-        f: [
-          {required: true, message: '不能为空', trigger: 'blur'}
+          {required: true, message: '房间号不能为空', trigger: 'blur'}
         ]
       },
       areas: ['都匀市', '福泉市', '三都县']
@@ -164,15 +135,8 @@ export default {
   methods: {
     getData (page) {
     },
-    validateIdNumber (rule, value, callback) {
-      if (this.$util.idCheck(value)) {
-        callback()
-      } else {
-        callback(new Error('身份证格式错误'))
-      }
-    },
     detailHandler (row) {
-      this.$router.push('userEdit?id=' + row.id)
+      this.$router.push('roomEdit?id=' + row.id)
     },
     deleteHandler (row) {
       this.$confirm('确定删除吗').then(() => {

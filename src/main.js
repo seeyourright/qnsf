@@ -10,6 +10,10 @@ import util from './utils/util'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
+// if (store.state.isIE) {
+//   require('./assets/css/ie.css')
+// }
+
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 

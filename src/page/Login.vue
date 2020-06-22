@@ -1,6 +1,7 @@
 <template>
   <div class="container">
-    <video class="video" autoplay muted loop src="http://img.yangrq.com/qnsfbg2"></video>
+    <img v-if="$store.state.isIE" class="image" src="http://img.yangrq.com/qnsfbgimg2" alt="">
+    <video v-else class="video" autoplay muted loop src="http://img.yangrq.com/qnsfbgvd2"></video>
     <div class="mask">
       <div class="box">
         <form>
@@ -15,7 +16,7 @@
               <div class="label">密码</div>
             </div>
             <div class="item code">
-              <input type="text" v-model="code">
+              <input type="text" @keydown.enter="submit" v-model="code">
               <div class="label">验证码</div>
               <VerificationCode ref="code"></VerificationCode>
             </div>
@@ -62,6 +63,16 @@ export default {
         this.$refs.code.changeCode()
         return false
       }
+      const params = {
+        username: this.username,
+        password: this.password,
+        grant_type: 'password',
+        scope: 'all',
+        client_id: 'pc',
+        client_secret: 'pc'
+      }
+      // this.$http.post(this.$url.login, params).then(res => {
+      // })
       const userInfo = {username: this.username}
       localStorage.setItem('userInfo', JSON.stringify(userInfo))
       localStorage.setItem('token', '1')
@@ -81,6 +92,10 @@ export default {
     width 100%
     top: 0
     left 0
+  .image
+    position absolute
+    height 100%
+    width 100%
   .video
     position absolute
     object-fit cover
@@ -92,7 +107,7 @@ export default {
     width 100%
     top: 0
     left 0
-    background-color: rgba(0,0,0,.5)
+    background-color: rgba(0,0,0,.2)
     z-index 100
   .box
     position absolute

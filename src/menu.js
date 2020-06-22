@@ -28,6 +28,12 @@ const menu = [
         icon: '',
         path: '/home/user',
         permission: ''
+      },
+      {
+        title: '房间管理',
+        icon: '',
+        path: '/home/room',
+        permission: ''
       }
     ]
   },
@@ -72,19 +78,19 @@ const menu = [
       {
         title: '系统推送',
         icon: '',
-        path: '/home/role',
+        path: '/home/push',
         permission: ''
       },
       {
         title: '法制政府',
         icon: '',
-        path: '/home/administrator',
+        path: '/home/government',
         permission: ''
       },
       {
         title: '法制宣传',
         icon: '',
-        path: '/home/user',
+        path: '/home/propaganda',
         permission: ''
       }
     ]

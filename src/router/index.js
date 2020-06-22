@@ -80,6 +80,19 @@ const router = new Router({
           }
         },
         {
+          path: 'room',
+          name: 'room',
+          component: () => import('../page/system/room/Room')
+        },
+        {
+          path: 'roomEdit',
+          name: 'roomEdit',
+          component: () => import('../page/system/room/RoomEdit'),
+          meta: {
+            ppath: '/home/room'
+          }
+        },
+        {
           path: 'banner',
           name: 'banner',
           component: () => import('../page/content/banner/Banner')
@@ -90,6 +103,19 @@ const router = new Router({
           component: () => import('../page/content/banner/BannerAdd'),
           meta: {
             ppath: '/home/banner'
+          }
+        },
+        {
+          path: 'push',
+          name: 'push',
+          component: () => import('../page/content/push/Push')
+        },
+        {
+          path: 'pushAdd',
+          name: 'pushAdd',
+          component: () => import('../page/content/push/PushAdd'),
+          meta: {
+            ppath: '/home/push'
           }
         },
         // ---------------------------ly------------------------------------

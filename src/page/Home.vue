@@ -77,8 +77,8 @@ export default {
 /*按钮*/
   /deep/ .text-danger
     color red
+  /*  */
   /deep/ .el-table .el-image
-    display inline
     img
       max-height 20px
       width auto
