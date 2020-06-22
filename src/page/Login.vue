@@ -154,6 +154,7 @@ export default {
         border-width 1px
         transition all .5s
         padding-left 70px
+        box-sizing border-box
         &:focus
           border-bottom-color: $mcolor2
           padding-left 0px

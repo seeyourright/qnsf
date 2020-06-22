@@ -30,8 +30,8 @@
         label="版本名称"
       ></el-table-column>
       <el-table-column
+        style="white-space: pre-wrap"
         align="center"
-        :show-overflow-tooltip="true"
         prop="a"
         label="更新内容"
       ></el-table-column>
