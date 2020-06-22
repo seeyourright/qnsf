@@ -109,6 +109,15 @@ export default {
        },
         applyRes(res){
           const that = this
+          if(that.isUp == true && res == '5' && that.upReason == ''){
+              that.$message.error('请填写未达成原因');
+              return false
+          }
+
+           if(that.isUp == false && res == '5' && that.lowReason == ''){
+              that.$message.error('请填写未达成原因');
+              return false
+          }
           that.$emit('res',res)   
 
        },
