@@ -5,30 +5,30 @@
         <div class="step0_up_yes" v-if="isUp === true">
                  <div class="step0_up_yes_item">
                      <span class="add_key">调解员:</span>
-                     <span >xxx</span>
+                     <span >{{upBaseObj.name}}</span>
                  </div>
                   <div class="step0_up_yes_item">
                      <span class="add_key">调解室:</span>
-                     <span >30562</span>
+                     <span >{{upBaseObj.roomId}}</span>
                  </div>
                   <div class="step0_up_yes_item">
                      <span class="add_key">调解时间:</span>
-                     <span >2020-06-02 16:00:00</span>
+                     <span >{{upBaseObj.time}}</span>
                  </div>
             </div>
         <!-- 线下 -->
           <div v-if="isUp === false" style="width:100%;">
                <div class="step0_low_item">
                       <span class="add_key">调解员:</span>
-                      <span class="add_value">张三</span>
+                      <span class="add_value">{{lowBaseObj.name}}</span>
                 </div>
                  <div class="step0_low_item">
                       <span class="add_key">调解时间:</span>
-                      <span class="add_value">无</span>
+                      <span class="add_value">{{lowBaseObj.time}}</span>
                 </div>
                 <div class="step0_low_item"> 
                       <span class="add_key" style="width:72px;">调解地点:</span>
-                      <span class="add_value"  style="white-space:nowrap;margin-right:10px;">无</span>
+                      <span class="add_value"  style="white-space:nowrap;margin-right:10px;">{{lowBaseObj.addr}}</span>
                 </div>
           </div>
 
@@ -37,56 +37,62 @@
           <div class="sf_file"  style="margin-top:20px;"   v-if="status == 4" >
              <div>
                   <span class="add_key">双方签署调解协议:</span>
-                  <img src="../../../../static/img/file.png" alt="">
+                  <img src="../../../../static/img/file.png" alt="" @click="showPDF = true">
              </div>
 
              <div  style="height:30px;">
-                 <el-button type="primary" size="small" style="margin-right:20px;">预览</el-button>
+                 <el-button type="primary" size="small" style="margin-right:20px;" @click="showPDF = true">预览</el-button>
                  <el-button type="primary" size="small">下载</el-button>
              </div>
           </div>
 
            <!-- 线上、线下调解失败（失败原因） -->
             <p class="add_key" v-if="status == 5"   style="margin-top:20px;">拒绝原因</p>
-            <el-input v-if="status == 5"  :disabled="true" style="margin:10px 0 30px;"  v-model = 'lowReason' type="textarea" :rows="5"></el-input>
+            <el-input v-if="status == 5"  :disabled="true" style="margin:10px 0 30px;"  v-model = 'rejReason' type="textarea" :rows="5"></el-input>
 
 
 
           <p  style="margin:30px 0;">
               <span class="add_key">完成时间:</span>
-              <span class="add_value">2020-02-02 10:00:00</span>
+              <span class="add_value">{{completeTime}}</span>
           </p>
-             
+
+           <!-- 协议预览 -->
+    <el-dialog title="协议预览" :visible.sync="showPDF" width="665px">
+      <pdf :src="previewUrl" :page="pdfPage"></pdf>
+      <div class="ad_row3">
+          <el-pagination
+            @current-change="handleCurrentChange"
+            :current-page.sync="pdfPage"
+            layout="prev, pager, next"
+            :page-size="1"
+            :total="pdfTotals"
+          ></el-pagination>
+      </div>
+      
+    </el-dialog>  
     </div>
 </template>
 
 <script>
+import pdf from "vue-pdf";
 export default {
-    props: ['upDown','status'],
+     components: {
+      pdf
+    },
+    props: ['upDown','status',"upBaseObj","lowBaseObj","previewUrl","agreeUrl",'completeTime',"rejReason"],
     data() {
         return {
           isUp:true,  //true线上审批  false 线下审批
           isPass:false,  //true完成调解  false调解失败
-          fileProgress:[{name:'调解员',isSign:true},{name:'申请人',isSign:false},{name:'对方',isSign:false}],
+          showPDF: false,
+          pdfPage:1,
+          pdfTotals:32
         };
     },
     created() {
         this.init()
         console.log(this.obj)
-    },
-    computed:{
-        isSign(){
-            let arr = []
-            arr =  this.fileProgress.filter(val=>{
-                return val.isSign == false
-            })
-
-            if(arr.length == 0){
-                return true
-            }else{
-                return false
-            }
-        }
     },
     mounted() {
 
@@ -157,4 +163,12 @@ export default {
     align-items: center;
     margin: 0 auto;
  }
+
+ .ad_row3 {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>

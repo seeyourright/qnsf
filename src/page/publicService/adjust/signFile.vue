@@ -5,30 +5,30 @@
     <div class="step0_up_yes" v-if="isUp === true">
       <div class="step0_up_yes_item">
         <span class="add_key">调解员:</span>
-        <span>xxx</span>
+        <span>{{upBaseObj.name}}</span>
       </div>
       <div class="step0_up_yes_item">
         <span class="add_key">调解室:</span>
-        <span>30562</span>
+        <span>{{upBaseObj.roomId}}</span>
       </div>
       <div class="step0_up_yes_item">
         <span class="add_key">调解时间:</span>
-        <span>2020-06-02 16:00:00</span>
+        <span>{{upBaseObj.time}}</span>
       </div>
     </div>
     <!-- 线下 -->
     <div v-if="isUp === false" style="width:100%;">
       <div class="step0_low_item">
         <span class="add_key">调解员:</span>
-        <span class="add_value">张三</span>
+        <span class="add_value">{{lowBaseObj.name}}</span>
       </div>
       <div class="step0_low_item">
         <span class="add_key">调解时间:</span>
-        <span class="add_value">无</span>
+        <span class="add_value">{{lowBaseObj.time}}</span>
       </div>
       <div class="step0_low_item">
         <span class="add_key" style="width:72px;">调解地点:</span>
-        <span class="add_value" style="white-space:nowrap;margin-right:10px;">无</span>
+        <span class="add_value" style="white-space:nowrap;margin-right:10px;">{{lowBaseObj.addr}}</span>
       </div>
     </div>
 
@@ -36,7 +36,7 @@
     <div class="sf_file">
       <div>
         <span class="add_key">双方签署调解协议:</span>
-        <img src="../../../../static/img/file.png" alt />
+        <img @click="showPDF = true" src="../../../../static/img/file.png" alt />
       </div>
 
       <div style="height:30px;">
@@ -47,7 +47,7 @@
 
     <div style="width:100%;margin:40px 0;">
       <span class="add_key">协议签署进度:</span>
-      <span class="add_value" v-for="(item,index) in fileProgress" :key="index">
+      <span class="add_value" v-for="(item,index) in signProgress" :key="index">
         {{item.name}}
         <span style="color:green;" v-if="item.isSign == true">（已签署）、</span>
         <span style="color:red;" v-else>（未签署）、</span>
@@ -55,12 +55,12 @@
     </div>
 
     <div class="step0_up_button" v-if="isSign == true">
-      <el-button type="primary">完成调解</el-button>
+      <el-button type="primary"  @click="applyRes('4')">完成调解</el-button>
     </div>
 
     <!-- 协议预览 -->
-    <el-dialog title="对方名单" :visible.sync="showPDF" width="665px">
-      <pdf src="../../../../static/img/bb.pdf" :page="pdfPage"></pdf>
+    <el-dialog title="协议预览" :visible.sync="showPDF" width="665px">
+      <pdf :src="previewUrl" :page="pdfPage"></pdf>
       <div class="ad_row3">
           <el-pagination
             @current-change="handleCurrentChange"
@@ -79,7 +79,7 @@
 import pdf from "vue-pdf";
 
 export default {
-  props: ["upDown"],
+  props: ["upDown","upBaseObj","lowBaseObj","signProgress","previewUrl","agreeUrl"],
   components: {
     pdf
   },
@@ -89,11 +89,6 @@ export default {
       showPDF: false,
       pdfPage:1,
       pdfTotals:32,
-      fileProgress: [
-        { name: "调解员", isSign: true },
-        { name: "申请人", isSign: false },
-        { name: "对方", isSign: true }
-      ]
     };
   },
   created() {
@@ -102,7 +97,7 @@ export default {
   computed: {
     isSign() {
       let arr = [];
-      arr = this.fileProgress.filter(val => {
+      arr = this.signProgress.filter(val => {
         return val.isSign == false;
       });
 
@@ -119,6 +114,11 @@ export default {
       this.isUp = this.upDown;
       console.log(this.isUp);
     },
+     applyRes(res){
+          const that = this
+          that.$emit('res',res)   
+
+       },
     preview(row) {
       //createLoadingTask方法，参数为pdf的文件地址，此方法可返回pdf文件的一些参数，例如页码总数，等；会返回一个promise对象；
       this.pdfUrl = pdf.createLoadingTask(this.fileUrl + row.magazinePdfPath);

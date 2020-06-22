@@ -8,28 +8,28 @@
                <div class="step0_up_yes">
                  <div class="step0_up_yes_item">
                      <span class="add_key">调解员:</span>
-                     <span >xxx</span>
+                     <span >{{upBaseObj.name}}</span>
                  </div>
                   <div class="step0_up_yes_item">
                      <span class="add_key">调解室:</span>
-                     <span >30562</span>
+                     <span >{{upBaseObj.roomId}}</span>
                  </div>
                   <div class="step0_up_yes_item">
                      <span class="add_key">调解时间:</span>
-                     <span >2020-06-02 16:00:00</span>
+                     <span >{{upBaseObj.time}}</span>
                  </div>
             </div>
                <p class="add_key" v-if="upPass === false">未达成原因</p>
-               <el-input  style="margin:10px 0 30px;"  type="textarea" :rows="5" v-if="upPass === false"></el-input>
+               <el-input  v-model="upReason"    style="margin:10px 0 30px;"  type="textarea" :rows="5" v-if="upPass === false"></el-input>
                <div class="step0_up_button"  v-if="upPass === false" >
-                   <el-button type="danger" size="small">提交</el-button>
+                   <el-button type="danger" size="small" @click="applyRes('5')">提交</el-button>
                    <el-button type="primary" size="small"  @click="upPass = ''">返回上一步</el-button>
                </div>
             </div>
             
               <div class="step0_up_button" v-if="upPass === '' && isTime == true">
                    <el-button type="danger" size="small"  @click="upPass = false">未达成调解</el-button>
-                   <el-button type="primary" size="small">达成调解推送调解员</el-button>
+                   <el-button type="primary" size="small" @click="applyRes('3')">达成调解推送调解员</el-button>
              </div>
          </div>
 
@@ -39,28 +39,28 @@
             <div class="step0_up_no"  >
                <div class="step0_low_item">
                       <span class="add_key">调解员:</span>
-                      <span class="add_value">张三</span>
+                      <span class="add_value">{{lowBaseObj.name}}</span>
                 </div>
                  <div class="step0_low_item">
                       <span class="add_key">调解时间:</span>
-                      <span class="add_value">无</span>
+                      <span class="add_value">{{lowBaseObj.time}}</span>
                 </div>
                 <div class="step0_low_item"> 
                       <span class="add_key" style="width:72px;">调解地点:</span>
-                      <span class="add_value"  style="white-space:nowrap;margin-right:10px;">无</span>
+                      <span class="add_value"  style="white-space:nowrap;margin-right:10px;">{{lowBaseObj.addr}}</span>
                 </div>
 
                <p class="add_key" v-if="lowPass === false">未达成原因</p>
-               <el-input  v-if="lowPass === false"  style="margin:10px 0 30px;"  type="textarea" :rows="5"></el-input>
+               <el-input  v-if="lowPass === false"   v-model="lowReason"   style="margin:10px 0 30px;"  type="textarea" :rows="5"></el-input>
                <div class="step0_up_button"  v-if="lowPass === false" >
-                   <el-button type="danger" size="small">提交</el-button>
+                   <el-button type="danger" size="small" @click="applyRes('5')">提交</el-button>
                    <el-button type="primary" size="small"  @click="lowPass = ''">返回上一步</el-button>
                </div>
             </div>
             
               <div class="step0_up_button" v-if="lowPass === ''">
                    <el-button type="danger" size="small" @click="lowPass = false">未达成调解</el-button>
-                   <el-button type="primary" size="small">达成调解推送调解员</el-button>
+                   <el-button type="primary" size="small" @click="applyRes('3')">达成调解推送调解员</el-button>
              </div>
          </div>
     </div>
@@ -68,7 +68,7 @@
 
 <script>
 export default {
-    props: ['upDown'],
+    props: ['upDown',"upBaseObj","lowBaseObj"],
     data() {
         return {
            isUp:true,
@@ -96,9 +96,22 @@ export default {
     },
     methods: {
        init(){
-           this.isUp = this.upDown
+           const that = this
+           that.isUp = that.upDown
+
+           if(that.isUp == true && new Date() >= new Date(that.upBaseObj.time)){
+                  //到线上开始调解的时候，才显示  达成调解或者未达成调解按钮
+                  that.isTime = true
+           }
+
+
            console.log(this.isUp)
-       }
+       },
+        applyRes(res){
+          const that = this
+          that.$emit('res',res)   
+
+       },
     },
 };
 </script>

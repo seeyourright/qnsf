@@ -9,23 +9,21 @@
                <el-input  :disabled="status == 1" style="margin:10px 0 30px;"  v-model = 'upReason' type="textarea" :rows="5"></el-input>
             </div>
              <div class="step0_up_button"   v-if="upPass === false && status == 0">
-                   <el-button type="danger" size="small">提交</el-button>
+                   <el-button type="danger" size="small" @click="applyRes('1')">提交</el-button>
                    <el-button type="primary" size="small"  @click="upPass = ''">返回上一步</el-button>
              </div>
             <!-- 审批通过显示内容 -->
             <div class="step0_up_yes" v-if="upPass === true && status == 0">
                  <div class="step0_up_yes_item">
                      <span class="add_key">选择调解员:</span>
-                      <el-select v-model="upPeople"  placeholder="请选择" size="small">
-                            <el-option value="全部">全部</el-option>
-                             <el-option value="待审批">待审批</el-option>
+                      <el-select v-model="upPeople"  placeholder="请选择" size="small" @change="upChange1">
+                            <el-option :value="item.id"  v-for="(item,index) in upPeopleList" :key='index'>{{item.name}}</el-option>
                       </el-select>
                  </div>
                   <div class="step0_up_yes_item">
                      <span class="add_key">选择调解室:</span>
-                      <el-select v-model="upRoom"  placeholder="请选择" size="small">
-                            <el-option value="全部">全部</el-option>
-                             <el-option value="待审批">待审批</el-option>
+                      <el-select v-model="upRoom"  placeholder="请选择" size="small"  @change="upChange2">
+                            <el-option :value="item.id"  v-for="(item,index) in upRoomList" :key='index'>{{item.name}}</el-option>
                       </el-select>
                  </div>
                   <div class="step0_up_yes_item">
@@ -39,7 +37,7 @@
                  </div>
             </div>
            <div class="step0_up_button" v-if="upPass === true && status == 0" >
-                   <el-button type="danger" size="small">提交</el-button>
+                   <el-button type="danger" size="small" @click="applyRes('2')" >提交</el-button>
                    <el-button type="primary" size="small"  @click="upPass = ''">返回上一步</el-button>
             </div>
             
@@ -73,7 +71,7 @@
                
             </div>
             <div class="step0_up_button" v-if="lowPass === false && status == 0" >
-                   <el-button type="danger" size="small">提交</el-button>
+                   <el-button type="danger" size="small" @click="applyRes('1')">提交</el-button>
                    <el-button type="primary" size="small"  @click="lowPass = ''">返回上一步</el-button>
                </div>
 
@@ -100,7 +98,7 @@
                       </div>
                 </div>
                 <div class="step0_up_button"  >
-                         <el-button type="danger" size="small">提交</el-button>
+                         <el-button type="danger" size="small" @click="applyRes('2')">提交</el-button>
                          <el-button type="primary" size="small"  @click="lowPass = ''">返回上一步</el-button>
                      </div>
                </div>
@@ -117,18 +115,19 @@
 
 <script>
 export default {
-    props: ['upDown','status'],
+    props: ['upDown','status','rejReason'],
     data() {
         return {
            isUp:true,  //true线上审批  false 线下审批
-           step:0,  //0 待审批  1审批通过(调解中)  2审批拒绝
-           role:0,   //用户角色  0超级管理员   1管理员  2调解员
-
            //线上审批
            upPass:'',//线上审批通过   线上审批拒绝
            upReason:'',//线上审批拒绝原因  
            upPeople:'',//线上审批通过  分配调解员
+           upPeopleId:'',//线上审批通过  分配调解员
+           upPeopleList:[{name:'牛大壮',id:'001'},{name:'陈二毛',id:'002'},{name:'李飞幺',id:'003'}],  //调解员列表
            upRoom:'',//线上审批通过  分配调解室
+           upRoomId:'',//线上审批通过  分配调解室
+           upRoomList:[{name:'调解室1',id:'001'},{name:'调解室2',id:'002'},{name:'调解室3',id:'003'}],
            upTime:'',//线上审批通过  分配调解时间
 
            //线下审批
@@ -144,8 +143,38 @@ export default {
     methods: {
        init(){
            this.isUp = this.upDown
-           console.log(this.isUp)
-       }
+           if(this.status == 1){
+                this.upReason = this.rejReason
+                this.lowReason = this.rejReason
+           }
+       },
+       applyRes(res){
+          const that = this
+          that.$emit('res',res)   
+
+       },
+       upChange1(e){
+           console.log(e)
+         const that = this
+          that.upPeopleList.forEach(val=>{
+             if(val.id == e){
+                  that.upPeople = val.name
+                   that.upPeopleId = val.id
+             }
+         })
+       },
+       upChange2(e){
+         const that = this
+        //  that.upPeople = that.upPeopleList.filter(val=>{
+        //      return val.id == e.detail.value
+        //  })
+         that.upRoomList.forEach(val=>{
+              if(val.id == e){
+                   that.upRoom = val.name
+                   that.upRoomId = val.id
+             }
+         })
+       },
     },
 };
 </script>

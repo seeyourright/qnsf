@@ -4,29 +4,29 @@
     <div class="add_row1">
       <div class="add_row1_item">
         <span class="add_key">预约号:</span>
-        <span class="add_value">12354897465</span>
+        <span class="add_value">{{orderNum}}</span>
       </div>
       <div class="add_row1_item">
         <span class="add_key">调解方式:</span>
-        <span class="add_value">线上调节</span>
+        <span class="add_value">{{isUp?'线上调解':"线下调解"}}</span>
       </div>
       <div class="add_row1_item">
         <span class="add_key">审批状态:</span>
-        <span class="add_value" style="color:red;">待审批</span>
+        <span class="add_value" style="color:red;">{{status}}</span>
       </div>
     </div>
     <div class="add_row1">
       <div class="add_row1_item">
         <span class="add_key">纠纷类型:</span>
-        <span class="add_value">财务纠纷</span>
+        <span class="add_value">{{issueType}}</span>
       </div>
       <div class="add_row1_item">
         <span class="add_key">调解时间:</span>
-        <span class="add_value">2020-06-05 11:00:00</span>
+        <span class="add_value">{{adjustTime}}</span>
       </div>
       <div class="add_row1_item">
         <span class="add_key">申请地点:</span>
-        <span class="add_value">贵州省贵阳市南明区贵惠路246号天豪精品酒店</span>
+        <span class="add_value">{{applyAddr}}</span>
       </div>
     </div>
 
@@ -37,33 +37,33 @@
     <div class="add_row2">
       <div>
         <span class="add_key">申请人姓名:</span>
-        <span class="add_value">张三</span>
+        <span class="add_value">{{applyMan[0].name}}</span>
       </div>
       <div>
         <span class="add_key">手机号:</span>
-        <span class="add_value">13595026341</span>
+        <span class="add_value">{{applyMan[0].phone}}</span>
       </div>
       <div>
         <span class="add_key">身份证号:</span>
-        <span class="add_value">522422199409111617</span>
+        <span class="add_value">{{applyMan[0].id}}</span>
       </div>
-      <div class="lookMore" @click="show1 = true">点击查看更多</div>
+      <div class="lookMore"   v-if="applyMan.length > 1"    @click="show1 = true">点击查看更多</div>
     </div>
 
     <div class="add_row2">
       <div>
         <span class="add_key">对方姓名:</span>
-        <span class="add_value">李四</span>
+        <span class="add_value">{{oppositeMan[0].name}}</span>
       </div>
       <div>
         <span class="add_key">手机号:</span>
-        <span class="add_value">13595026341</span>
+        <span class="add_value">{{oppositeMan[0].phone}}</span>
       </div>
       <div>
         <span class="add_key">身份证号:</span>
-        <span class="add_value">522422199409111617</span>
+        <span class="add_value">{{oppositeMan[0].id}}</span>
       </div>
-      <div class="lookMore"  @click="show2 = true">点击查看更多</div>
+      <div class="lookMore"  v-if="oppositeMan.length > 1"  @click="show2 = true">点击查看更多</div>
     </div>
 
     <!-- 分割线 -->
@@ -73,7 +73,7 @@
     <p style="font-size:15px;font-weight:bold;">调节内容概述:</p>
     <div
       style="text-indent:32px;line-height:28px;"
-    >按实际爱干净的换个时间噶给水管道很骄傲深V多久啊数据的噶金华市供电局哈市供电局哈撒给按实际爱干净的换个时间噶给水管道很骄傲深V多久啊数据的噶金华市供电局哈市供电局哈撒给按实际爱干净的换个时间噶给水管道很骄傲深V多久啊数据的噶金华市供电局哈市供电局哈撒给按实际爱干净的换个时间噶给水管道很骄傲深V多久啊数据的噶金华市供电局哈市供电局哈撒给按实际爱干净的换个时间噶给水管道很骄傲深V多久啊数据的噶金华市供电局哈市供电局哈撒给按实际爱干净的换个时间噶给水管道很骄傲深V多久啊数据的噶金华市供电局哈市供电局哈撒给按实际爱干净的换个时间噶给水管道很骄傲深V多久啊数据的噶金华市供电局哈市供电局哈撒给按实际爱干净的换个时间噶给水管道很骄傲深V多久啊数据的噶金华市供电局哈市供电局哈撒给</div>
+    >{{adjustContent}}</div>
 
     <!-- 分割线 -->
     <el-divider></el-divider>
@@ -102,7 +102,7 @@
     <!-- 查看更多申请人弹框 -->
     <el-dialog title="申请人名单" :visible.sync="show1" width="665px">
        <el-table
-        :data="tableData"
+        :data="applyMan"
         tooltip-effect="dark"
         style="width: 100%"
         :header-cell-style="{'background':'rgba(190,190,190,0)','color':'#666666'}"
@@ -117,7 +117,7 @@
      <!-- 查看更多对方信息弹框 -->
     <el-dialog title="对方名单" :visible.sync="show2" width="665px">
       <el-table
-        :data="tableData"
+        :data="oppositeMan"
         tooltip-effect="dark"
         style="width: 100%"
         :header-cell-style="{'background':'rgba(190,190,190,0)','color':'#666666'}"
@@ -131,16 +131,42 @@
 
 
     <!-- 待审批状态 -->
-    <waitAppr :upDown = 'isUp'  :status="status" v-if = "status == 0 || status == 1"></waitAppr>
+    <waitAppr :upDown = 'isUp'  
+              :status="status" 
+              :rejReason = 'rejReasonStatus1'
+              v-if = "status == 0 || status == 1"  
+              @res="getRes"></waitAppr>
     
     <!-- 调解中 -->
-    <adjusting :upDown = 'isUp'  :status="status"  v-if = "status==2"></adjusting>
+    <adjusting 
+         :upDown = 'isUp'  
+         :status = "status" 
+         :upBaseObj = "upBaseObj"
+         :lowBaseObj = "lowBaseObj"
+          v-if = "status==2" @res="getRes"></adjusting>
     
     <!-- 文件签署 -->
-    <signFile :upDown = 'isUp'  :status="status"  v-if = "status == 3"></signFile>
+    <signFile :upDown = 'isUp'  
+              :status="status"  
+              v-if = "status == 3"
+              :upBaseObj = "upBaseObj"
+              :lowBaseObj = "lowBaseObj" 
+              :signProgress = "signProgress" 
+              :previewUrl = "previewUrl"
+              :agreeUrl = "agreeUrl"
+              @res="getRes"></signFile>
 
     <!-- 调解结果 -->
-    <adjustRes :upDown = 'isUp'  :status="status"  v-if = "status == 4 || status == 5"  :obj="{a:1,b:2}" ></adjustRes>
+    <adjustRes :upDown = 'isUp'  
+               :status="status"  
+               :upBaseObj = "upBaseObj"
+               :lowBaseObj = "lowBaseObj"
+               :previewUrl = "previewUrl"
+               :agreeUrl = "agreeUrl" 
+               :rejReason = 'rejReasonStatus5'
+               :completeTime = 'completeTime'
+               v-if = "status == 4 || status == 5"  
+               :obj="{a:1,b:2}" ></adjustRes>
   </div>
 </template>
 
@@ -154,14 +180,39 @@ export default {
   components: {waitAppr,adjusting,signFile,adjustRes},
   data() {
     return {
-      status:'3',   //审批状态
-      isUp:false,    //线上线下
+      orderNum:"38338",  //预约号
+      isUp:false,    //false 线下调解   true 线上调解
+      status:'0',   //审批状态
+      issueType:'医患纠纷',  //纠纷类型
+      adjustTime:'2020-06-22 10:00:00',  //调解时间
+      applyAddr:'北京',    //申请地址
+      adjustContent:'殴打医生',  //调解内容
+      rejReasonStatus1:'线上审批拒绝',//审批拒绝原因
+      rejReasonStatus5:'线上调解拒绝',//调解拒绝原因
+      signProgress:[  //项目进度
+        { name: "调解员", isSign: true },
+        { name: "申请人", isSign: true },
+        { name: "对方", isSign: true }
+      ],
+      previewUrl:'../../../../static/img/bb.pdf',
+      agreeUrl:'',
+      completeTime:'2020-06-30 10:00:00',
+      //调解中
+      upBaseObj:{
+        name:'李飞幺',
+        roomId:'337',
+        time:'2020-06-22 14:00:00'
+      },
+      //调解中
+      lowBaseObj:{
+        name:'小明',
+        time:'2020-06-22 15:00:00',
+        addr:'李家屯'
+      },
       role:"",   //用户角色
-      step:1,   //1待审批  2调解中   3签署协议  4完成
-      show1: false, 
-      show2: false,
-      applyList:['','','','','','',''],
-      tableData: [
+      show1: false,   //隐藏显示更多申请人弹框
+      show2: false,   //隐藏显示对方信息弹框
+      applyMan: [   //申请人名单
         {
           id: "522422199409111617",
           name: "王小虎",
@@ -193,7 +244,39 @@ export default {
           phone: "13595026341"
         },
       ],
-      url: [
+      oppositeMan:[    //对方名单
+        {
+          id: "522422199409111617",
+          name: "王小虎",
+          phone: "13595026341"
+        },
+         {
+          id: "522422199409111617",
+          name: "王小虎",
+          phone: "13595026341"
+        },
+         {
+          id: "522422199409111617",
+          name: "王小虎",
+          phone: "13595026341"
+        },
+         {
+          id: "522422199409111617",
+          name: "王小虎",
+          phone: "13595026341"
+        },
+         {
+          id: "522422199409111617",
+          name: "王小虎",
+          phone: "13595026341"
+        },
+         {
+          id: "522422199409111617",
+          name: "王小虎",
+          phone: "13595026341"
+        },
+      ],
+      url: [   // 证明材料
         "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
         "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
         "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
@@ -201,7 +284,7 @@ export default {
         "",
         ""
       ],
-      srcList: [
+      srcList: [   //证明材料预览图片
         "https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg",
         "https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg"
       ]
@@ -212,7 +295,12 @@ export default {
     console.log("adjustDetail");
   },
   mounted() {},
-  methods: {}
+  methods: {
+    getRes(e){
+      this.status = e
+      this.$forceUpdate()
+    }
+  }
 };
 </script>
 

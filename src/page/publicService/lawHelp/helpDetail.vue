@@ -69,7 +69,7 @@
     <!-- 完成时间 -->
     <div class="step0_low_item"  style="margin-top:40px;" v-if="status != 0">
       <span class="add_key">{{status == 1?'通过':'拒绝'}}时间:</span>
-      <span class="add_value">2020-05-06</span>
+      <span class="add_value">{{completeTime}}</span>
     </div>
   </div>
 </template>
@@ -82,6 +82,7 @@ export default {
       isPass: "",
       status:"0",  //0待审核  1审核通过  2审核拒绝
       rejReason:'',//拒绝原因
+      completeTime:'2020-06-22 10:00:00',
       url: [
         "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
         "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",

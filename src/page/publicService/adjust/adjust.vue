@@ -1,11 +1,12 @@
 <template>
-<!-- 人民调解申请列表 -->
+  <!-- 人民调解申请列表 -->
   <div class="adjust">
+    <p class="lawTitle">人民调解</p>
     <!-- 操作栏 -->
     <div class="ad_row1">
       <span class="marginRight">状态</span>
       <div class="marginRight" style="width:15%;">
-        <el-select v-model="status" placeholder="请选择" size="small"  @change = "getApplyList"   >
+        <el-select v-model="status" placeholder="请选择" size="small" @change="selectChange">
           <el-option value="全部">全部</el-option>
           <el-option value="待审批">待审批</el-option>
           <el-option value="审批通过">审批通过</el-option>
@@ -17,9 +18,9 @@
       <div class="marginRight" style="width:15%;">
         <el-input v-model="condition" placeholder="输入预约号/申请人" size="small"></el-input>
       </div>
-      <el-button type="primary" size="small" icon="el-icon-search" @click="getApplyList" >搜索</el-button>
-      <el-popconfirm title="确定删除吗？"  @onConfirm = "delMore"  style="margin-left:20px;">
-        <el-button type="danger" size="small" slot="reference" >批量删除</el-button>
+      <el-button type="primary" size="small" icon="el-icon-search" @click="getApplyList">查询</el-button>
+      <el-popconfirm title="确定删除吗？" @onConfirm="delMore" style="margin-left:20px;">
+        <el-button type="danger" size="small" slot="reference">批量删除</el-button>
       </el-popconfirm>
     </div>
 
@@ -68,9 +69,9 @@ export default {
     return {
       status: "全部", //状态
       condition: null, //模糊查询字段
-      currentPage: 1,
-      size:10,
-      totals:50,
+      currentPage: 1, //当前页
+      size: 10, //每页展示条数
+      totals: 50, //总条数
       multipleSelection: [], //批量选择列表
       tableData: [
         {
@@ -120,21 +121,36 @@ export default {
   mounted() {},
   methods: {
     //查询人民调解申请列表
-    getApplyList(){
-
+    getApplyList() {
+      const that = this;
+      // that.$http({
+      //     method: "post",
+      //     url: that.url.sys.login,
+      //     params: {
+      //       loginName: that.status,
+      //       pwd: that.condition,
+      //       page:that.currentPage,
+      //       size:that.size
+      //     }
+      //   })
+      //   .then(function(response) {})
+      //   .catch(function(error) {
+      //     console.log(error);
+      //   });
     },
     //下拉框change事件
-    selectChange(){
-
+    selectChange(e) {
+        this.currentPage = 1
+        this.getApplyList()
     },
     //批量删除
     delMore() {
-        console.log('159')
+      console.log("159");
     },
-    //编辑
+    //查看详情
     lookDetail(val) {
       console.log(val);
-      this.$router.push({name:"adjustDetail",params:{id:val.id}})
+      this.$router.push({ name: "adjustDetail", params: { id: val.id } });
     },
     //点击表格多选框触发函数
     handleSelectionChange(val) {
@@ -142,7 +158,7 @@ export default {
     },
     //点击分页触发函数
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.getApplyList()
     }
   }
 };
@@ -155,6 +171,15 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.lawTitle {
+  font-size: 15px;
+  font-weight: bold;
+  padding: 20px 2.5% 0;
+  width: 100%;
+  height: 37px;
+  box-sizing: border-box;
 }
 
 .add_key {
@@ -190,9 +215,7 @@ export default {
   align-items: center;
 }
 
-
-
 /deep/ .el-checkbox__inner {
-    border: 1px solid rgba(190,190,190);
+  border: 1px solid rgba(190, 190, 190);
 }
 </style>
