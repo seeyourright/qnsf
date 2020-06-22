@@ -136,6 +136,7 @@ export default {
       position relative
       display flex
       align-items flex-end
+      overflow hidden
       &+.item
         margin-top 10px
       .label

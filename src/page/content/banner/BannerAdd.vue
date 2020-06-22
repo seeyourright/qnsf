@@ -21,7 +21,6 @@
           </el-switch>
         </el-form-item>
         <el-form-item label="展示顺序" prop="d">
-          <el-image src="http://img.yangrq.com/qnsfbgimg2"></el-image>
           <el-input-number placeholder="数字越大越靠前" :controls="false" v-model="form.d"></el-input-number>
         </el-form-item>
         <el-form-item label="" prop="e">

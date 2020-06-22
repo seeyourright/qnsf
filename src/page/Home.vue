@@ -79,7 +79,11 @@ export default {
     color red
   /*  */
   /deep/ .el-table .el-image
+    height 20px
     img
-      max-height 20px
       width auto
+  /deep/ .nocenter .el-image__inner--center
+    top 0
+    left 0
+    transform none
 </style>
