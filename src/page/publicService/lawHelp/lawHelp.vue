@@ -8,10 +8,8 @@
         <el-select v-model="status" placeholder="请选择" size="small"  @change = "getApplyList"   >
           <el-option value="全部">全部</el-option>
           <el-option value="待审批">待审批</el-option>
-          <el-option value="审批通过">审批通过</el-option>
-          <el-option value="审批拒绝">审批拒绝</el-option>
-          <el-option value="达成调解">达成调解</el-option>
-          <el-option value="未达成调解">未达成调解</el-option>
+          <el-option value="审批通过">未通过</el-option>
+          <el-option value="审批拒绝">已通过</el-option>
         </el-select>
       </div>
       <div class="marginRight" style="width:15%;">
@@ -134,7 +132,7 @@ export default {
     //编辑
     lookDetail(val) {
       console.log(val);
-      this.$router.push({name:"adjustDetail",params:{id:val.id}})
+      this.$router.push({name:"helpDetail",params:{id:val.id}})
     },
     //点击表格多选框触发函数
     handleSelectionChange(val) {
@@ -159,6 +157,13 @@ export default {
 
 .marginRight {
   margin-right: 20px;
+}
+
+.add_key {
+  font-size: 15px;
+  font-weight: bold;
+  margin-right: 10px;
+  white-space: nowrap;
 }
 
 .ad_row1 {

@@ -34,7 +34,7 @@
 
 
           <!--  线上、线下调解成功（文件签署）-->
-          <div class="sf_file"   v-if="isPass == true" >
+          <div class="sf_file"  style="margin-top:20px;"   v-if="status == 4" >
              <div>
                   <span class="add_key">双方签署调解协议:</span>
                   <img src="../../../../static/img/file.png" alt="">
@@ -47,8 +47,8 @@
           </div>
 
            <!-- 线上、线下调解失败（失败原因） -->
-            <p class="add_key" v-if="isPass == false">拒绝原因</p>
-            <el-input v-if="isPass == false"  :disabled="true" style="margin:10px 0 30px;"  v-model = 'lowReason' type="textarea" :rows="5"></el-input>
+            <p class="add_key" v-if="status == 5"   style="margin-top:20px;">拒绝原因</p>
+            <el-input v-if="status == 5"  :disabled="true" style="margin:10px 0 30px;"  v-model = 'lowReason' type="textarea" :rows="5"></el-input>
 
 
 
@@ -62,7 +62,7 @@
 
 <script>
 export default {
-    props: ['upDown','obj'],
+    props: ['upDown','status'],
     data() {
         return {
           isUp:true,  //true线上审批  false 线下审批

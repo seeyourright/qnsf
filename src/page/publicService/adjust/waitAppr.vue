@@ -4,17 +4,16 @@
          <!--------------------------------------- 线上调解 ------------------------------------------------->
          <div class="step0_up">
              <!-- 审批拒绝显示内容 -->
-            <div class="step0_up_no" v-if="upPass === false"  >
+            <div class="step0_up_no" v-if="upPass === false || (status == 1 && isUp === true)"  >
                <p class="add_key">拒绝原因</p>
-               <el-input  style="margin:10px 0 30px;"  v-model = 'upReason' type="textarea" :rows="5"></el-input>
-               <div class="step0_up_button"  >
+               <el-input  :disabled="status == 1" style="margin:10px 0 30px;"  v-model = 'upReason' type="textarea" :rows="5"></el-input>
+            </div>
+             <div class="step0_up_button"   v-if="upPass === false && status == 0">
                    <el-button type="danger" size="small">提交</el-button>
                    <el-button type="primary" size="small"  @click="upPass = ''">返回上一步</el-button>
-               </div>
-            </div>
-            
+             </div>
             <!-- 审批通过显示内容 -->
-            <div class="step0_up_yes" v-if="upPass === true">
+            <div class="step0_up_yes" v-if="upPass === true && status == 0">
                  <div class="step0_up_yes_item">
                      <span class="add_key">选择调解员:</span>
                       <el-select v-model="upPeople"  placeholder="请选择" size="small">
@@ -39,13 +38,13 @@
                         </el-date-picker>
                  </div>
             </div>
-           <div class="step0_up_button" v-if="upPass === true" >
+           <div class="step0_up_button" v-if="upPass === true && status == 0" >
                    <el-button type="danger" size="small">提交</el-button>
                    <el-button type="primary" size="small"  @click="upPass = ''">返回上一步</el-button>
             </div>
             
             <!-- 线上审批按钮 -->
-            <div class="step0_up_button"  v-if="upPass === '' && isUp === true" >
+            <div class="step0_up_button"  v-if="upPass === '' && isUp === true &&  status == 0" >
                    <el-button type="danger" size="small" @click="upPass = false" >拒绝</el-button>
                    <el-button type="primary" size="small" @click="upPass = true">通过</el-button>
             </div>
@@ -56,7 +55,7 @@
          <!--------------------------------------------- 线下调解 ----------------------------------------------->
          <div class="step0_low">
             <!-- 线下审批拒绝显示内容 -->
-            <div class="step0_up_no" v-if="lowPass === false"  >
+            <div class="step0_up_no" v-if="lowPass === false ||  (status == 1 && isUp === false)"  >
                 <div class="step0_low_item">
                       <span class="add_key">调解员:</span>
                       <span class="add_value">张三</span>
@@ -70,15 +69,16 @@
                       <span class="add_value"  style="white-space:nowrap;margin-right:10px;">无</span>
                 </div>
                <p class="add_key">拒绝原因</p>
-               <el-input  style="margin:10px 0 30px;"  v-model = 'lowReason' type="textarea" :rows="5"></el-input>
-               <div class="step0_up_button"  >
+               <el-input  :disabled="status == 1"  style="margin:10px 0 30px;"  v-model = 'lowReason' type="textarea" :rows="5"></el-input>
+               
+            </div>
+            <div class="step0_up_button" v-if="lowPass === false && status == 0" >
                    <el-button type="danger" size="small">提交</el-button>
                    <el-button type="primary" size="small"  @click="lowPass = ''">返回上一步</el-button>
                </div>
-            </div>
 
              <!-- 线下审批通过显示内容 -->
-            <div class="step0_up_no" v-if="lowPass === true"  >
+            <div class="step0_up_no" v-if="lowPass === true  && status == 0 "  >
                 <div class="step0_low_item">
                       <span class="add_key">调解员:</span>
                       <span class="add_value">张三</span>
@@ -94,7 +94,7 @@
                 </div>
                 <div class="step0_low_item">
                       <span class="add_key" style="width:72px;">调解地点:</span>
-                      <span class="add_value"  style="white-space:nowrap;margin-right:10px;">张三</span>
+                      <span class="add_value"  style="white-space:nowrap;margin-right:10px;">自动生成的地址</span>
                       <div  style="width:50%;">
                           <el-input v-model="lowAddr" placeholder="输入详细地点" size="small"></el-input>
                       </div>
@@ -107,7 +107,7 @@
 
 
             <!-- 线下审批按钮 -->
-            <div class="step0_up_button"  v-if="lowPass === '' && isUp === false" >
+            <div class="step0_up_button"  v-if="lowPass === '' && isUp === false && status == 0" >
                    <el-button type="danger" size="small" @click="lowPass = false" >拒绝</el-button>
                    <el-button type="primary" size="small" @click="lowPass = true">通过</el-button>
             </div>
@@ -117,7 +117,7 @@
 
 <script>
 export default {
-    props: ['upDown'],
+    props: ['upDown','status'],
     data() {
         return {
            isUp:true,  //true线上审批  false 线下审批

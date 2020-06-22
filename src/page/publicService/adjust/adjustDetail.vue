@@ -131,16 +131,16 @@
 
 
     <!-- 待审批状态 -->
-    <waitAppr :upDown = 'isUp' v-if = "step == 1"></waitAppr>
+    <waitAppr :upDown = 'isUp'  :status="status" v-if = "status == 0 || status == 1"></waitAppr>
     
     <!-- 调解中 -->
-    <adjusting :upDown = 'isUp' v-if = "step == 2"></adjusting>
+    <adjusting :upDown = 'isUp'  :status="status"  v-if = "status==2"></adjusting>
     
     <!-- 文件签署 -->
-    <signFile :upDown = 'isUp' v-if = "step == 3"></signFile>
+    <signFile :upDown = 'isUp'  :status="status"  v-if = "status == 3"></signFile>
 
     <!-- 调解结果 -->
-    <adjustRes :upDown = 'isUp' v-if = "step == 4"  :obj="{a:1,b:2}" ></adjustRes>
+    <adjustRes :upDown = 'isUp'  :status="status"  v-if = "status == 4 || status == 5"  :obj="{a:1,b:2}" ></adjustRes>
   </div>
 </template>
 
@@ -154,11 +154,11 @@ export default {
   components: {waitAppr,adjusting,signFile,adjustRes},
   data() {
     return {
-      status:'调解中',   //审批状态
-      isUp:true,    //线上线下
+      status:'3',   //审批状态
+      isUp:false,    //线上线下
       role:"",   //用户角色
-      step:4,   //1待审批  2调解中   3签署协议  4完成
-      show1: false,
+      step:1,   //1待审批  2调解中   3签署协议  4完成
+      show1: false, 
       show2: false,
       applyList:['','','','','','',''],
       tableData: [

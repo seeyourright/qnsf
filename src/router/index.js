@@ -109,6 +109,11 @@ const router = new Router({
           component: () => import('../page/publicService/lawHelp/lawHelp')
         },
         {
+          path: 'helpDetail',
+          name: 'helpDetail',
+          component: () => import('../page/publicService/lawHelp/helpDetail')
+        },
+        {
           path: 'lawConsult',
           name: 'lawConsult',
           component: () => import('../page/publicService/lawConsult/lawConsult')

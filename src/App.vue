@@ -111,4 +111,9 @@ input:-webkit-autofill { box-shadow: 0 0 0px 1000px white inset !important;}
 /deep/ .el-table th.is-leaf {
   border-bottom: 1px solid rgba(190, 190, 190, 0.5);
 }
+
+.el-table thead {
+    color: #909399;
+    font-weight: bold;
+}
 </style>

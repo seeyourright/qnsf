@@ -27,7 +27,7 @@
                </div>
             </div>
             
-              <div class="step0_up_button" v-if="upPass === ''">
+              <div class="step0_up_button" v-if="upPass === '' && isTime == true">
                    <el-button type="danger" size="small"  @click="upPass = false">未达成调解</el-button>
                    <el-button type="primary" size="small">达成调解推送调解员</el-button>
              </div>
@@ -74,6 +74,7 @@ export default {
            isUp:true,
 
            //线上审批
+           isTime:false,
            upPass:'',//线上审批通过   线上审批拒绝
            upReason:'',//线上审批拒绝原因  
            upPeople:'',//线上审批通过  分配调解员

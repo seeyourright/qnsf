@@ -157,6 +157,13 @@ export default {
   align-items: center;
 }
 
+.add_key {
+  font-size: 15px;
+  font-weight: bold;
+  margin-right: 10px;
+  white-space: nowrap;
+}
+
 .marginRight {
   margin-right: 20px;
 }
