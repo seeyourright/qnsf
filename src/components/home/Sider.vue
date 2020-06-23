@@ -3,9 +3,9 @@
     :collapse="collapse"
     router
     :style="{height: '100%', overflow: 'auto', width: menuWidth}"
-    background-color="#fff"
-    active-text-color="#006DF0"
-    text-color="rgba(0,0,0,.4)"
+    background-color="#555"
+    active-text-color="#60a8f3"
+    text-color="#fff"
     :default-active="onRoutes"
   >
     <el-menu-item index="/home/welcome">
@@ -87,4 +87,6 @@ export default {
 </script>
 
 <style lang='stylus' scoped>
+   i
+    color #eee
 </style>

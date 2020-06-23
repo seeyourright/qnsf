@@ -33,7 +33,7 @@ export default {
 <style lang='stylus' scoped>
   .h
     height 100%
-    background-color: #006DF0
+    background-color: #4685f9
     display flex
     align-items center
     .title

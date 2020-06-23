@@ -144,6 +144,11 @@ const router = new Router({
           name: 'lawConsult',
           component: () => import('../page/publicService/lawConsult/lawConsult')
         },
+        {
+          path: '*',
+          name: 'in404',
+          component: () => import('../page/404')
+        }
       ]
     },
     {
