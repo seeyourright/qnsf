@@ -97,7 +97,7 @@
                           <el-input v-model="lowAddr" placeholder="输入详细地点" size="small"></el-input>
                       </div>
                 </div>
-                <div class="step0_up_button"  >
+                <div class="step0_up_button">
                          <el-button type="danger" size="small" @click="applyRes('2')">提交</el-button>
                          <el-button type="primary" size="small"  @click="lowPass = ''">返回上一步</el-button>
                      </div>
@@ -150,6 +150,26 @@ export default {
        },
        applyRes(res){
           const that = this
+          if(that.isUp == true && res == '2' && (that.upPeople == '' || that.upRoom == '' || that.upTime == '')){
+              that.$message.error('填写不能为空');
+              return false
+          }
+
+          if(that.isUp == true && res == '1' && that.upReason == '' ){
+              that.$message.error('请填写拒绝原因');
+              return false
+          }
+
+          if(that.isUp == false && res == '2' && (that.lowTime == '' || that.lowAddr == '')){
+              that.$message.error('填写不能为空');
+              return false
+          }
+
+          if(that.isUp == false && res == '1' && that.lowReason == ''){
+              that.$message.error('请填写拒绝原因');
+              return false
+          }
+
           that.$emit('res',res)   
 
        },
