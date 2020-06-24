@@ -75,13 +75,33 @@
       title="新增"
       width="700px"
     >
-      <el-form ref="form" class="form" label-width="100px" :rules="rules" :model="form">
+      <el-form ref="form" class="form" label-width="150px" :rules="rules" :model="form">
         <el-form-item label="县/市" prop="a">
           <el-select v-model="form.a">
             <el-option v-for="area in areas" :label="area" :value="area" :key="area"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="视讯房间号" prop="b">
+        <el-form-item label="法律咨询房间号" prop="b">
+          <el-select v-model="form.b">
+            <el-option v-for="area in areas" :label="area" :value="area" :key="area"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="法律援助房间号" prop="b">
+          <el-select v-model="form.b">
+            <el-option v-for="area in areas" :label="area" :value="area" :key="area"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="人民调解房间号" prop="b">
+          <el-select v-model="form.b">
+            <el-option v-for="area in areas" :label="area" :value="area" :key="area"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="行政复议房间号" prop="b">
+          <el-select v-model="form.b">
+            <el-option v-for="area in areas" :label="area" :value="area" :key="area"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="行政执法房间号" prop="b">
           <el-select v-model="form.b">
             <el-option v-for="area in areas" :label="area" :value="area" :key="area"></el-option>
           </el-select>

@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import qs from 'qs'
 import VerificationCode from '../components/VerificationCode'
 export default {
   name: 'Login',
@@ -68,16 +69,19 @@ export default {
         password: this.password,
         grant_type: 'password',
         scope: 'all',
-        client_id: 'pc',
-        client_secret: 'pc'
+        client_id: 'miniapp',
+        client_secret: 'miniapp'
       }
-      // this.$http.post(this.$url.login, params).then(res => {
-      // })
-      const userInfo = {username: this.username}
-      localStorage.setItem('userInfo', JSON.stringify(userInfo))
-      localStorage.setItem('token', '1')
-      this.$store.state.userInfo = userInfo
-      this.$router.push('home')
+      this.$http.axios.post(this.$url.login, qs.stringify(params)).then(res => {
+        if (res) {
+          localStorage.setItem('userInfo', JSON.stringify(res.data))
+          localStorage.setItem('token', res.data.token_type + res.data.access_token)
+          this.$store.state.userInfo = res.data
+          this.$router.push('home')
+        } else {
+          this.$message.error('用户名或密码错误')
+        }
+      })
     }
   }
 }

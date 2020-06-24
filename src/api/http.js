@@ -1,8 +1,9 @@
 import axios from 'axios'
 import qs from 'qs'
 // import router from '../router'
-// import {Message} from 'element-ui'
+import {Message} from 'element-ui'
 
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 axios.interceptors.request.use(config => {
   const token = localStorage.getItem('token')
   token && (config.headers.Authorization = token)
@@ -34,9 +35,11 @@ const post = (url, params, config) => {
 }
 
 axios.interceptors.response.use(res => {
+  if (res.data.code && res.data.code !== 200) {
+    Message.error(res.data.msg)
+  }
   return res
-}, () => {
-
+}, (err) => {
 })
 
 export default {
