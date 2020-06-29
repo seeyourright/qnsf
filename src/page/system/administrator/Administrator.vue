@@ -4,7 +4,7 @@
       <div>系统管理—管理员列表</div>
       <el-form size="small" inline>
         <el-form-item>
-          <el-input placeholder="输入名称"></el-input>
+          <el-input placeholder="输入名称" v-model="condition.nickname"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button @click="getData(1)">查询</el-button>
@@ -32,35 +32,46 @@
       </el-table-column>
       <el-table-column
         align="center"
-        prop="a"
+        prop="id"
         label="ID"
       ></el-table-column>
       <el-table-column
         align="center"
         :show-overflow-tooltip="true"
-        prop="a"
+        prop="nickname"
         label="名称"
       ></el-table-column>
       <el-table-column
         align="center"
-        prop="a"
+        prop="username"
         label="账号"
       ></el-table-column>
       <el-table-column
         align="center"
-        prop="a"
+        prop="userType"
         label="角色"
-      ></el-table-column>
+      >
+        <template slot-scope="scope">
+          管理员
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
-        prop="a"
+        prop="status"
         label="状态"
-      ></el-table-column>
+      >
+        <template slot-scope="scope">
+          <span v-if="scope.row.status === 1">启用</span>
+          <span v-if="scope.row.status === 0">停用</span>
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
-        prop="a"
+        prop="createTime"
         label="创建时间"
-      ></el-table-column>
+      >
+        <template slot-scope="scope">{{$util.dateFormat(scope.row.createTime)}}</template>
+      </el-table-column>
       <el-table-column
         align="center"
         prop="a"
@@ -69,6 +80,7 @@
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="detailHandler(scope.row)">详情</el-button>
           <el-button type="text" size="small" class="text-danger" @click="deleteHandler(scope.row)">删除</el-button>
+          <el-button type="text" size="small" @click="openDialog(scope.row)">分配角色</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -80,6 +92,21 @@
       layout="prev, pager, next, jumper"
       :total="total"
     ></el-pagination>
+    <el-dialog
+      :show-close="false"
+      :visible="dialogVisible"
+      width="400px"
+    >
+      <div style="text-align: center;letter-spacing: 50px;margin-top: 30px">
+        <el-select v-model="roleid">
+          <el-option v-for="role in roles" :label="role.rname" :value="role.rid" :key="role.rid"></el-option>
+        </el-select>
+        <div style="margin-top: 60px">
+          <el-button @click="dialogVisible=false">取消</el-button>
+          <el-button type="primary" @click="roleChange">保存</el-button>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -90,40 +117,93 @@ export default {
     return {
       page: 1,
       size: 10,
-      total: 100,
-      tableData: [
-        {a: 1, id: 1},
-        {a: 1, id: 1},
-        {a: 1, id: 1},
-        {a: 1, id: 1},
-        {a: 1, id: 1}
-      ]
+      total: 0,
+      dialogVisible: false,
+      condition: {
+        userType: '2'
+      },
+      tableData: [],
+      uid: '',
+      roleid: '',
+      roles: []
     }
   },
-  created () {
+  mounted () {
+    this.getData(1)
+    this.roleInit()
   },
   methods: {
     getData (page) {
+      this.$util.tableLoading()
+      this.$http.get(this.$url.User_List, {page, limit: this.size, ...this.condition}).then(res => {
+        if (res.code === 200) {
+          this.tableData = res.data
+          this.page = page
+          this.total = res.totals
+        }
+      }).finally(res => {
+        this.$util.tableLoaded()
+      })
+    },
+    roleInit () {
+      this.$http.get(this.$url.Role_List).then(res => {
+        if (res.code === 200) {
+          this.roles = res.data
+        }
+      })
     },
     detailHandler (row) {
       this.$router.push('administratorEdit?id=' + row.id)
     },
     deleteHandler (row) {
       this.$confirm('确定删除吗').then(() => {
-        this.$message.success('删掉啦，开玩笑的ο(=•ω＜=)ρ⌒☆')
+        this.$http.post(this.$url.Delete_User, {uid: row.id}).then(res => {
+          if (res.code === 200) {
+            this.$message.success('删除成功')
+            this.getData(this.page)
+          }
+        })
       }, () => {})
     },
     deleteAllHandler () {
-      if (this.$refs.table.selection.length === 0) {
+      const selection = this.$refs.table.selection
+      if (selection.length === 0) {
         this.$message.warning('至少选择一条数据')
         return false
       }
+      const ids = []
+      for (let i = 0; i < selection.length; i++) {
+        ids.push(selection[i].id)
+      }
       this.$confirm('确定删除吗').then(() => {
-        this.$message.success('删掉啦，开玩笑的ο(=•ω＜=)ρ⌒☆')
+        this.$http.post(this.$url.Delete_User_Batch, {ids}).then(res => {
+          if (res.code === 200) {
+            this.$message.success('删除成功')
+            this.getData(this.page)
+          }
+        })
       }, () => {})
     },
     addHandler () {
       this.$router.push('administratorAdd')
+    },
+    openDialog (row) {
+      this.uid = row.id
+      this.roleid = ''
+      this.$http.get(this.$url.Role_By_User, {uid: row.id}).then(res => {
+        if (res.code === 200 && res.data.length > 0) {
+          this.roleid = res.data[0].rid
+        }
+      })
+      this.dialogVisible = true
+    },
+    roleChange () {
+      this.$http.post(this.$url.Give_User_Role, {uid: this.uid, roleid: this.roleid}).then(res => {
+        if (res.code === 200) {
+          this.$message.success('修改成功')
+          this.dialogVisible = false
+        }
+      })
     }
   }
 }

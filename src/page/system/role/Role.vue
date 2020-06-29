@@ -6,9 +6,9 @@
         <el-form-item>
           <el-button type="primary" @click="addHandler">新增</el-button>
         </el-form-item>
-        <el-form-item>
-          <el-button type="danger" @click="deleteAllHandler">批量删除</el-button>
-        </el-form-item>
+<!--        <el-form-item>-->
+<!--          <el-button type="danger" @click="deleteAllHandler">批量删除</el-button>-->
+<!--        </el-form-item>-->
       </el-form>
     </div>
     <el-table
@@ -26,23 +26,25 @@
       </el-table-column>
       <el-table-column
         align="center"
-        prop="a"
+        prop="rid"
         label="ID"
       ></el-table-column>
       <el-table-column
         align="center"
         :show-overflow-tooltip="true"
-        prop="a"
+        prop="rname"
         label="角色名称"
       ></el-table-column>
       <el-table-column
         align="center"
-        prop="a"
+        prop="createDate"
         label="创建时间"
-      ></el-table-column>
+      >
+        <template slot-scope="scope">{{$util.dateFormat(scope.row.createDate)}}</template>
+      </el-table-column>
       <el-table-column
         align="center"
-        prop="a"
+        prop="remarks"
         label="备注"
       ></el-table-column>
       <el-table-column
@@ -75,26 +77,37 @@ export default {
       page: 1,
       size: 10,
       total: 100,
-      tableData: [
-        {a: 1, id: 1},
-        {a: 1, id: 1},
-        {a: 1, id: 1},
-        {a: 1, id: 1},
-        {a: 1, id: 1}
-      ]
+      condition: {},
+      tableData: []
     }
   },
   created () {
+    this.getData(1)
   },
   methods: {
     getData (page) {
+      this.$util.tableLoading()
+      this.$http.get(this.$url.Role_List, {page, limit: this.size, ...this.condition}).then(res => {
+        if (res.code === 200) {
+          this.tableData = res.data
+          this.page = page
+          this.total = res.totals
+        }
+      }).finally(res => {
+        this.$util.tableLoaded()
+      })
     },
     detailHandler (row) {
-      this.$router.push('roleAdd?id=' + row.id)
+      this.$router.push('roleAdd?id=' + row.rid)
     },
     deleteHandler (row) {
       this.$confirm('确定删除吗').then(() => {
-        this.$message.success('删掉啦，开玩笑的ο(=•ω＜=)ρ⌒☆')
+        this.$http.post(this.$url.Delete_Role, {rid: row.rid}).then(res => {
+          if (res.code === 200) {
+            this.$message.success('删除成功')
+            this.getData(this.page)
+          }
+        })
       }, () => {})
     },
     deleteAllHandler () {

@@ -52,14 +52,19 @@
         label="注册时间"
       >
         <template slot-scope="scope">
-          {{this.$util.dateFormat(scope.row.createTime)}}
+          {{$util.dateFormat(scope.row.createTime)}}
         </template>
       </el-table-column>
       <el-table-column
         align="center"
         prop="a"
         label="用户角色"
-      ></el-table-column>
+      >
+        <template slot-scope="scope">
+          <span v-if="scope.row.userType === '0'">普通用户</span>
+          <span v-if="scope.row.userType === '1'">调解员</span>
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
         prop="a"
@@ -104,9 +109,9 @@
             <el-radio label="1">调解员</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item v-if="form.userType==='1'" label="所属地区" prop="unitId">
+        <el-form-item v-if="form.userType==='1'" label="所属单位" prop="unitId">
           <el-select v-model="form.unitId">
-            <el-option v-for="area in areas" :label="area" :value="area" :key="area"></el-option>
+            <el-option v-for="area in areas" :label="area.institutionalName" :value="area.id" :key="area.id"></el-option>
           </el-select>
         </el-form-item>
         <div style="text-align: right">
@@ -157,16 +162,17 @@ export default {
           {required: true, message: '县/市不能为空', trigger: 'blur'}
         ]
       },
-      areas: ['都匀市', '福泉市', '三都县']
+      areas: []
     }
   },
   mounted () {
+    this.areaInit()
     this.getData(1)
   },
   methods: {
     getData (page) {
       this.$util.tableLoading()
-      this.$http.get(this.$url.User_List, {page, limit: this.size, ...this.condition}).then(res => {
+      this.$http.get(this.$url.User_List_No_Admin, {page, limit: this.size, ...this.condition}).then(res => {
         if (res.code === 200) {
           this.tableData = res.data
           this.page = page
@@ -174,6 +180,22 @@ export default {
         }
       }).finally(res => {
         this.$util.tableLoaded()
+      })
+    },
+    areaInit () {
+      this.$http.get(this.$url.Area_All).then(res => {
+        if (res.code === 200) {
+          const area = []
+          for (let i = 0; i < res.data.length; i++) {
+            if (res.data[i].pid === 0) {
+              area.push(res.data[i])
+            }
+            if (area.length > 0 && area[0].id === res.data[i].pid.toString()) {
+              area.push(res.data[i])
+            }
+          }
+          this.areas = area
+        }
       })
     },
     validateIdNumber (rule, value, callback) {
@@ -188,16 +210,31 @@ export default {
     },
     deleteHandler (row) {
       this.$confirm('确定删除吗').then(() => {
-        this.$message.success('删掉啦，开玩笑的ο(=•ω＜=)ρ⌒☆')
+        this.$http.post(this.$url.Delete_User, {uid: row.id}).then(res => {
+          if (res.code === 200) {
+            this.$message.success('删除成功')
+            this.getData(this.page)
+          }
+        })
       }, () => {})
     },
     deleteAllHandler () {
-      if (this.$refs.table.selection.length === 0) {
+      const selection = this.$refs.table.selection
+      if (selection.length === 0) {
         this.$message.warning('至少选择一条数据')
         return false
       }
+      const ids = []
+      for (let i = 0; i < selection.length; i++) {
+        ids.push(selection[i].id)
+      }
       this.$confirm('确定删除吗').then(() => {
-        this.$message.success('删掉啦，开玩笑的ο(=•ω＜=)ρ⌒☆')
+        this.$http.post(this.$url.Delete_User_Batch, {ids}).then(res => {
+          if (res.code === 200) {
+            this.$message.success('删除成功')
+            this.getData(this.page)
+          }
+        })
       }, () => {})
     },
     addHandler () {
@@ -211,10 +248,14 @@ export default {
       })
     },
     add () {
+      if (this.form.userType === '0') {
+        delete this.form.unitId
+      }
       this.form.username = this.form.phone
       this.$http.post(this.$url.Add_User, this.form).then(res => {
         if (res.code === 200) {
           this.$message.success('新增成功')
+          this.getData(1)
           this.dialogVisible = false
         }
       })

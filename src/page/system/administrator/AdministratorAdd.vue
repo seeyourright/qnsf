@@ -19,55 +19,23 @@
       </div>
       <div class="row">
         <el-form-item label="密码" prop="password">
-          <el-input v-model="form.password"></el-input>
+          <el-input v-model="form.password" :placeholder="id?'不填写则不会修改密码':''"></el-input>
         </el-form-item>
-        <el-form-item label="角色" prop="roleid" >
-          <el-select v-model="form.roleid">
-            <el-option v-for="role in roles" :label="role" :value="role" :key="role"></el-option>
-          </el-select>
+        <el-form-item label="状态">
+          <el-switch
+            v-model="form.status"
+            :active-value="1"
+            :inactive-value="0"
+            active-text="启用"
+            inactive-text="禁用"
+          >
+          </el-switch>
         </el-form-item>
       </div>
       <el-row>
-<!--        <el-col class="roomid" :span="12">-->
-<!--          <el-form-item label="法律咨询房间号">-->
-<!--            <el-select v-model="form.g">-->
-<!--              <el-option v-for="role in roles" :label="role" :value="role" :key="role"></el-option>-->
-<!--            </el-select>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="法律援助房间号">-->
-<!--            <el-select v-model="form.h">-->
-<!--              <el-option v-for="role in roles" :label="role" :value="role" :key="role"></el-option>-->
-<!--            </el-select>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="人民调解房间号">-->
-<!--            <el-select v-model="form.i">-->
-<!--              <el-option v-for="role in roles" :label="role" :value="role" :key="role"></el-option>-->
-<!--            </el-select>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="行政复议房间号">-->
-<!--            <el-select v-model="form.j">-->
-<!--              <el-option v-for="role in roles" :label="role" :value="role" :key="role"></el-option>-->
-<!--            </el-select>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="行政执法房间号">-->
-<!--            <el-select v-model="form.k">-->
-<!--              <el-option v-for="role in roles" :label="role" :value="role" :key="role"></el-option>-->
-<!--            </el-select>-->
-<!--          </el-form-item>-->
-<!--        </el-col>-->
         <el-col :span="12">
-          <el-form-item label="状态">
-            <el-switch
-              v-model="form.status"
-              active-value="1"
-              inactive-value="0"
-              active-text="启用"
-              inactive-text="禁用"
-            >
-            </el-switch>
-          </el-form-item>
           <el-form-item v-if="form.createTime" label="创建时间">
-            <div>{{form.createTime}}</div>
+            <div>{{$util.dateFormat(form.createTime)}}</div>
           </el-form-item>
         </el-col>
       </el-row>
@@ -91,9 +59,8 @@ export default {
         username: '',
         email: '',
         password: '',
-        roleid: '',
         status: '1',
-        userType: '1'
+        userType: '2'
       },
       rules: {
         nickname: [
@@ -113,22 +80,26 @@ export default {
         password: [
           {required: true, message: '密码不能为空', trigger: 'blur'}
         ],
-        roleid: [
-          {required: true, message: '请选择角色', trigger: 'blur'}
-        ]
       },
-      roles: ['昌吉管理员']
+      roles: []
     }
   },
   created () {
     this.id = this.$route.query.id
     if (this.id) {
       this.init()
+      delete this.rules.password
     }
+    this.roleInit()
   },
   methods: {
     init () {
-      this.form.m = '2020-11-11 02:23:23'
+      this.$http.get(this.$url.User_One, {id: this.id}).then(res => {
+        if (res.code === 200) {
+          delete res.data.password
+          this.form = res.data
+        }
+      })
     },
     submit () {
       this.$refs.form.validate(valid => {
@@ -150,7 +121,23 @@ export default {
       })
     },
     edit () {
-      console.log('edit')
+      const params = {
+        id: this.id,
+        nickname: this.form.nickname,
+        phone: this.form.phone,
+        username: this.form.username,
+        email: this.form.email,
+        status: this.form.status
+      }
+      if (this.form.password) {
+        params.password = this.form.password
+      }
+      this.$http.post(this.$url.Update_User, params).then(res => {
+        if (res.code === 200) {
+          this.$message.success('修改成功')
+          this.$router.back()
+        }
+      })
     }
   }
 }

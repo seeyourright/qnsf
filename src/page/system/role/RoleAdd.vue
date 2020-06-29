@@ -1,14 +1,15 @@
 <template>
     <div class="mm">
       <el-form ref="form" class="form" label-width="150px" :rules="rules" :model="form">
-        <el-form-item label="角色名称" prop="a">
-          <el-input v-model="form.a"></el-input>
+        <el-form-item label="角色名称" prop="rname">
+          <el-input v-model="form.rname"></el-input>
         </el-form-item>
         <el-form-item label="备注">
-          <el-input v-model="form.b"></el-input>
+          <el-input v-model="form.remarks"></el-input>
         </el-form-item>
         <el-form-item label="权限">
           <el-tree
+            ref="tree"
             style="margin-top: 7px"
             :data="permissions"
             show-checkbox
@@ -30,13 +31,13 @@ export default {
     return {
       id: null,
       form: {
-        a: '',
-        b: '',
-        c: ''
+        rname: '',
+        remarks: '',
+        permissionids: ['1']
       },
       rules: {
-        a: [
-          {required: true, message: '不能为空', trigger: 'blur'}
+        rname: [
+          {required: true, message: '角色名不能为空', trigger: 'blur'}
         ]
       },
       permissions: [
@@ -76,10 +77,22 @@ export default {
     if (this.id) {
       this.init()
     }
+    this.permissionInit()
   },
   methods: {
     init () {
-      this.form.m = '2020-11-11 02:23:23'
+      this.$http.get(this.$url.Role_List, {rid: this.id}).then(res => {
+        if (res.code === 200 && res.data.length > 0) {
+          this.form = res.data[0]
+        }
+      })
+    },
+    permissionInit () {
+      this.$http.get(this.$url.Permission_List).then(res => {
+        if (res.code === 200) {
+          this.permissions = this.data
+        }
+      })
     },
     submit () {
       this.$refs.form.validate(valid => {
@@ -93,10 +106,31 @@ export default {
       })
     },
     add () {
-      console.log('add')
+      const params = {
+        rname: this.form.rname,
+        remarks: this.form.remarks,
+        permissionids: this.form.permissionids
+      }
+      this.$http.post(this.$url.Add_Role, params).then(res => {
+        if (res.code === 200) {
+          this.$message.success('新增成功')
+          this.$router.back()
+        }
+      })
     },
     edit () {
-      console.log('edit')
+      const params = {
+        rid: this.form.rid,
+        rname: this.form.rname,
+        remarks: this.form.remarks,
+        permissionids: this.form.permissionids
+      }
+      this.$http.post(this.$url.Update_Role, params).then(res => {
+        if (res.code === 200) {
+          this.$message.success('编辑成功')
+          this.$router.back()
+        }
+      })
     }
   }
 }
