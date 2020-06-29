@@ -6,7 +6,9 @@
 
     <!-- 分割线 -->
     <el-divider></el-divider>
-
+    
+    <!-- <el-button type="primary" size="small"  style="position:absolute;right:50px;top:80px;" @click="expWord" >导出申请表</el-button> -->
+    <a :href="wordUrl" class="expWord">导出申请表</a>
     <!-- 申请基础信息 -->
     <div class="step0_low_item" v-for="(item,index) in applyInfo.baseInfo" :key="index">
       <span class="add_key">{{item.name}}:</span>
@@ -32,9 +34,10 @@
     </div>
 
     <!-- 相关证明材料 -->
-    <div class="add_row2">
+    <div class="add_row2" style="position:relative;">
       <span class="add_key">相关证明材料:</span>
-      <el-button type="primary" size="small" icon="el-icon-download">下载材料</el-button>
+      <a :href="zipUrl" class="expWord"  style="top:15px;right:10px;">下载材料</a>
+      <!-- <el-button type="primary" size="small" icon="el-icon-download">下载材料</el-button> -->
     </div>
 
     <div class="add_row3">
@@ -53,21 +56,28 @@
     </div>
 
     <!-- 审批 -->
-    
-      <p class="add_key" style="margin-top:40px;" v-if="isPass === false || status == 2">拒绝原因</p>
-      <el-input v-if="isPass === false || status == 2"  :disabled="status == 2" style="margin:10px 0 30px;" v-model="rejReason" type="textarea" :rows="5"></el-input>
-      <div class="step0_up_button" v-if="isPass === false">
-        <el-button type="danger" size="small" @click="noPass">提交</el-button>
-        <el-button type="primary" size="small" @click="isPass = ''">返回上一步</el-button>
-      </div>
 
-    <div class="step0_up_button" v-if="isPass === ''">
+    <p class="add_key" style="margin-top:40px;" v-if="isPass === false || status == 2">拒绝原因</p>
+    <el-input
+      v-if="isPass === false || status == 2"
+      :disabled="status == 2"
+      style="margin:10px 0 30px;"
+      v-model="rejReason"
+      type="textarea"
+      :rows="5"
+    ></el-input>
+    <div class="step0_up_button" v-if="isPass === false">
+      <el-button type="danger" size="small" @click="noPass">提交</el-button>
+      <el-button type="primary" size="small" @click="isPass = ''">返回上一步</el-button>
+    </div>
+
+    <div class="step0_up_button" v-if="isPass === '' && status == 0">
       <el-button type="danger" size="small" @click="isPass = false">拒绝</el-button>
       <el-button type="primary" size="small" @click="pass">通过</el-button>
     </div>
 
     <!-- 完成时间 -->
-    <div class="step0_low_item"  style="margin-top:40px;" v-if="status != 0">
+    <div class="step0_low_item" style="margin-top:40px;" v-if="status != 0">
       <span class="add_key">{{status == 1?'通过':'拒绝'}}时间:</span>
       <span class="add_value">{{completeTime}}</span>
     </div>
@@ -79,63 +89,187 @@ export default {
   props: {},
   data() {
     return {
+      id:'',
       isPass: "",
-      status:"0",  //0待审核  1审核通过  2审核拒绝
-      rejReason:'',//拒绝原因
-      completeTime:'2020-06-22 10:00:00',
+      status: "0", //0待审核  1审核通过  2审核拒绝
+      rejReason: "", //拒绝原因
+      completeTime: "2020-06-22 10:00:00",
+      wordUrl:'',
+      zipUrl:'',
       url: [
-        "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+        "http://192.168.0.145:8080/api/lawAid/static/20200620140122882.jpg",
         "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
         "",
         "",
         ""
       ],
       srcList: [
-        "https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg",
+        "http://192.168.0.145:8080/api/lawAid/static/20200620140122882.jpg",
         "https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg"
       ],
       applyInfo: {
         baseInfo: [
-          { name: "预约号", value: "0025897" },
-          { name: "申请时间", value: "13595026341" },
-          { name: "申请地点", value: "男" },
-          { name: "状态", value: "待审批" }
+          { name: "预约号", value: "" },
+          { name: "申请时间", value: "" },
+          { name: "申请地点", value: "" },
+          { name: "状态", value: "" }
         ],
         people1: [
-          { name: "姓名", value: "李辉" },
-          { name: "联系电话", value: "13595026341" },
-          { name: "性别", value: "男" },
-          { name: "民族", value: "汉族" },
-          { name: "身份证号码", value: "522422199409111617" },
-          { name: "出生日期", value: "1944-09-11" },
-          { name: "工作单位", value: "代码科技有限公司" },
-          { name: "邮编", value: "550001" },
-          { name: "现居住地址", value: "贵州省贵阳市难民区" }
+          { name: "姓名", value: "" },
+          { name: "联系电话", value: "" },
+          { name: "性别", value: "" },
+          { name: "民族", value: "" },
+          { name: "身份证号码", value: "" },
+          { name: "出生日期", value: "" },
+          { name: "工作单位", value: "" },
+          { name: "邮编", value: "" },
+          { name: "现居住地址", value: "" }
         ],
         proxy: [
-          { name: "代理人", value: "法定代理人" },
-          { name: "姓名", value: "刘洋" },
-          { name: "身份证号", value: "522422199409111617" },
+          { name: "代理人", value: "" },
+          { name: "姓名", value: "" },
+          { name: "身份证号", value: "" },
           {
             name: "案件及申请理由概述",
             value:
-              "都是对的是多少级可视电话可接受的汇顶科技很多事客户端会计师对话框季度书法家看电视剧的"
+              ""
           }
         ]
       }
     };
   },
-  created() {},
+  created() {
+    // console.log()
+    this.id = sessionStorage.getItem('lawHelpId')    //this.$route.params.id
+    this.wordUrl = `${this.$url.lawHelp.expWord}?id=${this.id}` 
+    this.zipUrl = `${this.$url.lawHelp.downFile}?id=${this.id}` 
+    this.searchDetail();
+  },
   mounted() {},
   methods: {
-      pass(){
-          this.isPass = true
-          this.status = 1
-      },
-      noPass(){
-          this.isPass = true
-          this.status = 2
+    searchDetail() {
+      const that = this;
+
+      that.$http
+        .axios({
+          method: "post",
+          url: that.$url.lawHelp.getDetail,
+          params: {
+            id: that.id
+          }
+        })
+        .then(function(res) {
+          console.log("法律援助详情", res);
+
+          if (res.data.code == 200) {
+            let obj = res.data.data.lawAidApplyPerson;
+            that.completeTime = res.data.data.examineTime
+            that.status = res.data.data.status
+            that.rejReason = res.data.data.remarks
+            that.applyInfo = {
+              baseInfo: [
+                { name: "预约号", value: res.data.data.reservationNumber },
+                { name: "申请时间", value: that.$util.timeFormat(res.data.data.createTime)},
+                { name: "申请地点", value: res.data.data.applicationSite},
+                { name: "状态", value:  that.dealStatusShow(res.data.data.status)}
+              ],
+              people1: [
+                { name: "姓名", value: obj.applyPerson },
+                { name: "联系电话", value: obj.phone },
+                { name: "性别", value: obj.sex == 0?'男':'女' },
+                { name: "民族", value: obj.nation },
+                { name: "身份证号码", value: obj.idCard},
+                { name: "出生日期", value: obj.birthday },
+                { name: "工作单位", value: obj.workUnit },
+                { name: "邮编", value: obj.postalCode },
+                { name: "现居住地址", value: obj.address }
+              ],
+              proxy: [
+                { name: "代理人", value: obj.agentType == 0?'法定代理人':'委托代理人' },
+                { name: "姓名", value: obj.agentName},
+                { name: "身份证号", value: obj.agentIdCard },
+                {
+                  name: "案件及申请理由概述",
+                  value: obj.caseIntroduce }
+              ]
+            };
+          }
+        })
+        .catch(function(error) {
+          that.loading = false;
+          console.log(error);
+        });
+    },
+     dealStatusShow(e){
+       if(e == 0){
+           return '待审批'
+       }else if(e == 1){
+           return '已通过'
+       }else if(e == 2){
+           return '已拒绝'
+       }
+    },
+    pass() {
+      this.isPass = true;
+      this.status = 1;
+      this.subRes()
+    },
+    noPass() {
+      if(this.rejReason == ''){
+         this.$message.warning('请填写拒绝理由！');
+         return false
       }
+      this.isPass = true;
+      this.status = 2;
+      this.subRes()
+    },
+    subRes(){
+      const that = this;
+      that.$http
+        .axios({
+          method: "post",
+          url: that.$url.lawHelp.subRes,
+          params: {
+            id: that.id,
+            status: that.status,
+            remarks: that.status == 2?that.rejReason:''
+          }
+        })
+        .then(function(res) {
+          console.log("审批结果", res);
+          if (res.data.code == 200) {
+               that.searchDetail()
+          }
+        })
+        .catch(function(error) {
+          that.loading = false;
+          console.log(error);
+        });
+    },
+    expWord(){
+      const that = this;
+      that.$http
+        .axios({
+          method: "post",
+          url: that.$url.lawHelp.expWord,
+          headers: {
+            'Content-Type': 'application/msword'
+          },
+          params: {
+            id: that.id
+          }
+        })
+        .then(function(res) {
+          console.log("导出word结果", res);
+          if (res.data.code == 200) {
+              
+          }
+        })
+        .catch(function(error) {
+         
+          console.log(error);
+        });
+    }
   }
 };
 </script>
@@ -145,6 +279,7 @@ export default {
   width: 95%;
   min-width: 1100px;
   padding: 20px 2.5% 150px;
+  position: relative;
 }
 
 .add_key {
@@ -224,5 +359,15 @@ export default {
 
 /deep/.step0_up_button .el-button:nth-child(1) {
   margin-right: 40px;
+}
+
+.expWord{
+    color: white;
+    background: #409EFF;
+    padding: 5px 10px;
+    font-size: 14px;
+    position: absolute;
+    right: 50px;
+    top: 85px;
 }
 </style>

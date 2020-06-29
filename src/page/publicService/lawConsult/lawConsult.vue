@@ -15,6 +15,7 @@
       <el-table
         ref="multipleTable"
         :data="tableData"
+        v-loading="loading"
         tooltip-effect="dark"
         style="width: 100%"
         :header-cell-style="{'background':'rgba(190,190,190,0.3)','color':'#666666'}"
@@ -30,7 +31,7 @@
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button type="text" size="small" @click="lookDetail(scope.row)">查看详情</el-button>
-            <el-button type="text" size="small" @click="update(scope.row)">修改</el-button>
+            <!-- <el-button type="text" size="small" @click="update(scope.row)">修改</el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -59,27 +60,28 @@
         <el-form ref="form" :rules="rules" :model="form" label-width="100px">
           <el-row>
             <el-col :span="7">
-              <el-form-item label="视讯房间号" prop="roomId">
-                <el-select :disabled="mode == 'look'" v-model="form.roomId" placeholder="请选择">
+              <el-form-item label="县/市" prop="city">
+                <el-select :disabled="mode == 'look'" v-model="form.city" placeholder="请选择">
                   <el-option
-                    :label="item"
-                    :value="item"
-                    v-for="(item,index) in roomList"
+                    :label="item.name"
+                    :value="item.name"
+                    v-for="(item,index) in cityList"
                     :key="index"
                   ></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="7">
-              <el-form-item label="县/市" prop="city">
-                <el-select :disabled="mode == 'look'" v-model="form.city" placeholder="请选择">
+              <el-form-item label="视讯房间号" prop="roomId">
+                 <el-input :disabled="mode == 'look'" v-model="form.roomId"></el-input>
+                <!-- <el-select :disabled="mode == 'look'" v-model="form.roomId" placeholder="请选择">
                   <el-option
                     :label="item"
                     :value="item"
-                    v-for="(item,index) in cityList"
+                    v-for="(item,index) in roomList"
                     :key="index"
                   ></el-option>
-                </el-select>
+                </el-select> -->
               </el-form-item>
             </el-col>
           </el-row>
@@ -99,7 +101,7 @@
 
           <div style="width:60%;">
             <el-form-item label="简介" prop="intro">
-              <el-input  :disabled="mode == 'look'" type="textarea" v-model="form.intro"></el-input>
+              <el-input :disabled="mode == 'look'" type="textarea" v-model="form.intro"></el-input>
             </el-form-item>
           </div>
 
@@ -113,23 +115,34 @@
             <p style="color: #606266;padding-left: 58px;">上传图片</p>
             <div style="width:100%;padding:30px 58px;">
               <el-upload
-                action
+                v-if="mode != 'look'"
+                :action="upUrl"
+                name="upSignFile"
                 list-type="picture-card"
-                :auto-upload="false"
+                :auto-upload="true"
                 :on-change="fileChange"
                 :on-exceed="onExceed"
                 :limit="1"
                 :disabled="mode == 'look'"
-                :file-list = 'fileList'
+                :file-list="fileList"
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleRemove"
+                :on-success="uploadSuccess"
+                :on-error="uploadErr"
               >
                 <i class="el-icon-plus"></i>
               </el-upload>
+
+               <el-image 
+                 v-if="mode == 'look'"
+                 style="width: 100px; height: 100px"
+                 :src="form.imgUrl" 
+                 :preview-src-list="srcList">
+              </el-image>
             </div>
           </div>
 
-          
+         
 
           <el-form-item v-if="mode == 'add'">
             <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -159,6 +172,7 @@ export default {
     };
     return {
       mode: "",
+      loading: false,
       currentPage: 1, //当前页
       size: 10, //每页展示条数
       totals: 50, //总条数
@@ -173,10 +187,13 @@ export default {
           intro: "1",
           addr: "1",
           file: "",
+          imgUrl:''
         }
       ],
       // --------------------------------------------------------------------------------------------------------
-      fileList:[],
+      upUrl:'',
+      srcList:[],
+      fileList: [],
       dialogImageUrl: "",
       dialogVisible: false,
       show1: false,
@@ -210,7 +227,130 @@ export default {
       }
     };
   },
+  created() {
+    this.upUrl = this.$url.upUrl
+    this.getApplyList();
+    this.getCity()
+  },
   methods: {
+    
+    //查询人民调解申请列表
+    getApplyList() {
+      const that = this;
+      that.loading = true;
+      that.$http
+        .axios({
+          method: "get",
+          url: that.$url.lawConsult.getList,
+          params: {
+            page: that.currentPage,
+            limit: that.size
+          }
+        })
+        .then(function(res) {
+          console.log("法律咨询列表", res);
+          that.loading = false;
+          that.tableData = [];
+          if (res.data.code == 200) {
+            that.totals = res.data.totals;
+            res.data.data.forEach(val => {
+              that.tableData.push({
+                id: val.id,
+                roomId: val.roomNumber,
+                city: val.city,
+                phone: val.phone,
+                email: val.email,
+                intro: val.introduce,
+                addr: val.address,
+                imgUrl: val.imgUrl
+              });
+            });
+
+            console.log(that.tableData);
+          }
+        })
+        .catch(function(error) {
+          that.loading = false;
+          console.log(error);
+        });
+    },
+    //批量删除
+    delMore() {
+      const that = this;
+      if (that.multipleSelection.length == 0) {
+        that.$message.warning("请选择需要删除的记录！");
+        return false;
+      }
+
+      that.loading = true;
+      let arr = [];
+      that.multipleSelection.forEach(val => {
+        arr.push(val.id);
+      });
+
+      that.$http
+        .axios({
+          method: "post",
+          url: that.$url.lawConsult.delMore,
+          params: {
+            ids: arr.join(",")
+          }
+        })
+        .then(function(res) {
+          console.log("批量删除", res);
+          if (res.data.code == 200) {
+            that.getApplyList();
+            that.$message.success("删除成功！");
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    //查看详情
+    lookDetail(val) {
+      this.mode = "look";
+      this.form = val;
+      this.srcList = [val.imgUrl];
+      this.fileList = [val.imgUrl]
+      this.show1 = true;
+    },
+
+    //点击表格多选框触发函数
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    //点击分页触发函数
+    handleCurrentChange(val) {
+      this.getApplyList();
+    },
+    // -------------------------------------------------------------------------------------------------------------------
+    getCity(){
+      const that = this;
+      that.$http
+        .axios({
+          method: "post",
+          url: that.$url.lawConsult.getCity,
+          params: {
+          }
+        })
+        .then(function(res) {
+          console.log("获取行政单位", res);
+          that.cityList = []
+          if (res.data.code == 200) {
+              res.data.data.forEach(val=>{
+                   that.cityList.push({
+                     name:val.institutionalName,
+                     value:val.id
+                   })
+              })
+          }
+        })
+        .catch(function(error) {
+          that.loading = false;
+          console.log(error);
+        });
+    },
     add() {
       this.mode = "add";
       this.form = {
@@ -227,60 +367,59 @@ export default {
     },
     update(val) {
       console.log(val);
-      this.mode = 'update'
-      this.form = val
-      this.show1 = true
+      this.mode = "update";
+      this.form = val;
+      this.show1 = true;
     },
-    //查询人民调解申请列表
-    getApplyList() {
-      const that = this;
-      // that.$http({
-      //     method: "post",
-      //     url: that.url.sys.login,
-      //     params: {
-      //       loginName: that.status,
-      //       pwd: that.condition,
-      //       page:that.currentPage,
-      //       size:that.size
-      //     }
-      //   })
-      //   .then(function(response) {})
-      //   .catch(function(error) {
-      //     console.log(error);
-      //   });
+    uploadSuccess(e) {
+      console.log(e);
+      this.form.imgUrl = `${this.$url.imgUrl}${e.data.split('\\').pop()}`;
     },
-    //下拉框change事件
-    selectChange(e) {
-      this.currentPage = 1;
-      this.getApplyList();
+    uploadErr(e) {
+      console.log(e);
     },
-    //批量删除
-    delMore() {
-      console.log("159");
-    },
-    //查看详情
-    lookDetail(val) {
-      this.mode = 'look'
-      this.form = val
-      this.srcList = [val.imgUrl]
-      this.show1 = true
-    },
-
-    //点击表格多选框触发函数
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
-    //点击分页触发函数
-    handleCurrentChange(val) {
-      this.getApplyList();
-    },
-    // -------------------------------------------------------------------------------------------------------------------
     onSubmit() {
-      console.log("submit!");
+      const that = this;
+      that.$http
+        .axios({
+          method: "post",
+          url: that.$url.lawConsult.add,
+          params: {
+            city: that.form.city,
+            phone: that.form.phone,
+            roomNumber: that.form.roomId,
+            email: that.form.email,
+            introduce: that.form.intro,
+            address: that.form.addr,
+            imgUrl: that.form.imgUrl
+          }
+        })
+        .then(function(res) {
+          console.log("新增法律咨询", res);
+          if (res.data.code == 200) {
+            that.getApplyList();
+            that.form = {
+              roomId: "",
+              city: "",
+              phone: "",
+              email: "",
+              intro: "",
+              addr: "",
+              file: "",
+              imgUrl: ""
+            };
+            that.fileList=[]
+            that.$message.success("新增成功！");
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
       //   console.log(document.querySelector('.el-upload .el-upload__input').files[0])
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);
+      this.form.imgUrl = "";
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
@@ -288,15 +427,15 @@ export default {
     },
     onExceed() {
       console.log("超出限制");
-      this.$message.error('只能上传一张图片哦,如需修改请先删除图片~');
+      this.$message.error("只能上传一张图片哦,如需修改请先删除图片~");
     },
     reset() {
       this.$refs.form.resetFields();
-      this.fileList = []
+      this.fileList = [];
     },
     fileChange(file, filelist) {
       console.log(file);
-      this.form.file = file
+      // this.form.file = file
     }
   }
 };
@@ -395,7 +534,7 @@ export default {
   border: 1px solid rgba(190, 190, 190);
 }
 
-/deep/ .dlg .el-image-viewer__wrapper{
-    top: 8%;
+/deep/ .dlg .el-image-viewer__wrapper {
+  top: 8%;
 }
 </style>

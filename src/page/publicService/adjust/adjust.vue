@@ -7,12 +7,12 @@
       <span class="marginRight">状态</span>
       <div class="marginRight" style="width:15%;">
         <el-select v-model="status" placeholder="请选择" size="small" @change="selectChange">
-          <el-option value="全部">全部</el-option>
-          <el-option value="待审批">待审批</el-option>
-          <el-option value="审批通过">审批通过</el-option>
-          <el-option value="审批拒绝">审批拒绝</el-option>
-          <el-option value="达成调解">达成调解</el-option>
-          <el-option value="未达成调解">未达成调解</el-option>
+          <el-option value="全部"  label="全部"></el-option>
+          <el-option value="0" label="待审批"></el-option>
+          <el-option value="2" label="已审批"></el-option>
+          <el-option value="1" label="已拒绝"></el-option>
+          <el-option value="4" label="已完成"></el-option>
+          <el-option value="5" label="未达成调解"></el-option>
         </el-select>
       </div>
       <div class="marginRight" style="width:15%;">
@@ -123,6 +123,13 @@ export default {
     //查询人民调解申请列表
     getApplyList() {
       const that = this;
+      
+
+
+
+
+
+
       // that.$http({
       //     method: "post",
       //     url: that.url.sys.login,

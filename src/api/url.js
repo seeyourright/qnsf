@@ -1,5 +1,7 @@
-const path = `http://192.168.0.15:8080`
+// const path = `http://192.168.0.15:8080`
 // const path = `http://192.168.1.155:9001`
+const path = `http://192.168.0.127:8080`
+const path1 = `http://192.168.0.145:8080`
 
 const url = {
   login: `${path}/api/auth/oauth/token`, // 登录获取token
@@ -16,7 +18,33 @@ const url = {
   Delete_App: `${path}/api/system-management/sysappversion/deleteAppMore`, // app删除
   Download_App: `${path}/api/system-management/sysappversion/appDownload`, // app下载
 
-  doNotDelete: 'doNotDelete' // 别删
+  doNotDelete: 'doNotDelete', // 别删
+  imgUrl:`${path1}/api/lawAid/static/`,
+  upUrl:`${path1}/api/lawAid/lawAidApplyForm/upSignFile`,
+  adjust:{
+    getList:`${path}/api/rmtj/rmtj/selectReconcile`,
+  },
+  lawHelp:{
+      getList:`${path1}/api/lawAid/lawAidApplyForm/findlist`,
+      delMore:`${path1}/api/lawAid/lawAidApplyForm/removes`,
+      getDetail:`${path1}/api/lawAid/lawAidApplyForm/findbyid`,
+      subRes:`${path1}/api/lawAid/lawAidApplyForm/update`,
+      expWord:`${path1}/api/lawAid/createWord/exportSellPlan`,
+      downFile: `${path1}/api/lawAid/lawAidApplyForm/downloadFile`,
+      // ---------------------------------------------------------
+      getList1:`${path1}/api/lawAid/lawAidInfo/findlist`,
+      delMore1:`${path1}/api/lawAid/lawAidInfo/removes`,
+      add1:`${path1}/api/lawAid/lawAidInfo/add`,
+      getDetail1:`${path1}/api/lawAid/lawAidInfo/findById`,
+      update1:`${path1}/api/lawAid/lawAidInfo/update`
+  },
+  lawConsult:{
+    getList:`${path1}/api/lawConsult/lawConsultForm/findlist`,
+    delMore:`${path1}/api/lawConsult/lawConsultForm/removes`,
+    add:`${path1}/api/lawConsult/lawConsultForm/add`,
+    uploadPic:`${path1}/api/lawAid/lawAidApplyForm/upfile`,
+    getCity:`${path}/api/system-management/sysunit/getUnitList`
+  }
 }
 
 export default url

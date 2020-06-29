@@ -132,7 +132,12 @@ const router = new Router({
         {
           path: 'lawHelp',
           name: 'lawHelp',
-          component: () => import('../page/publicService/lawHelp/lawHelp')
+          component: () => import('../page/publicService/lawHelp/lawHelpHome')
+        },
+        {
+          path: 'lawHelpAdd',
+          name: 'lawHelpAdd',
+          component: () => import('../page/publicService/lawHelp/lawAdd')
         },
         {
           path: 'helpDetail',
