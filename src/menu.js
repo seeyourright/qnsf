@@ -21,7 +21,7 @@ const menu = [
         title: '管理员列表',
         icon: '',
         path: '/home/administrator',
-        permission: ''
+        permission: 'admin'
       },
       {
         title: '用户管理',
