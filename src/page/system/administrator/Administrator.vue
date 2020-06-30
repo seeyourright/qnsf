@@ -10,9 +10,9 @@
           <el-button @click="getData(1)">查询</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="addHandler">新增</el-button>
+          <el-button v-permission="'admin_add'" type="primary" @click="addHandler">新增</el-button>
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-permission="'admin_delete'">
           <el-button type="danger" @click="deleteAllHandler">批量删除</el-button>
         </el-form-item>
       </el-form>
@@ -78,9 +78,9 @@
         label="操作"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="detailHandler(scope.row)">详情</el-button>
-          <el-button type="text" size="small" class="text-danger" @click="deleteHandler(scope.row)">删除</el-button>
-          <el-button type="text" size="small" @click="openDialog(scope.row)">分配角色</el-button>
+          <el-button v-permission="'admin_update'" type="text" size="small" @click="detailHandler(scope.row)">详情</el-button>
+          <el-button v-permission="'admin_delete'" type="text" size="small" class="text-danger" @click="deleteHandler(scope.row)">删除</el-button>
+          <el-button v-permission="'admin_update'" type="text" size="small" @click="openDialog(scope.row)">分配角色</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -134,6 +134,10 @@ export default {
   },
   methods: {
     getData (page) {
+      if (this.$store.state.permission.indexOf('admin_select') === -1) {
+        this.$message.warning('没有权限')
+        return false
+      }
       this.$util.tableLoading()
       this.$http.get(this.$url.User_List, {page, limit: this.size, ...this.condition}).then(res => {
         if (res.code === 200) {

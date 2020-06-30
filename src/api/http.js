@@ -1,6 +1,6 @@
 import axios from 'axios'
 import qs from 'qs'
-// import router from '../router'
+import router from '../router'
 import {Message} from 'element-ui'
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -40,6 +40,9 @@ axios.interceptors.response.use(res => {
   }
   return res
 }, (err) => {
+  if (err.response && err.response.data.error === 'invalid_token') {
+    router.push('/login')
+  }
 })
 
 export default {

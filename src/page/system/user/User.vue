@@ -9,10 +9,10 @@
         <el-form-item>
           <el-button @click="getData(1)">查询</el-button>
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-permission="'user_add'">
           <el-button type="primary" @click="addHandler">新增</el-button>
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-permission="'user_delete'">
           <el-button type="danger" @click="deleteAllHandler">批量删除</el-button>
         </el-form-item>
       </el-form>
@@ -71,8 +71,8 @@
         label="操作"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="detailHandler(scope.row)">详情</el-button>
-          <el-button type="text" size="small" class="text-danger" @click="deleteHandler(scope.row)">删除</el-button>
+          <el-button v-permission="'user_update'" type="text" size="small" @click="detailHandler(scope.row)">详情</el-button>
+          <el-button v-permission="'user_delete'" type="text" size="small" class="text-danger" @click="deleteHandler(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

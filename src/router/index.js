@@ -27,6 +27,7 @@ const router = new Router({
           name: 'welcome',
           component: () => import('../page/Welcome')
         },
+        // 系统管理
         {
           path: 'app',
           name: 'app',
@@ -92,6 +93,12 @@ const router = new Router({
             ppath: '/home/room'
           }
         },
+        {
+          path: 'permission',
+          name: 'permission',
+          component: () => import('../page/system/permission/Permission')
+        },
+        // 内容管理
         {
           path: 'banner',
           name: 'banner',

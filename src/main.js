@@ -14,6 +14,14 @@ import 'element-ui/lib/theme-chalk/index.css'
 //   require('./assets/css/ie.css')
 // }
 
+Vue.directive('permission', {
+  bind (el, binding) {
+    if (store.state.permission.indexOf(binding.value) === -1) {
+      el.style.display = 'none'
+    }
+  }
+})
+
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 

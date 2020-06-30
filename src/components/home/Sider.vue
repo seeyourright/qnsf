@@ -53,15 +53,10 @@ export default {
     return {
       menuWidth: '220px',
       collapse: false,
-      menu: menu,
-      permissions: ['']
+      menu: menu
     }
   },
   created () {
-    // const a = this.$store.state.permission
-    // for (let i = 0; i < a.length; i++) {
-    //   this.permissions.push(a[i].name)
-    // }
     if (window.innerWidth < 800) {
       this.collapse = true
       this.menuWidth = '56px'
@@ -81,6 +76,9 @@ export default {
   computed: {
     onRoutes () {
       return this.$route.meta.ppath || this.$route.path
+    },
+    permissions () {
+      return this.$store.state.permission
     }
   }
 }

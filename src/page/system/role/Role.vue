@@ -3,7 +3,7 @@
     <div class="condition">
       <div>系统管理—角色管理</div>
       <el-form size="small" inline>
-        <el-form-item>
+        <el-form-item v-permission="'role_add'">
           <el-button type="primary" @click="addHandler">新增</el-button>
         </el-form-item>
 <!--        <el-form-item>-->
@@ -53,8 +53,8 @@
         label="操作"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="detailHandler(scope.row)">详情</el-button>
-          <el-button type="text" size="small" class="text-danger" @click="deleteHandler(scope.row)">删除</el-button>
+          <el-button v-permission="'role_update'" type="text" size="small" @click="detailHandler(scope.row)">详情</el-button>
+          <el-button v-permission="'role_delete'" type="text" size="small" class="text-danger" @click="deleteHandler(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -86,6 +86,10 @@ export default {
   },
   methods: {
     getData (page) {
+      if (this.$store.state.permission.indexOf('role_select') === -1) {
+        this.$message.warning('没有权限')
+        return false
+      }
       this.$util.tableLoading()
       this.$http.get(this.$url.Role_List, {page, limit: this.size, ...this.condition}).then(res => {
         if (res.code === 200) {

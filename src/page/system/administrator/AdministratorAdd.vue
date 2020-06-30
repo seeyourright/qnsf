@@ -90,7 +90,6 @@ export default {
       this.init()
       delete this.rules.password
     }
-    this.roleInit()
   },
   methods: {
     init () {

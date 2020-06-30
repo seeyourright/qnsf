@@ -3,19 +3,19 @@ const menu = [
     title: '系统管理',
     icon: 'icon-xitong',
     path: '1',
-    permission: '',
+    permission: 'system',
     children: [
       {
         title: 'App管理',
         icon: '',
         path: '/home/app',
-        permission: ''
+        permission: 'app'
       },
       {
         title: '角色管理',
         icon: '',
         path: '/home/role',
-        permission: ''
+        permission: 'role'
       },
       {
         title: '管理员列表',
@@ -27,14 +27,20 @@ const menu = [
         title: '用户管理',
         icon: '',
         path: '/home/user',
-        permission: ''
+        permission: 'user'
       },
       {
-        title: '房间管理',
+        title: '权限管理',
         icon: '',
-        path: '/home/room',
+        path: '/home/permission',
         permission: ''
       }
+      // {
+      //   title: '房间管理',
+      //   icon: '',
+      //   path: '/home/room',
+      //   permission: ''
+      // }
     ]
   },
   {

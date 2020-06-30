@@ -3,10 +3,10 @@
     <div class="condition">
       <div>系统管理—APP管理</div>
       <el-form size="small" inline>
-        <el-form-item>
+        <el-form-item v-permission="'app_add'">
           <el-button type="primary" @click="addHandler">新增</el-button>
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-permission="'app_delete'">
           <el-button type="danger" @click="deleteAllHandler">批量删除</el-button>
         </el-form-item>
       </el-form>
@@ -73,7 +73,7 @@
         label="操作"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small" class="text-danger" @click="deleteHandler(scope.row)">删除</el-button>
+          <el-button v-permission="'app_delete'" type="text" size="small" class="text-danger" @click="deleteHandler(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -159,6 +159,10 @@ export default {
   },
   methods: {
     getData (page) {
+      if (this.$store.state.permission.indexOf('app_select') === -1) {
+        this.$message.warning('没有权限')
+        return false
+      }
       this.$util.tableLoading()
       this.$http.get(this.$url.App_List, {page, limit: this.size}).then(res => {
         if (res.code === 200) {

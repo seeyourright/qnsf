@@ -74,12 +74,27 @@ export default {
       }
       this.$http.axios.post(this.$url.login, qs.stringify(params)).then(res => {
         if (res) {
+          this.getPremission(res.data.userId)
           localStorage.setItem('userInfo', JSON.stringify(res.data))
           localStorage.setItem('token', res.data.token_type + res.data.access_token)
           this.$store.state.userInfo = res.data
           this.$router.push('home')
         } else {
           this.$message.error('用户名或密码错误')
+        }
+      })
+    },
+    getPremission (uid) {
+      this.$http.get(this.$url.Permission_By_User, {uid}).then(res => {
+        if (res.code === 200) {
+          const permissions = ['']
+          for (let i = 0; i < res.data.length; i++) {
+            permissions.push(res.data[i].name)
+          }
+          localStorage.setItem('permission', JSON.stringify(permissions))
+          this.$store.state.permission = permissions
+        } else {
+          localStorage.setItem('permission', JSON.stringify(['']))
         }
       })
     }

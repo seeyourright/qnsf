@@ -1,4 +1,5 @@
-const path = `http://192.168.0.15:8080`
+const path = `http://192.168.0.127:8080`
+const path1 = `http://192.168.0.127:8080`
 // const path = `http://192.168.1.155:9001`
 
 const url = {
@@ -18,8 +19,12 @@ const url = {
   Update_Role: `${path}/api/system-management/sysrole/updateRole`, // 修改角色
   Delete_Role: `${path}/api/system-management/sysrole/deleteRole`, // 删除角色
   Role_By_User: `${path}/api/system-management/sysrole/selectRoleByUser`, // 根据用户查询角色
+  Role_By_Id: `${path}/api/system-management/sysrole/selectRoleOne`, // 根据id查询角色
   // 权限管理
   Permission_List: `${path}/api/system-management/syspermission/getPermissionTree`, // 根据用户查询角色
+  Add_Permission: `${path}/api/system-management/syspermission/insertPermission`, // 根据用户查询角色
+  Update_Permission: `${path}/api/system-management/syspermission/updatePermission`, // 根据用户查询角色
+  Delete_Permission: `${path}/api/system-management/syspermission/deletePermission`, // 根据用户查询角色
   Permission_By_User: `${path}/api/system-management/syspermission/getPermissionByUser`, // 根据用户查询角色
   // app管理
   App_List: `${path}/api/system-management/sysappversion/getAppALL`, // app列表
