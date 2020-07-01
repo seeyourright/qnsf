@@ -53,7 +53,7 @@
         label="操作"
       >
         <template slot-scope="scope">
-          <div v-if="scope.row.rid.length > 0">
+          <div v-if="scope.row.rid.length > 3">
             <el-button v-permission="'role_update'" type="text" size="small" @click="detailHandler(scope.row)">详情</el-button>
             <el-button v-permission="'role_delete'" type="text" size="small" class="text-danger" @click="deleteHandler(scope.row)">删除</el-button>
           </div>
