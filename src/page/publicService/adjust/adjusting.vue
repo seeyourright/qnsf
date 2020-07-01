@@ -8,15 +8,15 @@
                <div class="step0_up_yes">
                  <div class="step0_up_yes_item">
                      <span class="add_key">调解员:</span>
-                     <span >{{upBaseObj.name}}</span>
+                     <span >{{upBaseObj.reconcileMan}}</span>
                  </div>
                   <div class="step0_up_yes_item">
                      <span class="add_key">调解室:</span>
-                     <span >{{upBaseObj.roomId}}</span>
+                     <span >{{upBaseObj.reconcileRoom}}</span>
                  </div>
                   <div class="step0_up_yes_item">
                      <span class="add_key">调解时间:</span>
-                     <span >{{upBaseObj.time}}</span>
+                     <span >{{upBaseObj.reconcileTime}}</span>
                  </div>
             </div>
                <p class="add_key" v-if="upPass === false">未达成原因</p>
@@ -39,15 +39,15 @@
             <div class="step0_up_no"  >
                <div class="step0_low_item">
                       <span class="add_key">调解员:</span>
-                      <span class="add_value">{{lowBaseObj.name}}</span>
+                      <span class="add_value">{{lowBaseObj.reconcileMan}}</span>
                 </div>
                  <div class="step0_low_item">
                       <span class="add_key">调解时间:</span>
-                      <span class="add_value">{{lowBaseObj.time}}</span>
+                      <span class="add_value">{{lowBaseObj.reconcileTime}}</span>
                 </div>
                 <div class="step0_low_item"> 
                       <span class="add_key" style="width:72px;">调解地点:</span>
-                      <span class="add_value"  style="white-space:nowrap;margin-right:10px;">{{lowBaseObj.addr}}</span>
+                      <span class="add_value"  style="white-space:nowrap;margin-right:10px;">{{lowBaseObj.reconcileAddress}}</span>
                 </div>
 
                <p class="add_key" v-if="lowPass === false">未达成原因</p>
@@ -67,8 +67,9 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
-    props: ['upDown',"upBaseObj","lowBaseObj"],
+    props: ['upDown',"upBaseObj","lowBaseObj",'obj'],
     data() {
         return {
            isUp:true,
@@ -88,8 +89,14 @@ export default {
            lowAddr:'', //线下调解地点
         };
     },
+    watch:{
+      upDown(v){
+          this.isUp = v
+       }
+    },
     created() {
       this.init()
+      console.log(this.obj)
     },
     mounted() {
 
@@ -98,13 +105,12 @@ export default {
        init(){
            const that = this
            that.isUp = that.upDown
-
-           if(that.isUp == true && new Date() >= new Date(that.upBaseObj.time)){
+           that.upBaseObj.reconcileTime =  moment(that.upBaseObj.reconcileTime).format('YYYY-MM-DD HH:mm:ss') // that.$util.timeFormat(that.upBaseObj.reconcileTime)
+           that.lowBaseObj.reconcileTime = moment(that.lowBaseObj.reconcileTime).format('YYYY-MM-DD HH:mm:ss') //that.$util.timeFormat(that.lowBaseObj.reconcileTime)
+           if(that.isUp == true && new Date() >= new Date(that.obj.reconcileTime)){
                   //到线上开始调解的时候，才显示  达成调解或者未达成调解按钮
                   that.isTime = true
            }
-
-
            console.log(this.isUp)
        },
         applyRes(res){
@@ -118,9 +124,57 @@ export default {
               that.$message.error('请填写未达成原因');
               return false
           }
-          that.$emit('res',res)   
-
+            
+          that.resSubHttp(res)
        },
+       resSubHttp(res){
+         const that = this
+         let param = {}
+         if(that.isUp == true && res == '3'){
+              param = {
+                  reservationNumber: that.obj.reservationNumber,
+                  id:that.obj.id,
+                  applyForStatus:3
+              }
+          }else if(that.isUp == true && res == '5'){
+              param = {
+                  reservationNumber: that.obj.reservationNumber,
+                  id:that.obj.id,
+                  applyForStatus:5,
+                  notReach:that.upReason
+              }
+          }else if(that.isUp == false && res == '3'){
+              param = {
+                  reservationNumber: that.obj.reservationNumber,
+                  id:that.obj.id,
+                  applyForStatus:3
+              }
+          }else if(that.isUp == false && res == '5'){
+               param = {
+                  reservationNumber: that.obj.reservationNumber,
+                  id:that.obj.id,
+                  applyForStatus:5,
+                  notReach:that.lowReason
+              }
+          }
+         
+        that.$http
+        .axios({
+          method: "post",
+          url: that.$url.adjust.updateDetail,
+          params: param
+        })
+        .then(function(res) {
+          console.log("更新人民调解信息(调解中)", res);
+          if (res.data.code == 200) {
+                that.$emit('res',res) 
+          }
+        })
+        .catch(function(error) {
+          that.loading = false;
+          console.log(error);
+        });
+       }
     },
 };
 </script>

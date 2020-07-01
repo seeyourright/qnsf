@@ -37,6 +37,7 @@
         <el-table-column prop="id" label="ID" align="center"></el-table-column>
         <el-table-column prop="city" label="县/市" align="center"></el-table-column>
         <el-table-column prop="phone" label="联系电话" align="center"></el-table-column>
+        <el-table-column prop="roomNumber" label="房间号" align="center"></el-table-column>
         <el-table-column prop="status" label="状态" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
@@ -145,7 +146,8 @@ export default {
                          id: val.id,
                          city: val.city,
                          phone: val.phone,
-                         status: val.status == 0?'未启用':'启用'  
+                         status: val.status == 0?'未启用':'启用',
+                         roomNumber: val.roomNumber  
                    })
               });
           }

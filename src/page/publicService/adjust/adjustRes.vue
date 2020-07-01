@@ -5,30 +5,30 @@
         <div class="step0_up_yes" v-if="isUp === true">
                  <div class="step0_up_yes_item">
                      <span class="add_key">调解员:</span>
-                     <span >{{upBaseObj.name}}</span>
+                     <span >{{upBaseObj.reconcileMan}}</span>
                  </div>
                   <div class="step0_up_yes_item">
                      <span class="add_key">调解室:</span>
-                     <span >{{upBaseObj.roomId}}</span>
+                     <span >{{upBaseObj.reconcileRoom}}</span>
                  </div>
                   <div class="step0_up_yes_item">
                      <span class="add_key">调解时间:</span>
-                     <span >{{upBaseObj.time}}</span>
+                     <span >{{upBaseObj.reconcileTime}}</span>
                  </div>
             </div>
         <!-- 线下 -->
           <div v-if="isUp === false" style="width:100%;">
                <div class="step0_low_item">
                       <span class="add_key">调解员:</span>
-                      <span class="add_value">{{lowBaseObj.name}}</span>
+                      <span class="add_value">{{lowBaseObj.reconcileMan}}</span>
                 </div>
                  <div class="step0_low_item">
                       <span class="add_key">调解时间:</span>
-                      <span class="add_value">{{lowBaseObj.time}}</span>
+                      <span class="add_value">{{lowBaseObj.reconcileTime}}</span>
                 </div>
                 <div class="step0_low_item"> 
                       <span class="add_key" style="width:72px;">调解地点:</span>
-                      <span class="add_value"  style="white-space:nowrap;margin-right:10px;">{{lowBaseObj.addr}}</span>
+                      <span class="add_value"  style="white-space:nowrap;margin-right:10px;">{{lowBaseObj.reconcileAddress}}</span>
                 </div>
           </div>
 
@@ -42,25 +42,26 @@
 
              <div  style="height:30px;">
                  <el-button type="primary" size="small" style="margin-right:20px;" @click="showPDF = true">预览</el-button>
+                 <!-- <a target='_black' :href='previewUrl'>在线预览</a> -->
                  <el-button type="primary" size="small">下载</el-button>
              </div>
           </div>
 
            <!-- 线上、线下调解失败（失败原因） -->
             <p class="add_key" v-if="status == 5"   style="margin-top:20px;">拒绝原因</p>
-            <el-input v-if="status == 5"  :disabled="true" style="margin:10px 0 30px;"  v-model = 'rejReason' type="textarea" :rows="5"></el-input>
+            <el-input v-if="status == 5"  :disabled="true" style="margin:10px 0 30px;"  v-model = 'obj.notReach' type="textarea" :rows="5"></el-input>
 
 
 
           <p  style="margin:30px 0;">
               <span class="add_key">完成时间:</span>
-              <span class="add_value">{{completeTime}}</span>
+              <span class="add_value">{{obj.endTime}}</span>
           </p>
 
            <!-- 协议预览 -->
-    <el-dialog title="协议预览" :visible.sync="showPDF" width="665px">
-      <pdf :src="previewUrl" :page="pdfPage"></pdf>
-      <div class="ad_row3">
+    <el-dialog title="协议预览" :visible.sync="showPDF" width="1000px">
+      <!-- <pdf :src="previewUrl" :page="pdfPage"></pdf> -->
+      <!-- <div class="ad_row3">
           <el-pagination
             @current-change="handleCurrentChange"
             :current-page.sync="pdfPage"
@@ -68,19 +69,21 @@
             :page-size="1"
             :total="pdfTotals"
           ></el-pagination>
-      </div>
-      
+          
+      </div> -->
+      <iframe :src='previewUrl' width='100%' height='500px' frameborder='1'></iframe>
     </el-dialog>  
     </div>
 </template>
 
 <script>
+import moment from 'moment'
 import pdf from "vue-pdf";
 export default {
      components: {
       pdf
     },
-    props: ['upDown','status',"upBaseObj","lowBaseObj","previewUrl","agreeUrl",'completeTime',"rejReason"],
+    props: ['upDown','status',"upBaseObj","lowBaseObj","previewUrl","agreeUrl",'completeTime',"rejReason",'obj'],
     data() {
         return {
           isUp:true,  //true线上审批  false 线下审批
@@ -99,7 +102,11 @@ export default {
     },
     methods: {
         init(){
-           this.isUp = this.upDown
+           const that = this
+           that.isUp = that.upDown
+           that.upBaseObj.reconcileTime = moment(that.obj.reconcileTime).format('YYYY-MM-DD HH:mm:ss') //that.$util.timeFormat(that.upBaseObj.reconcileTime)
+           that.lowBaseObj.reconcileTime = moment(that.obj.reconcileTime).format('YYYY-MM-DD HH:mm:ss') //that.$util.timeFormat(that.lowBaseObj.reconcileTime)
+           that.obj.endTime = moment(that.obj.endTime).format('YYYY-MM-DD HH:mm:ss') //that.$util.timeFormat(that.obj.endTime)
            console.log(this.isUp)
        }
     },

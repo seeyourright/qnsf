@@ -34,23 +34,23 @@
     </div>
 
     <!-- 相关证明材料 -->
-    <div class="add_row2" style="position:relative;">
+    <div class="add_row2" style="position:relative;" v-if="url.length != 0"   >
       <span class="add_key">相关证明材料:</span>
       <a :href="zipUrl" class="expWord"  style="top:15px;right:10px;">下载材料</a>
       <!-- <el-button type="primary" size="small" icon="el-icon-download">下载材料</el-button> -->
     </div>
 
-    <div class="add_row3">
+    <div class="add_row3" v-if="url.length != 0">
       <div v-for="(item,index) in url" :key="index">
         <el-image
-          v-if="item.startsWith('http')"
+          v-if="item.type == 'img'"
           style="width: 100px; height: 100px;margin:20px;"
-          :src="item"
+          :src="item.name"
           :preview-src-list="srcList"
         ></el-image>
         <div v-else class="add_row3_file">
           <img src="../../../../static/img/file.png" alt />
-          <div>xxxx.docx</div>
+          <div>{{item.name}}</div>
         </div>
       </div>
     </div>
@@ -85,6 +85,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   props: {},
   data() {
@@ -96,17 +97,8 @@ export default {
       completeTime: "2020-06-22 10:00:00",
       wordUrl:'',
       zipUrl:'',
-      url: [
-        "http://192.168.0.145:8080/api/lawAid/static/20200620140122882.jpg",
-        "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-        "",
-        "",
-        ""
-      ],
-      srcList: [
-        "http://192.168.0.145:8080/api/lawAid/static/20200620140122882.jpg",
-        "https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg"
-      ],
+      url: [],
+      srcList: [],
       applyInfo: {
         baseInfo: [
           { name: "预约号", value: "" },
@@ -144,6 +136,7 @@ export default {
     this.wordUrl = `${this.$url.lawHelp.expWord}?id=${this.id}` 
     this.zipUrl = `${this.$url.lawHelp.downFile}?id=${this.id}` 
     this.searchDetail();
+    this.netFileAddr()
   },
   mounted() {},
   methods: {
@@ -169,7 +162,7 @@ export default {
             that.applyInfo = {
               baseInfo: [
                 { name: "预约号", value: res.data.data.reservationNumber },
-                { name: "申请时间", value: that.$util.timeFormat(res.data.data.createTime)},
+                { name: "申请时间", value: moment(res.data.data.createTime).format('YYYY-MM-DD HH:mm:ss') },
                 { name: "申请地点", value: res.data.data.applicationSite},
                 { name: "状态", value:  that.dealStatusShow(res.data.data.status)}
               ],
@@ -208,6 +201,45 @@ export default {
        }else if(e == 2){
            return '已拒绝'
        }
+    },
+    netFileAddr(){
+      const that = this;
+      that.$http
+        .axios({
+          method: "post",
+          url: that.$url.lawHelp.netFileAddr,
+          params: {
+            applyPersonId: that.id
+          }
+        })
+        .then(function(res) {
+          console.log("相关证明材料", res);
+                that.url = []
+                that.srcList = []
+          if (res.data.code == 200) {
+               res.data.data.forEach(val => {
+                   let s = val.fileUrl.split('\\').pop()
+                   let ss = s.split('.').pop()
+                   if(['jpg','JPG','png','PNG','JPEG','jpeg'].includes(ss)){
+                           that.url.push({
+                             type:'img',
+                             name: `${that.$url.imgUrl}${s}`,
+                           })
+                           that.srcList.push(`${that.$url.imgUrl}${s}`)
+                   }else{
+                          that.url.push({
+                             type:'text',
+                             name:s,
+                           })
+                   }
+
+               });
+          }
+        })
+        .catch(function(error) {
+          that.loading = false;
+          console.log(error);
+        });
     },
     pass() {
       this.isPass = true;

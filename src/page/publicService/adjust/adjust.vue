@@ -7,7 +7,7 @@
       <span class="marginRight">状态</span>
       <div class="marginRight" style="width:15%;">
         <el-select v-model="status" placeholder="请选择" size="small" @change="selectChange">
-          <el-option value="全部"  label="全部"></el-option>
+          <el-option value=''  label="全部"></el-option>
           <el-option value="0" label="待审批"></el-option>
           <el-option value="2" label="已审批"></el-option>
           <el-option value="1" label="已拒绝"></el-option>
@@ -29,6 +29,7 @@
       <el-table
         ref="multipleTable"
         :data="tableData"
+        v-loading="loading"
         tooltip-effect="dark"
         style="width: 100%"
         :header-cell-style="{'background':'rgba(190,190,190,0.3)','color':'#666666'}"
@@ -36,11 +37,11 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="num" label="预约号" align="center"></el-table-column>
-        <el-table-column prop="addr" label="申请地点" align="center"></el-table-column>
-        <el-table-column prop="people" label="申请人" align="center"></el-table-column>
-        <el-table-column prop="time" label="申请时间" align="center"></el-table-column>
-        <el-table-column prop="status" label="状态" align="center"></el-table-column>
+        <el-table-column prop="reservationNumber" label="预约号" align="center"></el-table-column>
+        <el-table-column prop="applyForAddress" label="申请地点" align="center"></el-table-column>
+        <el-table-column prop="yyrName" label="申请人" align="center"></el-table-column>
+        <el-table-column prop="applyForTime" label="申请时间" align="center"></el-table-column>
+        <el-table-column prop="applyForStatus" label="状态" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button type="text" size="small" @click="lookDetail(scope.row)">查看详情</el-button>
@@ -63,87 +64,77 @@
 </template>
 
 <script>
+import moment from 'moment'
+const qs = require('qs');
 export default {
   props: {},
   data() {
     return {
-      status: "全部", //状态
+      status: "", //状态
+      loading:false,
       condition: null, //模糊查询字段
       currentPage: 1, //当前页
-      size: 10, //每页展示条数
-      totals: 50, //总条数
+      size: 5, //每页展示条数
+      totals: 1, //总条数
       multipleSelection: [], //批量选择列表
-      tableData: [
-        {
-          id: "0",
-          num: "001",
-          addr: "贵州省贵阳市观山湖区会展城55号a组团1栋3单元附2号",
-          people: "王小虎",
-          time: "2020-03-04",
-          status: "待审批"
-        },
-        {
-          id: "1",
-          num: "001",
-          addr: "贵州省贵阳市",
-          people: "王小虎",
-          time: "2020-03-04",
-          status: "待审批"
-        },
-        {
-          id: "2",
-          num: "001",
-          addr: "贵州省贵阳市",
-          people: "王小虎",
-          time: "2020-03-04",
-          status: "待审批"
-        },
-        {
-          id: "3",
-          num: "001",
-          addr: "贵州省贵阳市",
-          people: "王小虎",
-          time: "2020-03-04",
-          status: "待审批"
-        },
-        {
-          id: "4",
-          num: "001",
-          addr: "贵州省贵阳市",
-          people: "王小虎",
-          time: "2020-03-04",
-          status: "待审批"
-        }
-      ]
+      tableData: []
     };
   },
-  created() {},
+  created() {
+    this.getApplyList()
+    console.log(this.$store.state.userInfo)
+  },
   mounted() {},
   methods: {
     //查询人民调解申请列表
     getApplyList() {
       const that = this;
-      
-
-
-
-
-
-
-      // that.$http({
-      //     method: "post",
-      //     url: that.url.sys.login,
-      //     params: {
-      //       loginName: that.status,
-      //       pwd: that.condition,
-      //       page:that.currentPage,
-      //       size:that.size
-      //     }
-      //   })
-      //   .then(function(response) {})
-      //   .catch(function(error) {
-      //     console.log(error);
-      //   });
+      that.loading = true
+      let reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+　　  let isHz = reg.test(that.condition)    
+      that.$http.axios({
+          method: "post",
+          url: that.$url.adjust.getList,
+          params: {
+            applyForStatus: that.status === ''?null:that.status,
+            yyrName:isHz?that.condition:null,
+            reservationNumber:isHz?null:that.condition,
+            page:that.currentPage,
+            limit:that.size
+          }
+        })
+        .then(function(res) {
+           console.log('人民调解列表',res)
+           that.tableData = []
+           if(res.data.code == 200){
+               that.loading = false
+               that.totals = res.data.totals
+               that.tableData = res.data.data.map(val=>{
+                     val.applyForTime = moment(val.applyForTime).format('YYYY-MM-DD HH:mm:ss')// that.$util.timeFormat()
+                     val.applyForStatus = that.dealStatusShow(val.applyForStatus)  
+                     return val
+               })
+               
+           }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    dealStatusShow(e){
+       if(e === 0){
+           return '待审批'
+       }else if(e == 1){
+           return '已拒绝'
+       }else if(e == 2){
+           return '已审批'
+       }else if(e == 3){
+           return '调解中'
+       }else if(e == 4){
+           return '已完成'
+       }else if(e == 5){
+           return '未达成调解'
+       }
     },
     //下拉框change事件
     selectChange(e) {
@@ -152,12 +143,45 @@ export default {
     },
     //批量删除
     delMore() {
-      console.log("159");
+     const that = this;
+    
+      if(that.multipleSelection.length == 0){
+            that.$message.warning('请选择需要删除的记录！');
+            return false
+      }
+
+      that.loading = true
+      let arr = []
+      that.multipleSelection.forEach(val=>{
+            arr.push(val.id)
+      })
+
+      that.$http.axios({
+          method: "post",
+          url: that.$url.adjust.delMore,
+          params: {
+            ids:arr
+          },
+           paramsSerializer: function(params) {
+               return qs.stringify(params, {arrayFormat: 'repeat'})
+          }
+        })
+        .then(function(res) {
+          console.log('批量删除',res);
+          if(res.data.code == 200){
+              that.getApplyList()
+               that.$message.success('删除成功！');
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     //查看详情
     lookDetail(val) {
       console.log(val);
-      this.$router.push({ name: "adjustDetail", params: { id: val.id } });
+      sessionStorage.setItem('adjustObj',val.reservationNumber)
+      this.$router.push("adjustDetail");
     },
     //点击表格多选框触发函数
     handleSelectionChange(val) {

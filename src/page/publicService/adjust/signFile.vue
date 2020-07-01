@@ -5,30 +5,30 @@
     <div class="step0_up_yes" v-if="isUp === true">
       <div class="step0_up_yes_item">
         <span class="add_key">调解员:</span>
-        <span>{{upBaseObj.name}}</span>
+        <span>{{upBaseObj.reconcileMan}}</span>
       </div>
       <div class="step0_up_yes_item">
         <span class="add_key">调解室:</span>
-        <span>{{upBaseObj.roomId}}</span>
+        <span>{{upBaseObj.reconcileRoom}}</span>
       </div>
       <div class="step0_up_yes_item">
         <span class="add_key">调解时间:</span>
-        <span>{{upBaseObj.time}}</span>
+        <span>{{upBaseObj.reconcileTime}}</span>
       </div>
     </div>
     <!-- 线下 -->
     <div v-if="isUp === false" style="width:100%;">
       <div class="step0_low_item">
         <span class="add_key">调解员:</span>
-        <span class="add_value">{{lowBaseObj.name}}</span>
+        <span class="add_value">{{lowBaseObj.reconcileMan}}</span>
       </div>
       <div class="step0_low_item">
         <span class="add_key">调解时间:</span>
-        <span class="add_value">{{lowBaseObj.time}}</span>
+        <span class="add_value">{{lowBaseObj.reconcileTime}}</span>
       </div>
       <div class="step0_low_item">
         <span class="add_key" style="width:72px;">调解地点:</span>
-        <span class="add_value" style="white-space:nowrap;margin-right:10px;">{{lowBaseObj.addr}}</span>
+        <span class="add_value" style="white-space:nowrap;margin-right:10px;">{{lowBaseObj.reconcileAddress}}</span>
       </div>
     </div>
 
@@ -47,9 +47,21 @@
 
     <div style="width:100%;margin:40px 0;">
       <span class="add_key">协议签署进度:</span>
-      <span class="add_value" v-for="(item,index) in signProgress" :key="index">
-        {{item.name}}
-        <span style="color:green;" v-if="item.isSign == true">（已签署）、</span>
+      <span class="add_value" >
+        调解员
+        <span style="color:green;" v-if="obj.peacemakerSignature == true">（已签署）、</span>
+        <span style="color:red;" v-else>（未签署）、</span>
+      </span>
+
+      <span class="add_value" >
+        预约人
+        <span style="color:green;" v-if="obj.proposerSignature == true">（已签署）、</span>
+        <span style="color:red;" v-else>（未签署）、</span>
+      </span>
+
+      <span class="add_value" >
+        被预约人
+        <span style="color:green;" v-if="obj.recipientSignature == true">（已签署）、</span>
         <span style="color:red;" v-else>（未签署）、</span>
       </span>
     </div>
@@ -60,7 +72,7 @@
 
     <!-- 协议预览 -->
     <el-dialog title="协议预览" :visible.sync="showPDF" width="665px">
-      <pdf :src="previewUrl" :page="pdfPage"></pdf>
+      <!-- <pdf :src="previewUrl" :page="pdfPage"></pdf>
       <div class="ad_row3">
           <el-pagination
             @current-change="handleCurrentChange"
@@ -68,18 +80,20 @@
             layout="prev, pager, next"
             :page-size="1"
             :total="pdfTotals"
-          ></el-pagination>
-      </div>
-      
+          ></el-pagination> 
+          
+      </div>-->
+        <iframe :src='previewUrl' width='100%' height='500px' frameborder='1'></iframe>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import moment from 'moment'
 import pdf from "vue-pdf";
 
 export default {
-  props: ["upDown","upBaseObj","lowBaseObj","signProgress","previewUrl","agreeUrl"],
+  props: ["upDown","upBaseObj","lowBaseObj","signProgress","previewUrl","agreeUrl","obj"],
   components: {
     pdf
   },
@@ -91,31 +105,59 @@ export default {
       pdfTotals:32,
     };
   },
+  watch:{
+    upDown(v){
+          this.isUp = v
+       },
+    obj(val){
+      console.log(val)
+    }
+  },
   created() {
     this.init();
   },
   computed: {
     isSign() {
-      let arr = [];
-      arr = this.signProgress.filter(val => {
-        return val.isSign == false;
-      });
-
-      if (arr.length == 0) {
-        return true;
-      } else {
-        return false;
-      }
+      // if(this.obj.peacemakerSignature == true && this.obj.proposerSignature == true && this.obj.recipientSignature == true){
+      //     return true
+      // }else{
+      //    return false
+      // }
+      return true
     }
   },
   mounted() {},
   methods: {
     init() {
-      this.isUp = this.upDown;
-      console.log(this.isUp);
+      let that = this
+      that.isUp = that.upDown;
+      that.upBaseObj.reconcileTime = moment(that.upBaseObj.reconcileTime).format('YYYY-MM-DD HH:mm:ss') //that.$util.timeFormat(that.upBaseObj.reconcileTime)
+      that.lowBaseObj.reconcileTime = moment(that.lowBaseObj.reconcileTime).format('YYYY-MM-DD HH:mm:ss') //that.$util.timeFormat(that.lowBaseObj.reconcileTime)
+      console.log(that.isUp);
     },
      applyRes(res){
           const that = this
+          that.$http
+          .axios({
+          method: "post",
+          url: that.$url.adjust.updateDetail,
+          params: {
+             reservationNumber: that.obj.reservationNumber,
+             id:that.obj.id,
+             applyForStatus:4,
+             endTime:that.$util.getDateTime()
+          }
+        })
+        .then(function(res) {
+          console.log("更新人民调解信息(调解中)", res);
+          if (res.data.code == 200) {
+                that.$emit('res',res) 
+          }
+        })
+        .catch(function(error) {
+          that.loading = false;
+          console.log(error);
+        });
           that.$emit('res',res)   
 
        },

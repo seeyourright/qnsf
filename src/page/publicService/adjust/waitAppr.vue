@@ -29,6 +29,7 @@
                   <div class="step0_up_yes_item">
                      <span class="add_key">调解时间:</span>
                        <el-date-picker
+                           value-format = "yyyy-MM-dd HH:mm:ss"
                            size="small"
                            v-model="upTime"
                            type="datetime"
@@ -43,8 +44,8 @@
             
             <!-- 线上审批按钮 -->
             <div class="step0_up_button"  v-if="upPass === '' && isUp === true &&  status == 0" >
-                   <el-button type="danger" size="small" @click="upPass = false" >拒绝</el-button>
-                   <el-button type="primary" size="small" @click="upPass = true">通过</el-button>
+                   <el-button type="danger" size="small" @click="upPass = false" >线上拒绝</el-button>
+                   <el-button type="primary" size="small" @click="upPass = true">线上通过</el-button>
             </div>
          </div>
          
@@ -56,7 +57,7 @@
             <div class="step0_up_no" v-if="lowPass === false ||  (status == 1 && isUp === false)"  >
                 <div class="step0_low_item">
                       <span class="add_key">调解员:</span>
-                      <span class="add_value">张三</span>
+                      <span class="add_value">{{obj.reconcileMan}}</span>
                 </div>
                  <div class="step0_low_item">
                       <span class="add_key">调解时间:</span>
@@ -79,11 +80,12 @@
             <div class="step0_up_no" v-if="lowPass === true  && status == 0 "  >
                 <div class="step0_low_item">
                       <span class="add_key">调解员:</span>
-                      <span class="add_value">张三</span>
+                      <span class="add_value">{{obj.reconcileMan}}</span>
                 </div>
                  <div class="step0_low_item">
                       <span class="add_key">调解时间:</span>
                       <el-date-picker
+                           value-format = "yyyy-MM-dd HH:mm:ss"
                            size="small"
                            v-model="lowTime"
                            type="datetime"
@@ -92,13 +94,13 @@
                 </div>
                 <div class="step0_low_item">
                       <span class="add_key" style="width:72px;">调解地点:</span>
-                      <span class="add_value"  style="white-space:nowrap;margin-right:10px;">自动生成的地址</span>
+                      <span class="add_value"  style="white-space:nowrap;margin-right:10px;">{{obj.applyForAddress}}</span>
                       <div  style="width:50%;">
                           <el-input v-model="lowAddr" placeholder="输入详细地点" size="small"></el-input>
                       </div>
                 </div>
                 <div class="step0_up_button">
-                         <el-button type="danger" size="small" @click="applyRes('2')">提交</el-button>
+                         <el-button type="danger" size="small" @click="applyRes('3')">提交</el-button>
                          <el-button type="primary" size="small"  @click="lowPass = ''">返回上一步</el-button>
                      </div>
                </div>
@@ -106,8 +108,8 @@
 
             <!-- 线下审批按钮 -->
             <div class="step0_up_button"  v-if="lowPass === '' && isUp === false && status == 0" >
-                   <el-button type="danger" size="small" @click="lowPass = false" >拒绝</el-button>
-                   <el-button type="primary" size="small" @click="lowPass = true">通过</el-button>
+                   <el-button type="danger" size="small" @click="lowPass = false" >线下拒绝</el-button>
+                   <el-button type="primary" size="small" @click="lowPass = true">线下通过</el-button>
             </div>
          </div>
      </div>
@@ -115,7 +117,7 @@
 
 <script>
 export default {
-    props: ['upDown','status','rejReason'],
+    props: ['upDown','status','rejReason',"obj"],
     data() {
         return {
            isUp:true,  //true线上审批  false 线下审批
@@ -137,16 +139,56 @@ export default {
            lowAddr:'', //线下调解地点
         };
     },
+    watch:{
+       upDown(v){
+          this.isUp = v
+       },
+       'obj.refuseReason'(v){
+           this.upReason = v  
+           this.lowReason = v
+       }
+    },
     created() {
        this.init()
+      
     },
     methods: {
        init(){
            this.isUp = this.upDown
-           if(this.status == 1){
-                this.upReason = this.rejReason
-                this.lowReason = this.rejReason
+           console.log(this.isUp)
+           if(this.obj.applyForStatus == 1){
+                this.upReason = this.obj.refuseReason  
+                this.lowReason = this.obj.refuseReason
            }
+            this.getTJYlist()
+       },
+       getTJYlist(){
+           const that = this
+            that.$http
+            .axios({
+                method: "post",
+                url: that.$url.adjust.tjyList,
+                params: {
+                    userType:'1'
+                }
+            })
+          .then(function(res) {
+          console.log("调解员列表", res);
+          if (res.data.code == 200) {
+                // that.$emit('res',res) 
+                that.upPeopleList = []
+                res.data.data.forEach(val=>{
+                    that.upPeopleList.push({
+                        name:val.nickname,
+                        id:val.id
+                    })
+                })
+          }
+        })
+        .catch(function(error) {
+          that.loading = false;
+          console.log(error);
+        });
        },
        applyRes(res){
           const that = this
@@ -169,9 +211,69 @@ export default {
               that.$message.error('请填写拒绝原因');
               return false
           }
+          
+          that.subResHttp(res)
+           
 
-          that.$emit('res',res)   
+       },
+       subResHttp(res){
+          const that = this
+          let param = {}
 
+          if(that.isUp == true && res == 1){
+              param = {
+                  reservationNumber: that.obj.reservationNumber,
+                  id:that.obj.id,
+                  applyForStatus:1,
+                  refuseReason:that.upReason,
+                  endTime: that.$util.getDateTime()
+              }
+          }else if(that.isUp == true && res == 2){
+              param = {
+                  reservationNumber: that.obj.reservationNumber,
+                  id:that.obj.id,
+                  applyForStatus:2,
+                  reconcileMan: that.upPeople,
+                  reconcileRoom: that.upRoom,
+                  reconcileTime:that.upTime
+              }
+          }else if(that.isUp == false && res == 1){
+              param = {
+                  reservationNumber: that.obj.reservationNumber,
+                  id:that.obj.id,
+                  applyForStatus:1,
+                  refuseReason:that.lowReason,
+                //   endTime:that.$util.getDateTime()
+              }
+          }else if(that.isUp == false && res == 3){
+               param = {
+                  reservationNumber: that.obj.reservationNumber,
+                  id:that.obj.id,
+                  applyForStatus:3,
+                  reconcileTime:that.lowTime,
+                  reconcileAddress:that.obj.applyForAddress + that.lowAddr
+              }
+          }
+      console.log(param)
+    //   return false
+      that.$http
+        .axios({
+          method: "post",
+          url: that.$url.adjust.updateDetail,
+          params: param
+        })
+        .then(function(res) {
+          console.log("更新人民调解信息", res);
+          if (res.data.code == 200) {
+                that.$emit('res',res) 
+          }
+        })
+        .catch(function(error) {
+          that.loading = false;
+          console.log(error);
+        });
+
+           //     
        },
        upChange1(e){
            console.log(e)

@@ -1,22 +1,21 @@
 <template>
-  <!-- 法律援助申请列表 -->
+  <!-- 人民调解申请列表 -->
   <div class="adjust">
-    <p class="lawTitle">法律援助</p>
+    <p class="lawTitle">人民调解</p>
     <!-- 操作栏 -->
     <div class="ad_row1">
-      <span class="marginRight">状态</span>
+      <span class="marginRight">县/市</span>
       <div class="marginRight" style="width:15%;">
-        <el-select v-model="status" placeholder="请选择" size="small" @change="selectChange">
-          <el-option value=""  label="全部"></el-option>
-          <el-option value="0" label="待审批"></el-option>
-          <el-option value="1" label="已通过"></el-option>
-          <el-option value="2" label="未通过"></el-option>
+        <el-select v-model="city" placeholder="请选择" size="small" @change="selectChange">
+             <el-option
+                    :label="item.name"
+                    :value="item.name"
+                    v-for="(item,index) in cityList"
+                    :key="index"
+                  ></el-option>
         </el-select>
       </div>
-      <div class="marginRight" style="width:15%;">
-        <el-input  :clearable="true" v-model="condition" placeholder="输入预约号/申请人" size="small"></el-input>
-      </div>
-      <el-button type="primary" size="small" icon="el-icon-search" @click="getApplyList">查询</el-button>
+      <el-button type="primary" size="small" icon="el-icon-plus" @click="add">新增</el-button>
       <el-popconfirm title="确定删除吗？" @onConfirm="delMore" style="margin-left:20px;">
         <el-button type="danger" size="small" slot="reference">批量删除</el-button>
       </el-popconfirm>
@@ -27,7 +26,6 @@
       <el-table
         ref="multipleTable"
         v-loading="loading"
-        element-loading-spinner="el-icon-loading"
         :data="tableData"
         tooltip-effect="dark"
         style="width: 100%"
@@ -36,10 +34,10 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="num" label="预约号" align="center"></el-table-column>
-        <el-table-column prop="addr" label="申请地点" align="center"></el-table-column>
-        <el-table-column prop="people" label="申请人" align="center"></el-table-column>
-        <el-table-column prop="time" label="申请时间" align="center"></el-table-column>
+        <el-table-column prop="id" label="ID" align="center"></el-table-column>
+        <el-table-column prop="city" label="县/市" align="center"></el-table-column>
+        <el-table-column prop="phone" label="联系电话" align="center"></el-table-column>
+        <el-table-column prop="roomNumber" label="房间号" align="center"></el-table-column>
         <el-table-column prop="status" label="状态" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
@@ -63,54 +61,93 @@
 </template>
 
 <script>
-import moment from 'moment'
 export default {
   props: {},
   data() {
     return {
+      city:'',
       loading:false,
-      status: "0", //状态
-      condition: null, //模糊查询字段
+      cityList:[],
       currentPage: 1, //当前页
       size: 5, //每页展示条数
-      totals: -1, //总条数
+      totals: 50, //总条数
       multipleSelection: [], //批量选择列表
-      tableData: []
+      tableData: [
+        {
+          id: "",
+          city: "",
+          phone: "",
+          status: ""
+        }
+      
+      ]
     };
   },
   created() {
-    this.getApplyList()
+      this.getCity()
   },
   mounted() {},
   methods: {
+      add(){
+        sessionStorage.setItem('adjustHome', JSON.stringify({mode:'add'}))
+        this.$router.push('adjustAdd')
+      },
+      getCity(){
+      const that = this;
+      that.$http
+        .axios({
+          method: "post",
+          url: that.$url.lawConsult.getCity,
+          params: {
+          }
+        })
+        .then(function(res) {
+          console.log("获取行政单位", res);
+          that.cityList = []
+          if (res.data.code == 200) {
+              res.data.data.forEach(val=>{
+                   that.cityList.push({
+                     name:val.institutionalName,
+                     value:val.id
+                   })
+              })
+            
+              that.city = that.cityList[0].name
+              that.getApplyList()
+          }
+        })
+        .catch(function(error) {
+          that.loading = false;
+          console.log(error);
+        });
+    },
     //查询人民调解申请列表
     getApplyList() {
       const that = this;
       that.loading = true
       that.$http.axios({
           method: "post",
-          url: that.$url.lawHelp.getList,
+          url: that.$url.lawHelp.getList1,
           params: {
-            status: that.status,
-            applyName: that.condition?that.condition:null,
+            // status: that.status,
+            city: that.city,
             page:that.currentPage,
             limit:that.size
           }
         })
         .then(function(res) {
-          console.log('法律援助列表',res);
+          console.log('法律援助列表Home',res);
           that.loading = false
           that.tableData = []
           if(res.data.code == 200){
               that.totals = res.data.totals
               res.data.data.forEach(val => {
                    that.tableData.push({
-                        id: val.id,
-                        num: val.reservationNumber,
-                        addr: val.applicationSite,
-                        people: val.applyName,
-                        time: moment(val.createTime).format('YYYY-MM-DD HH:mm:ss'),// that.$util.timeFormat(val.createTime),
-                        status: that.dealStatusShow(val.status)  
+                         id: val.id,
+                         city: val.city,
+                         phone: val.phone,
+                         status: val.status == 0?'未启用':'启用',
+                         roomNumber: val.roomNumber  
                    })
               });
           }
@@ -120,17 +157,9 @@ export default {
           console.log(error);
         });
     },
-    dealStatusShow(e){
-       if(e == 0){
-           return '待审批'
-       }else if(e == 1){
-           return '已通过'
-       }else if(e == 2){
-           return '已拒绝'
-       }
-    },
     //下拉框change事件
     selectChange(e) {
+        console.log(e)
         this.currentPage = 1
         this.getApplyList()
     },
@@ -150,7 +179,7 @@ export default {
 
       that.$http.axios({
           method: "post",
-          url: that.$url.lawHelp.delMore,
+          url: that.$url.lawHelp.delMore1,
           params: {
             ids:arr.join(',')
           }
@@ -169,8 +198,9 @@ export default {
     //查看详情
     lookDetail(val) {
       console.log(val);
-      sessionStorage.setItem('lawHelpId',val.id)
-      this.$router.push({ name: "helpDetail", params: { id: val.id } });
+      sessionStorage.setItem('adjustHome', JSON.stringify({mode:'update',id:val.id}))
+      this.$router.push('adjustAdd')
+    //   this.$router.push({ name: "adjustDetail", params: { id: val.id } });
     },
     //点击表格多选框触发函数
     handleSelectionChange(val) {

@@ -75,38 +75,58 @@ const util = {
   },
   //时间格式转化
   timeFormat(time) {
-    var d = new Date(time);
  
-    var year = d.getFullYear();       //年  
-    var month = d.getMonth() + 1;     //月  
-    var day = d.getDate();            //日  
+     var d = new Date(time)
+     var a= d.getFullYear() + '-' + (d.getMonth() + 1 < 10 ? "0" + (d.getMonth() + 1) : d.getMonth() + 1) + '-' + (d.getDate()<10 ? "0" +d.getDate():d.getDate())+ ' ' + (d.getHours()<10 ?"0"+d.getDate():d.getDate()) + ':' + (d.getMinutes()<10 ? "0" + d.getMinutes(): d.getMinutes()) + ':' + (d.getSeconds()<10 ? "0" + d.getSeconds() : d.getSeconds() );
+     return a
+  
+    // var d = new Date(time);
  
-    var hh = d.getHours();            //时  
-    var mm = d.getMinutes();          //分  
-    var ss = d.getSeconds();           //秒  
+    // var year = d.getFullYear();       //年  
+    // var month = d.getMonth() + 1;     //月  
+    // var day = d.getDate();            //日  
  
-    var clock = year + "/";
+    // var hh = d.getHours();            //时  
+    // var mm = d.getMinutes();          //分  
+    // var ss = d.getSeconds();           //秒  
  
-    if (month < 10)
-        clock += "0";
+    // var clock = year + "/";
  
-    clock += month + "/";
+    // if (month < 10)
+    //     clock += "0";
  
-    if (day < 10)
-        clock += "0";
+    // clock += month + "/";
  
-    clock += day + " ";
+    // if (day < 10)
+    //     clock += "0";
  
-    if (hh < 10)
-        clock += "0";
+    // clock += day + " ";
  
-    clock += hh + ":";
-    if (mm < 10) clock += '0';
-    clock += mm + ":";
+    // if (hh < 10)
+    //     clock += "0";
  
-    if (ss < 10) clock += '0';
-    clock += ss;
-    return (clock);
+    // clock += hh + ":";
+    // if (mm < 10) clock += '0';
+    // clock += mm + ":";
+ 
+    // if (ss < 10) clock += '0';
+    // clock += ss;
+    // return (clock);
+},
+getDateTime(){
+  var myDate = new Date(); //实例一个时间对象；
+  let str = ''
+  let yyyy = myDate.getFullYear()
+  // let MM = myDate .getMonth()+1>=10?myDate.getMonth()+1:'0'+(myDate.getMonth()+1)
+  // let dd = myDate .getDate()>=10?myDate.getDate():'0'+myDate.getDate()
+  let MM = (myDate.getMonth()+1)*1>=10?(myDate.getMonth()+1):'0'+(myDate.getMonth()+1)
+  let dd = myDate.getDate()*1>=10?myDate.getDate():'0'+myDate.getDate()
+  let h = myDate.getHours()*1>=10?myDate.getHours():'0'+myDate.getHours()
+  let m = myDate.getMinutes()*1>=10?myDate.getMinutes():'0'+myDate.getMinutes()
+  let s = myDate.getSeconds()*1>=10?myDate.getSeconds():'0'+myDate.getSeconds()
+  str =  `${yyyy}-${MM}-${dd} ${h}:${m}:${s}` 
+  
+  return str
 }
 }
 

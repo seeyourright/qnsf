@@ -61,10 +61,10 @@
           <el-row>
             <el-col :span="7">
               <el-form-item label="县/市" prop="city">
-                <el-select :disabled="mode == 'look'" v-model="form.city" placeholder="请选择">
+                <el-select :disabled="mode == 'look'" v-model="form.cityId"  @change="selectChange"  placeholder="请选择">
                   <el-option
                     :label="item.name"
-                    :value="item.name"
+                    :value="item.value"
                     v-for="(item,index) in cityList"
                     :key="index"
                   ></el-option>
@@ -113,7 +113,8 @@
 
           <div style="width:100%;">
             <p style="color: #606266;padding-left: 58px;">上传图片</p>
-            <div style="width:100%;padding:30px 58px;">
+            <div style="width:100%;padding:30px 58px;display:flex;align-items: center;">
+              <el-image  v-if="mode == 'update' && preImg != ''"   style="width: 140px; height: 140px;margin-right:10px;" :src="form.imgUrl" :preview-src-list="srcList"></el-image>
               <el-upload
                 v-if="mode != 'look'"
                 :action="upUrl"
@@ -149,7 +150,7 @@
             <el-button @click="reset">重置</el-button>
           </el-form-item>
           <el-form-item v-if="mode == 'update'">
-            <el-button type="primary" @click="onSubmit">确认修改</el-button>
+            <el-button type="primary" @click="onSubmit1">确认修改</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -174,8 +175,8 @@ export default {
       mode: "",
       loading: false,
       currentPage: 1, //当前页
-      size: 10, //每页展示条数
-      totals: 50, //总条数
+      size: 5, //每页展示条数
+      totals: 1, //总条数
       multipleSelection: [], //批量选择列表
       tableData: [
         {
@@ -194,6 +195,7 @@ export default {
       upUrl:'',
       srcList:[],
       fileList: [],
+      preImg:'',
       dialogImageUrl: "",
       dialogVisible: false,
       show1: false,
@@ -211,8 +213,8 @@ export default {
       },
       rules: {
         phone: [
-          { required: true, message: "请输入电话号码", trigger: "blur" },
-          { validator: validatePhone, trigger: "blur" }
+          { required: true, message: "请输入电话号码", trigger: "blur" }
+          // { validator: validatePhone, trigger: "blur" }
         ],
         email: [
           { required: true, message: "请输入邮箱", trigger: "blur" },
@@ -222,7 +224,6 @@ export default {
             trigger: ["blur", "change"]
           }
         ],
-        intro: [{ required: true, message: "请输入简介", trigger: "blur" }],
         addr: [{ required: true, message: "请输入地址", trigger: "blur" }]
       }
     };
@@ -258,6 +259,7 @@ export default {
                 id: val.id,
                 roomId: val.roomNumber,
                 city: val.city,
+                cityId: val.addressNumber,
                 phone: val.phone,
                 email: val.email,
                 intro: val.introduce,
@@ -309,10 +311,11 @@ export default {
     },
     //查看详情
     lookDetail(val) {
-      this.mode = "look";
+      this.mode = "update";
       this.form = val;
+      this.preImg = val.imgUrl
       this.srcList = [val.imgUrl];
-      this.fileList = [val.imgUrl]
+      // this.fileList = [val.imgUrl]
       this.show1 = true;
     },
 
@@ -351,11 +354,20 @@ export default {
           console.log(error);
         });
     },
+    selectChange(e){
+      this.cityList.forEach(val => {
+        if(e == val.value){
+           this.form.city = val.name;
+        }
+        
+      });
+    },
     add() {
       this.mode = "add";
       this.form = {
         roomId: "",
         city: "",
+        cityId:'',
         phone: "",
         email: "",
         intro: "",
@@ -373,6 +385,7 @@ export default {
     },
     uploadSuccess(e) {
       console.log(e);
+      this.preImg = ''
       this.form.imgUrl = `${this.$url.imgUrl}${e.data.split('\\').pop()}`;
     },
     uploadErr(e) {
@@ -386,6 +399,7 @@ export default {
           url: that.$url.lawConsult.add,
           params: {
             city: that.form.city,
+            addressNumber: that.form.cityId,
             phone: that.form.phone,
             roomNumber: that.form.roomId,
             email: that.form.email,
@@ -410,6 +424,38 @@ export default {
             };
             that.fileList=[]
             that.$message.success("新增成功！");
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      //   console.log(document.querySelector('.el-upload .el-upload__input').files[0])
+    },
+     onSubmit1() {
+      const that = this;
+      // console.log(that.form)
+      // return false
+      that.$http
+        .axios({
+          method: "post",
+          url: that.$url.lawConsult.update,
+          params: {
+            id:that.form.id,
+            city: that.form.city,
+            addressNumber: that.form.cityId,
+            phone: that.form.phone,
+            roomNumber: that.form.roomId,
+            email: that.form.email,
+            introduce: that.form.intro,
+            address: that.form.addr,
+            imgUrl: that.form.imgUrl
+          }
+        })
+        .then(function(res) {
+          console.log("修改法律咨询", res);
+          if (res.data.code == 200) {
+            that.getApplyList();
+            that.$message.success("修改成功！");
           }
         })
         .catch(function(error) {

@@ -153,6 +153,11 @@ const router = new Router({
           component: () => import('../page/publicService/adjust/adjust')
         },
         {
+          path: 'adjustAdd',
+          name: 'adjustAdd',
+          component: () => import('../page/publicService/adjust/adjustAdd')
+        },
+        {
           path: 'adjustDetail',
           name: 'adjustDetail',
           component: () => import('../page/publicService/adjust/adjustDetail')
@@ -160,7 +165,7 @@ const router = new Router({
         {
           path: 'lawHelp',
           name: 'lawHelp',
-          component: () => import('../page/publicService/lawHelp/lawHelpHome')
+          component: () => import('../page/publicService/lawHelp/lawHelp')
         },
         {
           path: 'lawHelpAdd',

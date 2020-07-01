@@ -46,10 +46,18 @@ const url = {
   Area_All: `${path}/api/system-management/sysunit/getUnitAll`, // 地区列表
 
   doNotDelete: 'doNotDelete', // 别删
+  // ----------------------------------ly---------------------------------------
   imgUrl:`${path1}/api/lawAid/static/`,
   upUrl:`${path1}/api/lawAid/lawAidApplyForm/upSignFile`,
   adjust:{
     getList:`${path}/api/rmtj/rmtj/selectReconcile`,
+    delMore:`${path}/api/rmtj/rmtj/deleteReconcile`,
+    getDetail:`${path}/api/rmtj/rmtj/selectReconcileOne`,
+    updateDetail:`${path}/api/rmtj/rmtj/updateReconcile`,
+    lookMorePeople:`${path}/api/rmtj/rmtj/selectMorYyrAndByyr`,
+    imgUrl:`${path}/api/rmtj/static/`,
+    downZip:`${path}/api/rmtj/rmtj/verifyMaterialDownloadZip`,
+    tjyList:`${path}/api/system-management/sysuser/select_user_all`
   },
   lawHelp:{
       getList:`${path1}/api/lawAid/lawAidApplyForm/findlist`,
@@ -63,12 +71,14 @@ const url = {
       delMore1:`${path1}/api/lawAid/lawAidInfo/removes`,
       add1:`${path1}/api/lawAid/lawAidInfo/add`,
       getDetail1:`${path1}/api/lawAid/lawAidInfo/findById`,
-      update1:`${path1}/api/lawAid/lawAidInfo/update`
+      update1:`${path1}/api/lawAid/lawAidInfo/update`,
+      netFileAddr:`${path1}/api/lawAid/lawAidApplyFile/findlist`
   },
   lawConsult:{
     getList:`${path1}/api/lawConsult/lawConsultForm/findlist`,
     delMore:`${path1}/api/lawConsult/lawConsultForm/removes`,
     add:`${path1}/api/lawConsult/lawConsultForm/add`,
+    update:`${path1}/api/lawConsult/lawConsultForm/update`,
     uploadPic:`${path1}/api/lawAid/lawAidApplyForm/upfile`,
     getCity:`${path}/api/system-management/sysunit/getUnitList`
   }
