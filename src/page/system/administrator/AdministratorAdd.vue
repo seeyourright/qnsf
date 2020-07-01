@@ -21,17 +21,22 @@
         <el-form-item label="密码" prop="password">
           <el-input v-model="form.password" :placeholder="id?'不填写则不会修改密码':''"></el-input>
         </el-form-item>
-        <el-form-item label="状态">
-          <el-switch
-            v-model="form.status"
-            :active-value="1"
-            :inactive-value="0"
-            active-text="启用"
-            inactive-text="禁用"
-          >
-          </el-switch>
+        <el-form-item label="所属地区" prop="unitId">
+          <el-select v-model="form.unitId">
+            <el-option v-for="area in areas" :label="area.institutionalName" :value="area.id" :key="area.id"></el-option>
+          </el-select>
         </el-form-item>
       </div>
+      <el-form-item label="状态">
+        <el-switch
+          v-model="form.status"
+          :active-value="1"
+          :inactive-value="0"
+          active-text="启用"
+          inactive-text="禁用"
+        >
+        </el-switch>
+      </el-form-item>
       <el-row>
         <el-col :span="12">
           <el-form-item v-if="form.createTime" label="创建时间">
@@ -59,7 +64,8 @@ export default {
         username: '',
         email: '',
         password: '',
-        status: '1',
+        unitId: '',
+        status: 1,
         userType: '2'
       },
       rules: {
@@ -79,9 +85,10 @@ export default {
         ],
         password: [
           {required: true, message: '密码不能为空', trigger: 'blur'}
-        ],
+        ]
       },
-      roles: []
+      roles: [],
+      areas: []
     }
   },
   created () {
@@ -90,6 +97,7 @@ export default {
       this.init()
       delete this.rules.password
     }
+    this.areaInit()
   },
   methods: {
     init () {
@@ -97,6 +105,22 @@ export default {
         if (res.code === 200) {
           delete res.data.password
           this.form = res.data
+        }
+      })
+    },
+    areaInit () {
+      this.$http.get(this.$url.Area_All).then(res => {
+        if (res.code === 200) {
+          const area = []
+          for (let i = 0; i < res.data.length; i++) {
+            if (res.data[i].pid === 0) {
+              area.push(res.data[i])
+            }
+            if (area.length > 0 && area[0].id === res.data[i].pid.toString()) {
+              area.push(res.data[i])
+            }
+          }
+          this.areas = area
         }
       })
     },

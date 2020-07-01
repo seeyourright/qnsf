@@ -26,37 +26,49 @@
       </el-table-column>
       <el-table-column
         align="center"
-        prop="a"
-        label="ID"
-      ></el-table-column>
-      <el-table-column
-        align="center"
         :show-overflow-tooltip="true"
-        prop="a"
-        label="名称"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        prop="a"
-        label="账号"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        prop="a"
+        prop="roomNumber"
         label="房间号"
       ></el-table-column>
       <el-table-column
         align="center"
-        prop="a"
+        prop="roomType"
+        label="房间类型"
+      >
+        <template slot-scope="scope">
+          {{scope.row.roomType || '无'}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        prop="institutionalName"
+        label="所属机构"
+      >
+        <template slot-scope="scope">
+          {{scope.row.institutionalName || '无'}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        prop="status"
         label="状态"
-      ></el-table-column>
+      >
+        <template slot-scope="scope">
+          <span v-if="scope.row.roomStatus === 0">空闲</span>
+          <span v-if="scope.row.roomStatus === 1">忙碌</span>
+          <span v-if="scope.row.roomStatus === 2">不可用</span>
+          <span></span>
+          <span></span>
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
         prop="a"
         label="操作"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="detailHandler(scope.row)">详情</el-button>
+          <el-button v-if="scope.row.roomStatus === 2" type="text" size="small" @click="statusHandler(scope.row)">启用</el-button>
+          <el-button v-if="scope.row.roomStatus === 0" type="text" size="small" @click="statusHandler(scope.row)">禁用</el-button>
           <el-button type="text" size="small" class="text-danger" @click="deleteHandler(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -72,45 +84,15 @@
     <el-dialog
       :visible="dialogVisible"
       :show-close="false"
-      title="新增"
-      width="700px"
+      width="300px"
     >
-      <el-form ref="form" class="form" label-width="150px" :rules="rules" :model="form">
-        <el-form-item label="县/市" prop="a">
-          <el-select v-model="form.a">
-            <el-option v-for="area in areas" :label="area" :value="area" :key="area"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="法律咨询房间号" prop="b">
-          <el-select v-model="form.b">
-            <el-option v-for="area in areas" :label="area" :value="area" :key="area"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="法律援助房间号" prop="b">
-          <el-select v-model="form.b">
-            <el-option v-for="area in areas" :label="area" :value="area" :key="area"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="人民调解房间号" prop="b">
-          <el-select v-model="form.b">
-            <el-option v-for="area in areas" :label="area" :value="area" :key="area"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="行政复议房间号" prop="b">
-          <el-select v-model="form.b">
-            <el-option v-for="area in areas" :label="area" :value="area" :key="area"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="行政执法房间号" prop="b">
-          <el-select v-model="form.b">
-            <el-option v-for="area in areas" :label="area" :value="area" :key="area"></el-option>
-          </el-select>
-        </el-form-item>
-        <div style="text-align: right">
+      <div>
+        <el-input v-model="roomNumber" placeholder="请输入新的房间号"></el-input>
+        <div style="text-align: center;margin-top: 20px">
           <el-button @click="dialogVisible=false">取消</el-button>
           <el-button type="primary" @click="submit">保存</el-button>
         </div>
-      </el-form>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -123,22 +105,9 @@ export default {
       page: 1,
       size: 10,
       total: 100,
-      tableData: [
-        {a: 1, id: 1},
-        {a: 1, id: 1},
-        {a: 1, id: 1},
-        {a: 1, id: 1},
-        {a: 1, id: 1}
-      ],
+      tableData: [],
       dialogVisible: false,
-      form: {
-        a: '',
-        b: '',
-        c: '',
-        d: '',
-        e: '1',
-        f: ''
-      },
+      roomNumber: '',
       rules: {
         a: [
           {required: true, message: '县/市不能为空', trigger: 'blur'}
@@ -151,17 +120,41 @@ export default {
     }
   },
   created () {
+    this.getData(1)
   },
   methods: {
     getData (page) {
+      this.$http.get(this.$url.Room_List, {page: page, limit: this.size}).then(res => {
+        if (res.code === 200) {
+          this.tableData = res.data
+          this.page = page
+          this.total = res.totals
+        }
+      })
     },
-    detailHandler (row) {
-      this.$router.push('roomEdit?id=' + row.id)
+    statusHandler (row) {
+      let status = 0
+      if (row.roomStatus === 2) {
+        status = 0
+      } else if (row.roomStatus === 0) {
+        status = 2
+      } else {
+        return false
+      }
+      this.$http.post(this.$url.Update_Room, {id: row.id, roomStatus: status}).then(res => {
+        if (res.code === 200) {
+          this.$message.success('修改成功')
+          this.getData(this.page)
+        }
+      })
     },
     deleteHandler (row) {
-      this.$confirm('确定删除吗').then(() => {
-        this.$message.success('删掉啦，开玩笑的ο(=•ω＜=)ρ⌒☆')
-      }, () => {})
+      this.$http.post(this.$url.Delete_Room, {id: row.id}).then(res => {
+        if (res.code === 200) {
+          this.$message.success('删除成功')
+          this.getData(this.page)
+        }
+      })
     },
     deleteAllHandler () {
       if (this.$refs.table.selection.length === 0) {
@@ -176,14 +169,13 @@ export default {
       this.dialogVisible = true
     },
     submit () {
-      this.$refs.form.validate(valid => {
-        if (valid) {
-          this.add()
+      this.$http.post(this.$url.Add_Room, {roomNumber: this.roomNumber}).then(res => {
+        if (res.code === 200) {
+          this.$message.success('新增成功')
+          this.getData(1)
+          this.dialogVisible = false
         }
       })
-    },
-    add () {
-      console.log('add')
     }
   }
 }

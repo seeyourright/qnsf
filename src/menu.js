@@ -34,38 +34,44 @@ const menu = [
         icon: '',
         path: '/home/permission',
         permission: ''
+      },
+      {
+        title: '单位管理',
+        icon: '',
+        path: '/home/unit',
+        permission: ''
+      },
+      {
+        title: '房间管理',
+        icon: '',
+        path: '/home/room',
+        permission: ''
       }
-      // {
-      //   title: '房间管理',
-      //   icon: '',
-      //   path: '/home/room',
-      //   permission: ''
-      // }
     ]
   },
   {
     title: '公共服务',
     icon: 'icon-fuwu',
     path: '2',
-    permission: '',
+    permission: 'public_service',
     children: [
       {
         title: '人民调解',
         icon: '',
         path: '/home/adjust',
-        permission: ''
+        permission: 'adjust'
       },
       {
         title: '法律援助',
         icon: '',
         path: '/home/lawHelp',
-        permission: ''
+        permission: 'lawHelp'
       },
       {
         title: '法律咨询',
         icon: '',
         path: '/home/lawConsult',
-        permission: ''
+        permission: 'lawConsult'
       }
     ]
   },
@@ -73,19 +79,19 @@ const menu = [
     title: '内容管理',
     icon: 'icon-xitong',
     path: '3',
-    permission: '',
+    permission: 'content',
     children: [
       {
         title: 'Banner管理',
         icon: '',
         path: '/home/banner',
-        permission: ''
+        permission: 'banner'
       },
       {
         title: '系统推送',
         icon: '',
         path: '/home/push',
-        permission: ''
+        permission: 'push'
       },
       {
         title: '法制政府',

@@ -1,7 +1,7 @@
 <template>
   <div class="mm">
     <div class="condition">
-      <div>系统管理—角色管理</div>
+      <div>系统管理—单位管理</div>
       <el-form size="small" inline>
         <el-form-item v-permission="'role_add'">
           <el-button type="primary" @click="addHandler">新增</el-button>
@@ -26,26 +26,25 @@
       </el-table-column>
       <el-table-column
         align="center"
-        prop="rid"
-        label="ID"
+        prop="departmentName"
+        label="名称"
       ></el-table-column>
       <el-table-column
         align="center"
         :show-overflow-tooltip="true"
-        prop="rname"
-        label="角色名称"
+        prop="phone"
+        label="电话"
       ></el-table-column>
       <el-table-column
         align="center"
-        prop="createDate"
-        label="创建时间"
+        prop="address"
+        label="地址"
       >
-        <template slot-scope="scope">{{$util.dateFormat(scope.row.createDate)}}</template>
       </el-table-column>
       <el-table-column
         align="center"
-        prop="remarks"
-        label="备注"
+        prop="principal"
+        label="负责人"
       ></el-table-column>
       <el-table-column
         align="center"
@@ -53,10 +52,9 @@
         label="操作"
       >
         <template slot-scope="scope">
-          <div v-if="scope.row.rid.length > 0">
-            <el-button v-permission="'role_update'" type="text" size="small" @click="detailHandler(scope.row)">详情</el-button>
-            <el-button v-permission="'role_delete'" type="text" size="small" class="text-danger" @click="deleteHandler(scope.row)">删除</el-button>
-          </div>
+          <el-button v-permission="'role_update'" type="text" size="small" @click="detailHandler(scope.row)">详情</el-button>
+          <el-button v-permission="'role_update'" type="text" size="small" @click="roomHandler(scope.row)">房间管理</el-button>
+          <el-button v-permission="'role_delete'" type="text" size="small" class="text-danger" @click="deleteHandler(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -73,7 +71,7 @@
 
 <script>
 export default {
-  name: 'Role',
+  name: 'unit',
   data () {
     return {
       page: 1,
@@ -93,7 +91,7 @@ export default {
         return false
       }
       this.$util.tableLoading()
-      this.$http.get(this.$url.Role_List, {page, limit: this.size, ...this.condition}).then(res => {
+      this.$http.get(this.$url.Unit_List, {page, limit: this.size, ...this.condition}).then(res => {
         if (res.code === 200) {
           this.tableData = res.data
           this.page = page
@@ -104,11 +102,11 @@ export default {
       })
     },
     detailHandler (row) {
-      this.$router.push('roleAdd?id=' + row.rid)
+      this.$router.push('unitEdit?id=' + row.institutionalCode)
     },
     deleteHandler (row) {
       this.$confirm('确定删除吗').then(() => {
-        this.$http.post(this.$url.Delete_Role, {rid: row.rid}).then(res => {
+        this.$http.post(this.$url.Delete_Unit, {institutionalCode: row.institutionalCode}).then(res => {
           if (res.code === 200) {
             this.$message.success('删除成功')
             this.getData(this.page)
@@ -126,7 +124,10 @@ export default {
       }, () => {})
     },
     addHandler () {
-      this.$router.push('roleAdd')
+      this.$router.push('unitEdit')
+    },
+    roomHandler (row) {
+      this.$router.push('unitRoom?id=' + row.institutionalCode + '&type=' + row.departmentType + '&name=' + row.departmentName)
     }
   }
 }

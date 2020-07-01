@@ -109,7 +109,7 @@
             <el-radio label="1">调解员</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item v-if="form.userType==='1'" label="所属单位" prop="unitId">
+        <el-form-item v-if="form.userType==='1'" label="所属地区" prop="unitId">
           <el-select v-model="form.unitId">
             <el-option v-for="area in areas" :label="area.institutionalName" :value="area.id" :key="area.id"></el-option>
           </el-select>

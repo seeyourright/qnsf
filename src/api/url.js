@@ -31,6 +31,17 @@ const url = {
   Add_App: `${path}/api/system-management/sysappversion/insertApp`, // app添加
   Delete_App: `${path}/api/system-management/sysappversion/deleteAppMore`, // app删除
   Download_App: `${path}/api/system-management/sysappversion/appDownload`, // app下载
+  // 单位管理
+  Unit_List: `${path}/api/system-management/department/getAll`, // 单位列表
+  Add_Unit: `${path}/api/system-management/department/insertDepartment`, // 单位添加
+  Update_Unit: `${path}/api/system-management/department/updateDepartment`, // 单位修改
+  Delete_Unit: `${path}/api/system-management/department/deleteDepartment`, // 单位删除
+  // 房间管理
+  Room_List: `${path}/api/system-management/room/getRoomAll`, // 房间列表
+  Add_Room: `${path}/api/system-management/room/insertRoom`, // 房间添加
+  Update_Room: `${path}/api/system-management/room/updateRoom`, // 房间修改
+  Distribution_Room: `${path}/api/system-management/room/updateRoom2`, // 房间修改
+  Delete_Room: `${path}/api/system-management/room/deleteRoom`, // 房间删除
   // 地区管理
   Area_All: `${path}/api/system-management/sysunit/getUnitAll`, // 地区列表
 

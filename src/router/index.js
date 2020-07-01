@@ -81,6 +81,27 @@ const router = new Router({
           }
         },
         {
+          path: 'unit',
+          name: 'unit',
+          component: () => import('../page/system/unit/Unit')
+        },
+        {
+          path: 'unitEdit',
+          name: 'unitEdit',
+          component: () => import('../page/system/unit/UnitEdit'),
+          meta: {
+            ppath: '/home/unit'
+          }
+        },
+        {
+          path: 'unitRoom',
+          name: 'unitRoom',
+          component: () => import('../page/system/unit/Room'),
+          meta: {
+            ppath: '/home/unit'
+          }
+        },
+        {
           path: 'room',
           name: 'room',
           component: () => import('../page/system/room/Room')
@@ -90,7 +111,7 @@ const router = new Router({
           name: 'roomEdit',
           component: () => import('../page/system/room/RoomEdit'),
           meta: {
-            ppath: '/home/room'
+            ppath: '/home/room '
           }
         },
         {
