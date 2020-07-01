@@ -74,7 +74,8 @@ export default {
       }
       this.$http.axios.post(this.$url.login, qs.stringify(params)).then(res => {
         if (res) {
-          this.getPremission(res.data.userId)
+          this.getPermission(res.data.userId)
+          this.getUser(res.data.userId)
           localStorage.setItem('userInfo', JSON.stringify(res.data))
           localStorage.setItem('token', res.data.token_type + res.data.access_token)
           this.$store.state.userInfo = res.data
@@ -84,7 +85,7 @@ export default {
         }
       })
     },
-    getPremission (uid) {
+    getPermission (uid) {
       this.$http.get(this.$url.Permission_By_User, {uid}).then(res => {
         if (res.code === 200) {
           const permissions = ['']
@@ -95,6 +96,14 @@ export default {
           this.$store.state.permission = permissions
         } else {
           localStorage.setItem('permission', JSON.stringify(['']))
+        }
+      })
+    },
+    getUser (uid) {
+      this.$http.get(this.$url.User_One, {id: uid}).then(res => {
+        if (res.code === 200) {
+          localStorage.setItem('user', JSON.stringify(res.data))
+          this.$store.state.user = res.data
         }
       })
     }

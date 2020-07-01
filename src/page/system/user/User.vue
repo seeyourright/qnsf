@@ -110,9 +110,10 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item v-if="form.userType==='1'" label="所属地区" prop="unitId">
-          <el-select v-model="form.unitId">
+          <el-select v-model="form.unitId" :disabled="$store.state.user.userType === '2'">
             <el-option v-for="area in areas" :label="area.institutionalName" :value="area.id" :key="area.id"></el-option>
           </el-select>
+          <div></div>
         </el-form-item>
         <div style="text-align: right">
           <el-button @click="dialogVisible=false">取消</el-button>
@@ -166,6 +167,9 @@ export default {
     }
   },
   mounted () {
+    if (this.$store.state.user.userType === '2') {
+      this.condition.unitId = this.$store.state.user.unitId
+    }
     this.areaInit()
     this.getData(1)
   },
@@ -239,6 +243,7 @@ export default {
     },
     addHandler () {
       this.dialogVisible = true
+      this.form.unitId = this.$store.state.user.unitId
     },
     submit () {
       this.$refs.form.validate(valid => {

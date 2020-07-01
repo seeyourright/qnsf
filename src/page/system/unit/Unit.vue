@@ -82,6 +82,9 @@ export default {
     }
   },
   created () {
+    if (this.$store.state.user.userType === '2') {
+      this.condition.area = this.$store.state.user.unitId
+    }
     this.getData(1)
   },
   methods: {
