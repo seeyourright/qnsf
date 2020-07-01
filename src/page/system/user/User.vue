@@ -248,11 +248,15 @@ export default {
       })
     },
     add () {
-      if (this.form.userType === '0') {
-        delete this.form.unitId
+      const form = {...this.form}
+      if (form.userType === '0') {
+        delete form.unitId
+      }
+      if (form.userType === '1') {
+        form.roleid = 2
       }
       this.form.username = this.form.phone
-      this.$http.post(this.$url.Add_User, this.form).then(res => {
+      this.$http.post(this.$url.Add_User, form).then(res => {
         if (res.code === 200) {
           this.$message.success('新增成功')
           this.getData(1)

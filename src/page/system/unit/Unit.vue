@@ -3,7 +3,7 @@
     <div class="condition">
       <div>系统管理—单位管理</div>
       <el-form size="small" inline>
-        <el-form-item v-permission="'role_add'">
+        <el-form-item v-permission="'unit_add'">
           <el-button type="primary" @click="addHandler">新增</el-button>
         </el-form-item>
 <!--        <el-form-item>-->
@@ -52,9 +52,9 @@
         label="操作"
       >
         <template slot-scope="scope">
-          <el-button v-permission="'role_update'" type="text" size="small" @click="detailHandler(scope.row)">详情</el-button>
-          <el-button v-permission="'role_update'" type="text" size="small" @click="roomHandler(scope.row)">房间管理</el-button>
-          <el-button v-permission="'role_delete'" type="text" size="small" class="text-danger" @click="deleteHandler(scope.row)">删除</el-button>
+          <el-button v-permission="'unit_update'" type="text" size="small" @click="detailHandler(scope.row)">详情</el-button>
+          <el-button v-permission="'unit_update'" type="text" size="small" @click="roomHandler(scope.row)">房间管理</el-button>
+          <el-button v-permission="'unit_delete'" type="text" size="small" class="text-danger" @click="deleteHandler(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -86,7 +86,7 @@ export default {
   },
   methods: {
     getData (page) {
-      if (this.$store.state.permission.indexOf('role_select') === -1) {
+      if (this.$store.state.permission.indexOf('unit_select') === -1) {
         this.$message.warning('没有权限')
         return false
       }

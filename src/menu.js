@@ -39,13 +39,13 @@ const menu = [
         title: '单位管理',
         icon: '',
         path: '/home/unit',
-        permission: ''
+        permission: 'unit'
       },
       {
         title: '房间管理',
         icon: '',
         path: '/home/room',
-        permission: ''
+        permission: 'room'
       }
     ]
   },

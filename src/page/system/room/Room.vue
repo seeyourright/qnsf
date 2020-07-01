@@ -4,11 +4,11 @@
       <div>系统管理—房间管理</div>
       <el-form size="small" inline>
         <el-form-item>
-          <el-button type="primary" @click="addHandler">新增</el-button>
+          <el-button v-permission="'room_add'" type="primary" @click="addHandler">新增</el-button>
         </el-form-item>
-        <el-form-item>
-          <el-button type="danger" @click="deleteAllHandler">批量删除</el-button>
-        </el-form-item>
+<!--        <el-form-item>-->
+<!--          <el-button type="danger" @click="deleteAllHandler">批量删除</el-button>-->
+<!--        </el-form-item>-->
       </el-form>
     </div>
     <el-table
@@ -67,9 +67,9 @@
         label="操作"
       >
         <template slot-scope="scope">
-          <el-button v-if="scope.row.roomStatus === 2" type="text" size="small" @click="statusHandler(scope.row)">启用</el-button>
-          <el-button v-if="scope.row.roomStatus === 0" type="text" size="small" @click="statusHandler(scope.row)">禁用</el-button>
-          <el-button type="text" size="small" class="text-danger" @click="deleteHandler(scope.row)">删除</el-button>
+          <el-button v-if="scope.row.roomStatus === 2" v-permission="'room_update'" type="text" size="small" @click="statusHandler(scope.row)">启用</el-button>
+          <el-button v-if="scope.row.roomStatus === 0" v-permission="'room_update'" type="text" size="small" @click="statusHandler(scope.row)">禁用</el-button>
+          <el-button v-permission="'room_delete'" type="text" size="small" class="text-danger" @click="deleteHandler(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -124,6 +124,10 @@ export default {
   },
   methods: {
     getData (page) {
+      if (this.$store.state.permission.indexOf('room_select') === -1) {
+        this.$message.warning('没有权限')
+        return false
+      }
       this.$http.get(this.$url.Room_List, {page: page, limit: this.size}).then(res => {
         if (res.code === 200) {
           this.tableData = res.data
