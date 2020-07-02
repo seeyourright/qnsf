@@ -4,6 +4,14 @@
       <div>系统管理—房间管理</div>
       <el-form size="small" inline>
         <el-form-item>
+          <el-select style="width: 220px" v-model="condition.roomStatus" @change="getData(1)">
+            <el-option label="全部类型" :value="null"></el-option>
+            <el-option label="空闲" :value="0"></el-option>
+            <el-option label="忙碌" :value="1"></el-option>
+            <el-option label="不可用" :value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
           <el-button v-permission="'room_add'" type="primary" @click="addHandler">新增</el-button>
         </el-form-item>
 <!--        <el-form-item>-->
@@ -50,7 +58,7 @@
       </el-table-column>
       <el-table-column
         align="center"
-        prop="status"
+        prop="roomStatus"
         label="状态"
       >
         <template slot-scope="scope">
@@ -105,6 +113,9 @@ export default {
       page: 1,
       size: 10,
       total: 100,
+      condition: {
+        roomStatus: null
+      },
       tableData: [],
       dialogVisible: false,
       roomNumber: '',
@@ -128,7 +139,7 @@ export default {
         this.$message.warning('没有权限')
         return false
       }
-      this.$http.get(this.$url.Room_List, {page: page, limit: this.size}).then(res => {
+      this.$http.get(this.$url.Room_List, {page: page, limit: this.size, ...this.condition}).then(res => {
         if (res.code === 200) {
           this.tableData = res.data
           this.page = page
@@ -170,6 +181,7 @@ export default {
       }, () => {})
     },
     addHandler () {
+      this.roomNumber = ''
       this.dialogVisible = true
     },
     submit () {

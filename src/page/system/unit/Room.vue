@@ -1,7 +1,7 @@
 <template>
   <div class="mm">
     <div class="condition">
-      <div>系统管理—单位管理—房间管理</div>
+      <div>{{name}}—房间管理</div>
       <el-form size="small" inline>
         <el-form-item v-permission="'role_add'">
           <el-button type="primary" @click="addHandler">添加房间</el-button>
@@ -58,11 +58,13 @@
     ></el-pagination>
     <el-dialog
       :show-close="false"
+      :modal="false"
       :visible="dialogVisible"
       width="300px"
+      top="200px"
     >
       <div style="text-align: center">
-        <el-select v-model="selectRoom">
+        <el-select v-model="selectRoom" filterable>
           <el-option v-for="room in rooms" :label="room.roomNumber" :value="room.id" :key="room.id"></el-option>
         </el-select>
         <div style="text-align: center;letter-spacing: 50px;margin-top: 30px">
@@ -79,9 +81,6 @@ export default {
   name: 'room',
   data () {
     return {
-      id: null,
-      type: null,
-      name: null,
       dialogVisible: false,
       page: 1,
       size: 10,
@@ -92,10 +91,12 @@ export default {
       selectRoom: ''
     }
   },
+  props: {
+    id: Number,
+    type: String,
+    name: String
+  },
   created () {
-    this.id = this.$route.query.id
-    this.type = this.$route.query.type
-    this.name = this.$route.query.name
     this.getData(1)
   },
   methods: {
@@ -139,6 +140,7 @@ export default {
       }, () => {})
     },
     addHandler () {
+      this.selectRoom = ''
       this.roominit()
       this.dialogVisible = true
     },

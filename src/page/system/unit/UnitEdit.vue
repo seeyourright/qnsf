@@ -7,8 +7,8 @@
       <el-form-item label="电话" prop="phone">
         <el-input style="width: 220px" v-model="form.phone"></el-input>
       </el-form-item>
-      <el-form-item label="邮箱" prop="additional">
-        <el-input style="width: 220px" v-model="form.additional"></el-input>
+      <el-form-item label="邮箱" prop="email">
+        <el-input style="width: 220px" v-model="form.email"></el-input>
       </el-form-item>
       <el-form-item label="地区" prop="area">
         <el-select style="width: 220px" v-model="form.area">
@@ -32,6 +32,18 @@
       <el-form-item label="职能" prop="function">
         <el-input v-model="form.functions"></el-input>
       </el-form-item>
+      <el-form-item label="图片" prop="function">
+        <el-upload
+          action="#"
+          :before-upload="beforeUpload"
+          :show-file-list="false"
+        >
+          <div style="text-align: left;margin-bottom: 10px">
+            <el-button>上传图片</el-button>
+          </div>
+          <img style="max-width: 600px" :src="imgUrl" alt="">
+        </el-upload>
+      </el-form-item>
       <div style="text-align: center;letter-spacing: 50px;margin-top: 30px">
         <el-button>取消</el-button>
         <el-button type="primary" @click="submit">保存</el-button>
@@ -49,14 +61,17 @@ export default {
       form: {
         departmentName: '',
         phone: '',
-        additional: '',
+        email: '',
         address: '',
         area: '',
         departmentSynopsis: '',
         departmentType: '',
         principal: '',
-        functions: ''
+        functions: '',
+        picture: ''
       },
+      file: '',
+      imgUrl: '',
       rules: {
         departmentName: [
           {required: true, message: '名称不能为空', trigger: 'blur'}
@@ -64,7 +79,7 @@ export default {
         address: [
           {required: true, message: '地址不能为空', trigger: 'blur'}
         ],
-        additional: [
+        Email: [
           {pattern: this.$util.emailReg, message: '邮箱格式不正确', trigger: 'blur'}
         ],
         area: [
@@ -100,6 +115,7 @@ export default {
       this.$http.post(this.$url.Unit_List, {institutionalCode: this.id}).then(res => {
         if (res.code === 200 && res.data.length > 0) {
           this.form = res.data[0]
+          this.imgUrl = this.$url.Img_Path + res.data[0].picture
         }
       })
     },
@@ -119,6 +135,15 @@ export default {
         }
       })
     },
+    beforeUpload (file) {
+      const fileReader = new FileReader()
+      fileReader.onload = (e) => {
+        this.file = file
+        this.imgUrl = e.target.result
+      }
+      fileReader.readAsDataURL(file)
+      return false
+    },
     submit () {
       this.$refs.form.validate(valid => {
         if (valid) {
@@ -131,17 +156,42 @@ export default {
       })
     },
     add () {
-      this.$http.post(this.$url.Add_Unit, this.form).then(res => {
-        if (res.code === 200) {
+      const formdata = new FormData()
+      const form = {...this.form}
+      if (this.file) {
+        form.up_file = this.file
+        delete form.picture
+      }
+      for (let key in form) {
+        if (form[key]) {
+          formdata.append(key, form[key])
+        }
+      }
+      this.$http.axios.post(this.$url.Add_Unit, formdata).then(res => {
+        if (res.data.code === 200) {
           this.$message.success('添加成功')
           this.$router.back()
         }
       })
     },
     edit () {
-      this.$http.post(this.$url.Update_Unit, this.form).then(res => {
-        this.$message.success('修改成功')
-        this.$router.back()
+      const formdata = new FormData()
+      const form = {...this.form}
+      if (this.file) {
+        form.up_file = this.file
+        delete form.picture
+      }
+      delete form.sysRoomManagements
+      for (let key in form) {
+        if (form[key]) {
+          formdata.append(key, form[key])
+        }
+      }
+      this.$http.axios.post(this.$url.Update_Unit, formdata).then(res => {
+        if (res.data.code === 200) {
+          this.$message.success('修改成功')
+          this.$router.back()
+        }
       })
     }
   }

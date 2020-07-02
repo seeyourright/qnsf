@@ -44,7 +44,8 @@ const url = {
   Delete_Room: `${path}/api/system-management/room/deleteRoom`, // 房间删除
   // 地区管理
   Area_All: `${path}/api/system-management/sysunit/getUnitAll`, // 地区列表
-
+  // tupian
+  Img_Path: `${path}/api/rmtj/static/`,
   doNotDelete: 'doNotDelete', // 别删
   // ----------------------------------ly---------------------------------------
   imgUrl:`${path1}/api/lawAid/static/`,

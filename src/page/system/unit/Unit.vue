@@ -3,6 +3,12 @@
     <div class="condition">
       <div>系统管理—单位管理</div>
       <el-form size="small" inline>
+        <el-form-item>
+          <el-select style="width: 220px" v-model="condition.departmentType" @change="getData(1)">
+            <el-option label="全部类型" :value="null"></el-option>
+            <el-option v-for="item in unitType" :label="item" :value="item" :key="item"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item v-permission="'unit_add'">
           <el-button type="primary" @click="addHandler">新增</el-button>
         </el-form-item>
@@ -43,6 +49,12 @@
       </el-table-column>
       <el-table-column
         align="center"
+        prop="departmentType"
+        label="类型"
+      >
+      </el-table-column>
+      <el-table-column
+        align="center"
         prop="principal"
         label="负责人"
       ></el-table-column>
@@ -66,19 +78,42 @@
       layout="prev, pager, next, jumper"
       :total="total"
     ></el-pagination>
+    <el-dialog
+      width="800px"
+      :visible.sync="dialogVisible"
+    >
+      <Room ref="room" :id="room.id" :type="room.type" :name="room.name"></Room>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import Room from './Room'
 export default {
   name: 'unit',
+  components: {
+    Room
+  },
   data () {
     return {
+      dialogVisible: false,
       page: 1,
       size: 10,
       total: 100,
-      condition: {},
-      tableData: []
+      condition: {
+        departmentType: null
+      },
+      room: {
+        id: 0,
+        type: '',
+        name: ''
+      },
+      tableData: [],
+      unitType: [
+        '人民调解',
+        '法律援助',
+        '法律咨询'
+      ]
     }
   },
   created () {
@@ -130,7 +165,14 @@ export default {
       this.$router.push('unitEdit')
     },
     roomHandler (row) {
-      this.$router.push('unitRoom?id=' + row.institutionalCode + '&type=' + row.departmentType + '&name=' + row.departmentName)
+      // this.$router.push('unitRoom?id=' + row.institutionalCode + '&type=' + row.departmentType + '&name=' + row.departmentName)
+      this.room.id = row.institutionalCode
+      this.room.type = row.departmentType
+      this.room.name = row.departmentName
+      this.dialogVisible = true
+      this.$nextTick(() => {
+        this.$refs.room.getData(1)
+      })
     }
   }
 }
