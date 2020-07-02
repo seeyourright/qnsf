@@ -17,11 +17,35 @@ export default {
   },
   created () {
     this.getTime()
+    this.getUserInfo()
     setInterval(this.getTime, 1000)
   },
   methods: {
     getTime () {
       this.time = this.$util.dateFormat(new Date())
+    },
+    getUserInfo(){
+      const that = this
+      that.$http.axios({
+          method: "post",
+          url: that.$url.getUserInfo,
+          params: {
+            id: that.$store.state.userInfo.userId
+          }
+        })
+        .then(function(res) {
+           console.log('用户信息',res)
+           
+           if(res.data.code == 200){
+               sessionStorage.setItem('unitId',res.data.data.unitId)
+               sessionStorage.setItem('userType',res.data.data.userType)
+               sessionStorage.setItem('userPhone',res.data.data.phone)
+               sessionStorage.setItem('userId',res.data.data.id)
+           }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     }
   }
 }

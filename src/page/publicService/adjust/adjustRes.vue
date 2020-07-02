@@ -43,25 +43,26 @@
              <div  style="height:30px;">
                  <el-button type="primary" size="small" style="margin-right:20px;" @click="showPDF = true">预览</el-button>
                  <!-- <a target='_black' :href='previewUrl'>在线预览</a> -->
-                 <el-button type="primary" size="small">下载</el-button>
+                  <a :href="agreeUrl" class="expWord1"  style="top:15px;right:10px;">下载</a>
+                 <!-- <el-button type="primary" size="small">下载</el-button> -->
              </div>
           </div>
 
            <!-- 线上、线下调解失败（失败原因） -->
-            <p class="add_key" v-if="status == 5"   style="margin-top:20px;">拒绝原因</p>
+            <p class="add_key" v-if="status == 5"   style="margin-top:20px;">未达成原因</p>
             <el-input v-if="status == 5"  :disabled="true" style="margin:10px 0 30px;"  v-model = 'obj.notReach' type="textarea" :rows="5"></el-input>
 
 
 
-          <p  style="margin:30px 0;">
-              <span class="add_key">完成时间:</span>
+          <p style="margin:30px 0;">
+              <span class="add_key">{{obj.applyForStatus == 5?'拒绝时间:':'完成时间:'}}</span>
               <span class="add_value">{{obj.endTime}}</span>
           </p>
 
            <!-- 协议预览 -->
     <el-dialog title="协议预览" :visible.sync="showPDF" width="1000px">
-      <!-- <pdf :src="previewUrl" :page="pdfPage"></pdf> -->
-      <!-- <div class="ad_row3">
+     <pdf :src="previewUrl" :page="pdfPage"></pdf> 
+      <div class="ad_row3">
           <el-pagination
             @current-change="handleCurrentChange"
             :current-page.sync="pdfPage"
@@ -70,8 +71,8 @@
             :total="pdfTotals"
           ></el-pagination>
           
-      </div> -->
-      <iframe :src='previewUrl' width='100%' height='500px' frameborder='1'></iframe>
+      </div> 
+      <!-- <iframe :src='previewUrl' width='100%' height='500px' frameborder='1'></iframe> -->
     </el-dialog>  
     </div>
 </template>
@@ -90,12 +91,12 @@ export default {
           isPass:false,  //true完成调解  false调解失败
           showPDF: false,
           pdfPage:1,
-          pdfTotals:32
+          pdfTotals:10
         };
     },
     created() {
         this.init()
-        console.log(this.obj)
+        console.log(this.agreeUrl)
     },
     mounted() {
 
@@ -108,7 +109,12 @@ export default {
            that.lowBaseObj.reconcileTime = moment(that.obj.reconcileTime).format('YYYY-MM-DD HH:mm:ss') //that.$util.timeFormat(that.lowBaseObj.reconcileTime)
            that.obj.endTime = moment(that.obj.endTime).format('YYYY-MM-DD HH:mm:ss') //that.$util.timeFormat(that.obj.endTime)
            console.log(this.isUp)
-       }
+       },
+        //点击分页触发函数
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      
+    }
     },
 };
 </script>
@@ -177,5 +183,14 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.expWord1{
+    color: white;
+    background: #409EFF;
+    padding: 5px 10px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
 }
 </style>

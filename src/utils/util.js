@@ -73,6 +73,18 @@ const util = {
     }
     mask.parentNode.removeChild(mask)
   },
+  //计算两个时间相差天数
+  datedifference(sDate1) {    //sDate1和sDate2是2006-12-18格式 
+    var dateSpan,
+        tempDate,
+        iDays;
+    sDate1 = new Date(sDate1)   //Date.parse(sDate1);
+    let sDate2 = new Date()   // Date.parse(sDate2);
+    dateSpan = sDate2 - sDate1;
+    dateSpan = Math.abs(dateSpan);
+    iDays = Math.floor(dateSpan / (24 * 3600 * 1000));
+    return iDays
+  },
   //时间格式转化
   timeFormat(time) {
  

@@ -347,6 +347,13 @@ export default {
                      value:val.id
                    })
               })
+
+              res.data.data[0].children.forEach(val=>{
+                   that.cityList.push({
+                     name:val.institutionalName,
+                     value:val.id
+                   })
+              })
           }
         })
         .catch(function(error) {

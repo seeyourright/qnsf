@@ -41,7 +41,8 @@
 
       <div style="height:30px;">
         <el-button type="primary" size="small" style="margin-right:20px;" @click="showPDF = true">预览</el-button>
-        <el-button type="primary" size="small">下载</el-button>
+        <a :href="agreeUrl" class="expWord1"  style="top:15px;right:10px;">下载</a>
+        <!-- <el-button type="primary" size="small">下载</el-button> -->
       </div>
     </div>
 
@@ -49,30 +50,30 @@
       <span class="add_key">协议签署进度:</span>
       <span class="add_value" >
         调解员
-        <span style="color:green;" v-if="obj.peacemakerSignature == true">（已签署）、</span>
+        <span style="color:green;" v-if="obj.peacemakerSignature != null">（已签署）、</span>
         <span style="color:red;" v-else>（未签署）、</span>
       </span>
 
       <span class="add_value" >
         预约人
-        <span style="color:green;" v-if="obj.proposerSignature == true">（已签署）、</span>
+        <span style="color:green;" v-if="obj.proposerSignature != null">（已签署）、</span>
         <span style="color:red;" v-else>（未签署）、</span>
       </span>
 
       <span class="add_value" >
         被预约人
-        <span style="color:green;" v-if="obj.recipientSignature == true">（已签署）、</span>
+        <span style="color:green;" v-if="obj.recipientSignature != null">（已签署）、</span>
         <span style="color:red;" v-else>（未签署）、</span>
       </span>
     </div>
 
-    <div class="step0_up_button" v-if="isSign == true">
+    <div class="step0_up_button" v-if="obj.peacemakerSignature != null  && obj.proposerSignature  != null  && obj.recipientSignature  != null ">
       <el-button type="primary"  @click="applyRes('4')">完成调解</el-button>
     </div>
 
     <!-- 协议预览 -->
     <el-dialog title="协议预览" :visible.sync="showPDF" width="665px">
-      <!-- <pdf :src="previewUrl" :page="pdfPage"></pdf>
+      <pdf :src="previewUrl" :page="pdfPage"></pdf>
       <div class="ad_row3">
           <el-pagination
             @current-change="handleCurrentChange"
@@ -82,8 +83,8 @@
             :total="pdfTotals"
           ></el-pagination> 
           
-      </div>-->
-        <iframe :src='previewUrl' width='100%' height='500px' frameborder='1'></iframe>
+      </div>
+        <!-- <iframe :src='previewUrl' width='100%' height='500px' frameborder='1'></iframe> -->
     </el-dialog>
   </div>
 </template>
@@ -102,7 +103,7 @@ export default {
       isUp: true, //true线上审批  false 线下审批
       showPDF: false,
       pdfPage:1,
-      pdfTotals:32,
+      pdfTotals:10,
     };
   },
   watch:{
@@ -115,15 +116,17 @@ export default {
   },
   created() {
     this.init();
+    console.log(this.previewUrl)
+    console.log(this.agreeUrl)
   },
   computed: {
     isSign() {
-      // if(this.obj.peacemakerSignature == true && this.obj.proposerSignature == true && this.obj.recipientSignature == true){
-      //     return true
-      // }else{
-      //    return false
-      // }
-      return true
+      if(this.obj.peacemakerSignature != null  && this.obj.proposerSignature  != null  && this.obj.recipientSignature  != null ){
+          return true
+      }else{
+         return false
+      }
+      // return true
     }
   },
   mounted() {},
@@ -133,7 +136,15 @@ export default {
       that.isUp = that.upDown;
       that.upBaseObj.reconcileTime = moment(that.upBaseObj.reconcileTime).format('YYYY-MM-DD HH:mm:ss') //that.$util.timeFormat(that.upBaseObj.reconcileTime)
       that.lowBaseObj.reconcileTime = moment(that.lowBaseObj.reconcileTime).format('YYYY-MM-DD HH:mm:ss') //that.$util.timeFormat(that.lowBaseObj.reconcileTime)
-      console.log(that.isUp);
+      let diffDays = that.$util.datedifference(that.obj.protocolPushTime)
+
+      console.log('与推送协议相差天数',diffDays)
+      if( !that.obj.peacemakerSignature && !that.obj.proposerSignature && !that.obj.recipientSignature  && diffDays >7){
+              that.autoRej()    //7天内未签署完成   自动改为未达成调解状态
+      }
+
+
+
     },
      applyRes(res){
           const that = this
@@ -158,9 +169,34 @@ export default {
           that.loading = false;
           console.log(error);
         });
-          that.$emit('res',res)   
+           
 
        },
+    autoRej(){
+        const that = this
+          that.$http
+          .axios({
+          method: "post",
+          url: that.$url.adjust.updateDetail,
+          params: {
+             reservationNumber: that.obj.reservationNumber,
+             id:that.obj.id,
+             applyForStatus:5,
+             notReach:`协议推送后${7}天内未完成签署，系统自动归为未达成调解`,
+             endTime:that.$util.getDateTime()
+          }
+        })
+        .then(function(res) {
+          console.log("系统自动归为未调节状态", res);
+          if (res.data.code == 200) {
+                that.$emit('res',res) 
+          }
+        })
+        .catch(function(error) {
+          that.loading = false;
+          console.log(error);
+        });
+    },
     preview(row) {
       //createLoadingTask方法，参数为pdf的文件地址，此方法可返回pdf文件的一些参数，例如页码总数，等；会返回一个promise对象；
       this.pdfUrl = pdf.createLoadingTask(this.fileUrl + row.magazinePdfPath);
@@ -249,5 +285,15 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.expWord1{
+    color: white;
+    background: #409EFF;
+    padding: 5px 10px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    
 }
 </style>

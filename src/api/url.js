@@ -48,6 +48,7 @@ const url = {
   Img_Path: `${path}/api/rmtj/static/`,
   doNotDelete: 'doNotDelete', // 别删
   // ----------------------------------ly---------------------------------------
+  getUserInfo:`${path}/api/system-management/sysuser/select_user_one`,
   imgUrl:`${path1}/api/lawAid/static/`,
   upUrl:`${path1}/api/lawAid/lawAidApplyForm/upSignFile`,
   adjust:{
@@ -58,7 +59,8 @@ const url = {
     lookMorePeople:`${path}/api/rmtj/rmtj/selectMorYyrAndByyr`,
     imgUrl:`${path}/api/rmtj/static/`,
     downZip:`${path}/api/rmtj/rmtj/verifyMaterialDownloadZip`,
-    tjyList:`${path}/api/system-management/sysuser/select_user_all`
+    tjyList:`${path}/api/system-management/sysuser/select_user_all`,
+    roomList:`${path}/api/system-management/room/getRoomAll`
   },
   lawHelp:{
       getList:`${path1}/api/lawAid/lawAidApplyForm/findlist`,
@@ -81,7 +83,7 @@ const url = {
     add:`${path1}/api/lawConsult/lawConsultForm/add`,
     update:`${path1}/api/lawConsult/lawConsultForm/update`,
     uploadPic:`${path1}/api/lawAid/lawAidApplyForm/upfile`,
-    getCity:`${path}/api/system-management/sysunit/getUnitList`
+    getCity:`${path}/api/system-management/sysunit/getUnitTree`
   }
 }
 

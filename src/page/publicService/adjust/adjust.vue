@@ -92,6 +92,7 @@ export default {
       that.loading = true
       let reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
 　　  let isHz = reg.test(that.condition)    
+console.log(sessionStorage.getItem('userType'))
       that.$http.axios({
           method: "post",
           url: that.$url.adjust.getList,
@@ -99,6 +100,9 @@ export default {
             applyForStatus: that.status === ''?null:that.status,
             yyrName:isHz?that.condition:null,
             reservationNumber:isHz?null:that.condition,
+            recordAffiliation:sessionStorage.getItem('userType') == 2?sessionStorage.getItem('unitId'):null,
+            reconcileId: sessionStorage.getItem('userType') == 1?sessionStorage.getItem('userId'):null,
+            reconcileWay: sessionStorage.getItem('userType') != 1 && that.status === '0'?'线上调解':null,
             page:that.currentPage,
             limit:that.size
           }

@@ -1,6 +1,7 @@
 <template>
   <div class="adjust_detail">
-    <p class="lawTitle" @click="reset">reset</p>
+   
+    <!-- <p class="lawTitle" @click="reset">reset</p> -->
     <!-- 申请信息 -->
     <div class="add_row1">
       <div class="add_row1_item">
@@ -137,6 +138,7 @@
     <!-- 待审批状态 -->
     <waitAppr :upDown = 'isUp'  
               :status="status" 
+              :role = "role"
               :rejReason = 'rejReasonStatus1'
               :obj = "obj"
               v-if = "status == 0 || status == 1"  
@@ -254,6 +256,7 @@ export default {
   },
   created() {
     this.orderNum = sessionStorage.getItem('adjustObj')
+    this.role = sessionStorage.getItem('userType')
     this.getDetail()
   },
   mounted() {},
@@ -281,7 +284,9 @@ export default {
                  that.adjustTime =  moment(r.applyForTime).format('YYYY-MM-DD HH:mm:ss') //that.$util.timeFormat(r.applyForTime)     //申请时间
                  that.applyAddr = r.applyForAddress    //申请地址
                  that.adjustContent = r.reconcileContent  //调解内容
-                 that.previewUrl =  r.reconcileProtocol?`${that.$url.imgUrl}${r.reconcileProtocol}`:''
+                 that.previewUrl =  r.reconcileProtocolb?`${that.$url.adjust.imgUrl}${r.reconcileProtocolb.split('.')[0]}.pdf`:''
+                 that.agreeUrl =  r.reconcileProtocolb?`${that.$url.adjust.imgUrl}${r.reconcileProtocolb.split('.')[0]}.doc`:''
+                //  that.agreeUrl = r.reconcileProtocolb?`${that.$url.adjust.imgUrl   }${r.reconcileProtocolb}`:''
                  that.applyManId = r.yyrSfzhm
                  that.applyManName = r.yyrName
                  that.applyManPhone =  r.yyrPhone
@@ -468,5 +473,14 @@ export default {
     padding: 5px 10px;
     font-size: 14px;
     
+}
+
+.lawTitle {
+  font-size: 15px;
+  font-weight: bold;
+  padding: 20px  0;
+  width: 100%;
+  height: 37px;
+  box-sizing: border-box;
 }
 </style>

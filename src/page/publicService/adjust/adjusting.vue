@@ -134,27 +134,31 @@ export default {
               param = {
                   reservationNumber: that.obj.reservationNumber,
                   id:that.obj.id,
-                  applyForStatus:3
+                  applyForStatus:3,
+                  protocolPushTime: that.$util.getDateTime()
               }
           }else if(that.isUp == true && res == '5'){
               param = {
                   reservationNumber: that.obj.reservationNumber,
                   id:that.obj.id,
                   applyForStatus:5,
-                  notReach:that.upReason
+                  notReach:that.upReason,
+                  endTime:that.$util.getDateTime()
               }
           }else if(that.isUp == false && res == '3'){
               param = {
                   reservationNumber: that.obj.reservationNumber,
                   id:that.obj.id,
-                  applyForStatus:3
+                  applyForStatus:3,
+                  protocolPushTime: that.$util.getDateTime()
               }
           }else if(that.isUp == false && res == '5'){
                param = {
                   reservationNumber: that.obj.reservationNumber,
                   id:that.obj.id,
                   applyForStatus:5,
-                  notReach:that.lowReason
+                  notReach:that.lowReason,
+                  endTime:that.$util.getDateTime()
               }
           }
          
