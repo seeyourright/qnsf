@@ -22,7 +22,7 @@
           <el-input v-model="form.password" :placeholder="id?'不填写则不会修改密码':''"></el-input>
         </el-form-item>
         <el-form-item label="所属地区" prop="unitId">
-          <el-select v-model="form.unitId">
+          <el-select v-model="form.unitId" :disabled="$store.state.user.userType === '2'">
             <el-option v-for="area in areas" :label="area.institutionalName" :value="area.id" :key="area.id"></el-option>
           </el-select>
         </el-form-item>
@@ -93,6 +93,7 @@ export default {
   },
   created () {
     this.id = this.$route.query.id
+    this.form.unitId = this.$store.state.user.unitId
     if (this.id) {
       this.init()
       delete this.rules.password

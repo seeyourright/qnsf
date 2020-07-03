@@ -11,7 +11,7 @@
         <el-input style="width: 220px" v-model="form.email"></el-input>
       </el-form-item>
       <el-form-item label="地区" prop="area">
-        <el-select style="width: 220px" v-model="form.area">
+        <el-select style="width: 220px" v-model="form.area" :disabled="$store.state.user.userType === '2'">
           <el-option v-for="area in areas" :label="area.institutionalName" :value="area.id" :key="area.id"></el-option>
         </el-select>
       </el-form-item>
@@ -105,6 +105,7 @@ export default {
   },
   created () {
     this.id = this.$route.query.id
+    this.form.area = this.$store.state.user.unitId
     if (this.id) {
       this.init()
     }

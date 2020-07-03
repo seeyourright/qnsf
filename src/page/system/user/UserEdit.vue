@@ -16,7 +16,7 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item v-if="form.userType==='1'" label="所属地区" prop="unitId">
-              <el-select style="width: 100%" v-model="form.unitId">
+              <el-select style="width: 100%" v-model="form.unitId" :disabled="$store.state.user.userType === '2'">
                 <el-option v-for="area in areas" :label="area.institutionalName" :value="area.id" :key="area.id"></el-option>
               </el-select>
             </el-form-item>
