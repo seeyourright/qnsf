@@ -109,6 +109,7 @@ export default {
       })
     },
     areaInit () {
+      console.log(1)
       this.$http.get(this.$url.Area_All).then(res => {
         if (res.code === 200) {
           const area = []

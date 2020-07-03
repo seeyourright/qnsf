@@ -21,7 +21,7 @@
               <VerificationCode ref="code"></VerificationCode>
             </div>
             <div class="">
-              <div class="btn" @click="submit">登录</div>
+              <el-button type="text" class="btn" :loading="loading" @click="submit">登录</el-button>
             </div>
           </fieldset>
         </form>
@@ -38,6 +38,7 @@ export default {
   components: {VerificationCode},
   data () {
     return {
+      loading: false,
       username: '',
       password: '',
       code: ''
@@ -72,6 +73,7 @@ export default {
         client_id: 'miniapp',
         client_secret: 'miniapp'
       }
+      this.loading = true
       this.$http.axios.post(this.$url.login, qs.stringify(params)).then(res => {
         if (res) {
           this.getPermission(res.data.userId)
@@ -83,6 +85,8 @@ export default {
         } else {
           this.$message.error('用户名或密码错误')
         }
+      }).finally(res => {
+        this.loading = false
       })
     },
     getPermission (uid) {
@@ -199,9 +203,10 @@ export default {
     border $mcolor 1px solid
     text-align center
     height 40px
-    line-height 40px
     margin-top 40px
     cursor pointer
+    background-color: transparent;
+    color $mcolor
     transition all .5s
     &:hover
       border $mcolor2 1px solid
