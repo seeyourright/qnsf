@@ -1,5 +1,5 @@
 <template>
-  <div class="adjust_detail">
+  <div class="adjust_detail" >
    
     <!-- <p class="lawTitle" @click="reset">reset</p> -->
     <!-- 申请信息 -->
@@ -38,7 +38,7 @@
     <!-- 申请人信息 -->
     <div class="add_row2">
       <div>
-        <span class="add_key">申请人姓名:</span>
+        <span class="add_key">预约人:</span>
         <span class="add_value">{{applyManName}}</span>
       </div>
       <div>
@@ -55,7 +55,7 @@
 
     <div class="add_row2">
       <div>
-        <span class="add_key">对方姓名:</span>
+        <span class="add_key">对方信息:</span>
         <span class="add_value">{{oppositeManName}}</span>
       </div>
       <div>
@@ -191,6 +191,7 @@ export default {
   components: {waitAppr,adjusting,signFile,adjustRes},
   data() {
     return {
+      loading:false,
       obj:{},
       orderNum:"38338",  //预约号
       isUp:false,    //false 线下调解   true 线上调解
@@ -272,7 +273,6 @@ export default {
         })
         .then(function(res) {
            console.log('人民调解申请详情',res)
-          
            if(res.data.code == 200){
                  let r = res.data.data
                  that.obj = res.data.data
@@ -373,7 +373,7 @@ export default {
           }
         })
         .catch(function(error) {
-          that.loading = false;
+          
           console.log(error);
         });
     }

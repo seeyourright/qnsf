@@ -10,6 +10,7 @@
           <el-option value=''  label="全部"></el-option>
           <el-option value="0" label="待审批"></el-option>
           <el-option value="2" label="已审批"></el-option>
+          <el-option value="3" label="调解中"></el-option>
           <el-option value="1" label="已拒绝"></el-option>
           <el-option value="4" label="已完成"></el-option>
           <el-option value="5" label="未达成调解"></el-option>
@@ -91,18 +92,17 @@ export default {
       const that = this;
       that.loading = true
       let reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
-　　  let isHz = reg.test(that.condition)    
-console.log(sessionStorage.getItem('userType'))
+　　  let isHz = reg.test(that.condition)  //判断输入框输入是不是汉字   是汉字按预约人筛选查询   不是则按预约号筛选查询
       that.$http.axios({
           method: "post",
           url: that.$url.adjust.getList,
           params: {
             applyForStatus: that.status === ''?null:that.status,
-            yyrName:isHz?that.condition:null,
+            yyrName:isHz?that.condition:null,   
             reservationNumber:isHz?null:that.condition,
-            recordAffiliation:sessionStorage.getItem('userType') == 2?sessionStorage.getItem('unitId'):null,
-            reconcileId: sessionStorage.getItem('userType') == 1?sessionStorage.getItem('userId'):null,
-            reconcileWay: sessionStorage.getItem('userType') != 1 && that.status === '0'?'线上调解':null,
+            recordAffiliation:sessionStorage.getItem('userType') == 2?sessionStorage.getItem('unitId'):null,  //管理员按归属单位查找  超级管理员可查看所有
+            reconcileId: sessionStorage.getItem('userType') == 1?sessionStorage.getItem('userId'):null,  //调解员按id查找  
+            reconcileWay: sessionStorage.getItem('userType') != 1 && that.status === '0'?'线上调解':null,  //查询审批状态的数据时   调解员只能获取线下调解的  管理员和超级管理员只能获取线上
             page:that.currentPage,
             limit:that.size
           }
@@ -121,9 +121,6 @@ console.log(sessionStorage.getItem('userType'))
                
            }
         })
-        .catch(function(error) {
-          console.log(error);
-        });
     },
     dealStatusShow(e){
        if(e === 0){
@@ -177,13 +174,9 @@ console.log(sessionStorage.getItem('userType'))
                that.$message.success('删除成功！');
           }
         })
-        .catch(function(error) {
-          console.log(error);
-        });
     },
     //查看详情
     lookDetail(val) {
-      console.log(val);
       sessionStorage.setItem('adjustObj',val.reservationNumber)
       this.$router.push("adjustDetail");
     },

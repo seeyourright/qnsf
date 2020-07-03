@@ -91,6 +91,7 @@ export default {
           method: "post",
           url: that.$url.lawHelp.getList,
           params: {
+            addressNumber:sessionStorage.getItem('userType') == 2?sessionStorage.getItem('unitId'):null,
             status: that.status,
             applyName: that.condition?that.condition:null,
             page:that.currentPage,
@@ -126,7 +127,7 @@ export default {
        }else if(e == 1){
            return '已通过'
        }else if(e == 2){
-           return '已拒绝'
+           return '未通过'
        }
     },
     //下拉框change事件

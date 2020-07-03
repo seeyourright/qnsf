@@ -50,25 +50,33 @@
       <span class="add_key">协议签署进度:</span>
       <span class="add_value" >
         调解员
-        <span style="color:green;" v-if="obj.peacemakerSignature != null">（已签署）、</span>
+        <span style="color:green;" v-if="obj.peacemakerSignature ">（已签署）、</span>
         <span style="color:red;" v-else>（未签署）、</span>
       </span>
 
       <span class="add_value" >
         预约人
-        <span style="color:green;" v-if="obj.proposerSignature != null">（已签署）、</span>
+        <span style="color:green;" v-if="obj.proposerSignature">（已签署）、</span>
         <span style="color:red;" v-else>（未签署）、</span>
       </span>
 
       <span class="add_value" >
         被预约人
-        <span style="color:green;" v-if="obj.recipientSignature != null">（已签署）、</span>
+        <span style="color:green;" v-if="obj.recipientSignature">（已签署）、</span>
         <span style="color:red;" v-else>（未签署）、</span>
       </span>
     </div>
+    
+    <p class="add_key" v-if="showLowRej" >未达成原因</p>
+    <el-input v-if="showLowRej"  v-model="lowReason"    style="margin:10px 0 30px;"  type="textarea" :rows="5" ></el-input>
+    <div class="step0_up_button" v-if="showLowRej">
+        <el-button type="danger" size="small" :loading="btnLoading" @click="applyRes1('5')">提交</el-button>
+        <el-button type="primary" size="small"  @click="showLowRej = false">返回上一步</el-button>
+    </div>
 
-    <div class="step0_up_button" v-if="obj.peacemakerSignature != null  && obj.proposerSignature  != null  && obj.recipientSignature  != null ">
-      <el-button type="primary"  @click="applyRes('4')">完成调解</el-button>
+    <div class="step0_up_button" v-if="obj.peacemakerSignature  && obj.proposerSignature && obj.recipientSignature && showLowRej == false">
+      <el-button type="danger" size="small"  v-if="obj.reconcileWay == '线下调解'"  @click="showLowRej = true" >未达成调解</el-button>
+      <el-button type="primary" size="small"  :loading="btnLoading1"  @click="applyRes('4')">完成调解</el-button>
     </div>
 
     <!-- 协议预览 -->
@@ -100,6 +108,10 @@ export default {
   },
   data() {
     return {
+      btnLoading:false,
+      btnLoading1:false,
+      showLowRej:false,
+      lowReason:'',
       isUp: true, //true线上审批  false 线下审批
       showPDF: false,
       pdfPage:1,
@@ -143,11 +155,10 @@ export default {
               that.autoRej()    //7天内未签署完成   自动改为未达成调解状态
       }
 
-
-
     },
      applyRes(res){
           const that = this
+           that.btnLoading1 = true
           that.$http
           .axios({
           method: "post",
@@ -161,6 +172,7 @@ export default {
         })
         .then(function(res) {
           console.log("更新人民调解信息(调解中)", res);
+           that.btnLoading1 = false
           if (res.data.code == 200) {
                 that.$emit('res',res) 
           }
@@ -171,6 +183,28 @@ export default {
         });
            
 
+       },
+       applyRes1(){
+          const that = this
+          that.btnLoading = true
+          that.$http
+          .axios({
+          method: "post",
+          url: that.$url.adjust.updateDetail,
+          params: {
+             reservationNumber: that.obj.reservationNumber,
+             id:that.obj.id,
+             applyForStatus:5,
+             notReach:that.lowReason,
+             endTime:that.$util.getDateTime()
+          }
+        })
+        .then(function(res) {
+          that.btnLoading = false
+          if (res.data.code == 200) {
+                that.$emit('res',res) 
+          }
+        })
        },
     autoRej(){
         const that = this
@@ -192,10 +226,7 @@ export default {
                 that.$emit('res',res) 
           }
         })
-        .catch(function(error) {
-          that.loading = false;
-          console.log(error);
-        });
+        
     },
     preview(row) {
       //createLoadingTask方法，参数为pdf的文件地址，此方法可返回pdf文件的一些参数，例如页码总数，等；会返回一个promise对象；

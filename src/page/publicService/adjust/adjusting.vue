@@ -22,14 +22,14 @@
                <p class="add_key" v-if="upPass === false">未达成原因</p>
                <el-input  v-model="upReason"    style="margin:10px 0 30px;"  type="textarea" :rows="5" v-if="upPass === false"></el-input>
                <div class="step0_up_button"  v-if="upPass === false" >
-                   <el-button type="danger" size="small" @click="applyRes('5')">提交</el-button>
+                   <el-button type="danger" size="small"  :loading="btnLoading"  @click="applyRes('5')">提交</el-button>
                    <el-button type="primary" size="small"  @click="upPass = ''">返回上一步</el-button>
                </div>
             </div>
             
               <div class="step0_up_button" v-if="upPass === '' && isTime == true">
                    <el-button type="danger" size="small"  @click="upPass = false">未达成调解</el-button>
-                   <el-button type="primary" size="small" @click="applyRes('3')">达成调解推送调解员</el-button>
+                   <el-button type="primary" size="small" :loading="btnLoading1"  @click="applyRes('3')">达成调解推送调解员</el-button>
              </div>
          </div>
 
@@ -53,14 +53,14 @@
                <p class="add_key" v-if="lowPass === false">未达成原因</p>
                <el-input  v-if="lowPass === false"   v-model="lowReason"   style="margin:10px 0 30px;"  type="textarea" :rows="5"></el-input>
                <div class="step0_up_button"  v-if="lowPass === false" >
-                   <el-button type="danger" size="small" @click="applyRes('5')">提交</el-button>
+                   <el-button type="danger" size="small"   :loading="btnLoading"   @click="applyRes('5')">提交</el-button>
                    <el-button type="primary" size="small"  @click="lowPass = ''">返回上一步</el-button>
                </div>
             </div>
             
               <div class="step0_up_button" v-if="lowPass === ''">
                    <el-button type="danger" size="small" @click="lowPass = false">未达成调解</el-button>
-                   <el-button type="primary" size="small" @click="applyRes('3')">达成调解推送调解员</el-button>
+                   <el-button type="primary" size="small"  @click="applyRes('3')">达成调解推送调解员</el-button>
              </div>
          </div>
     </div>
@@ -73,7 +73,8 @@ export default {
     data() {
         return {
            isUp:true,
-
+           btnLoading:false,
+           btnLoading1:false,
            //线上审批
            isTime:false,
            upPass:'',//线上审批通过   线上审批拒绝
@@ -130,6 +131,12 @@ export default {
        resSubHttp(res){
          const that = this
          let param = {}
+         if(res == 3){
+              that.btnLoading1 = true
+         }else{
+             that.btnLoading = true
+         }
+        
          if(that.isUp == true && res == '3'){
               param = {
                   reservationNumber: that.obj.reservationNumber,
@@ -170,6 +177,8 @@ export default {
         })
         .then(function(res) {
           console.log("更新人民调解信息(调解中)", res);
+          that.btnLoading = false
+          that.btnLoading1 = false
           if (res.data.code == 200) {
                 that.$emit('res',res) 
           }

@@ -61,7 +61,7 @@
           <el-row>
             <el-col :span="7">
               <el-form-item label="县/市" prop="city">
-                <el-select :disabled="mode == 'look'" v-model="form.cityId"  @change="selectChange"  placeholder="请选择">
+                <el-select :disabled="mode == 'look' || role != 3" v-model="form.cityId"  @change="selectChange"  placeholder="请选择">
                   <el-option
                     :label="item.name"
                     :value="item.value"
@@ -118,6 +118,7 @@
               <el-upload
                 v-if="mode != 'look'"
                 :action="upUrl"
+                :headers = "upHeader"
                 name="upSignFile"
                 list-type="picture-card"
                 :auto-upload="true"
@@ -192,7 +193,9 @@ export default {
         }
       ],
       // --------------------------------------------------------------------------------------------------------
-      upUrl:'',
+     role:'',
+     upUrl:'',
+     upHeader:{},
       srcList:[],
       fileList: [],
       preImg:'',
@@ -204,6 +207,7 @@ export default {
       form: {
         roomId: "",
         city: "",
+        cityId:'',
         phone: "",
         email: "",
         intro: "",
@@ -229,13 +233,19 @@ export default {
     };
   },
   created() {
-    this.upUrl = this.$url.upUrl
+    this.upUrl = this.$url.upUrl  //初始化上传地址
+    this.role = sessionStorage.getItem('userType')
+    
     this.getApplyList();
     this.getCity()
+
+    // 上传图片需加上token
+    this.upHeader = {
+      Authorization:localStorage.getItem('token')
+    }
   },
   methods: {
-    
-    //查询人民调解申请列表
+    //查询法律咨询列表
     getApplyList() {
       const that = this;
       that.loading = true;
@@ -244,6 +254,7 @@ export default {
           method: "get",
           url: that.$url.lawConsult.getList,
           params: {
+            addressNumber: sessionStorage.getItem('userType') == 3?null:sessionStorage.getItem('unitId'),  //管理员查询需加上归属单位编码
             page: that.currentPage,
             limit: that.size
           }
@@ -267,14 +278,8 @@ export default {
                 imgUrl: val.imgUrl
               });
             });
-
-            console.log(that.tableData);
           }
         })
-        .catch(function(error) {
-          that.loading = false;
-          console.log(error);
-        });
     },
     //批量删除
     delMore() {
@@ -305,9 +310,6 @@ export default {
             that.$message.success("删除成功！");
           }
         })
-        .catch(function(error) {
-          console.log(error);
-        });
     },
     //查看详情
     lookDetail(val) {
@@ -328,7 +330,8 @@ export default {
       this.getApplyList();
     },
     // -------------------------------------------------------------------------------------------------------------------
-    getCity(){
+   //初始化地区选择下拉框下拉数据
+   getCity(){
       const that = this;
       that.$http
         .axios({
@@ -341,13 +344,15 @@ export default {
           console.log("获取行政单位", res);
           that.cityList = []
           if (res.data.code == 200) {
+            // 添加一级行政单位
               res.data.data.forEach(val=>{
                    that.cityList.push({
                      name:val.institutionalName,
                      value:val.id
                    })
               })
-
+            
+            //添加二级行政单位
               res.data.data[0].children.forEach(val=>{
                    that.cityList.push({
                      name:val.institutionalName,
@@ -356,25 +361,23 @@ export default {
               })
           }
         })
-        .catch(function(error) {
-          that.loading = false;
-          console.log(error);
-        });
     },
     selectChange(e){
       this.cityList.forEach(val => {
         if(e == val.value){
            this.form.city = val.name;
+           this.form.cityId = val.value;
         }
         
       });
     },
+    //添加按钮触发事件
     add() {
       this.mode = "add";
       this.form = {
         roomId: "",
         city: "",
-        cityId:'',
+        cityId: sessionStorage.getItem('userType') == 3?'':sessionStorage.getItem('unitId'),   //管理员新增时候不可选择区县  所以要初始化
         phone: "",
         email: "",
         intro: "",
@@ -385,19 +388,21 @@ export default {
       this.show1 = true;
     },
     update(val) {
-      console.log(val);
       this.mode = "update";
       this.form = val;
       this.show1 = true;
     },
+    // 上传图片成功回调函数
     uploadSuccess(e) {
       console.log(e);
       this.preImg = ''
       this.form.imgUrl = `${this.$url.imgUrl}${e.data.split('\\').pop()}`;
     },
+    // 上传图片失败回调函数
     uploadErr(e) {
       console.log(e);
     },
+    //新增数据
     onSubmit() {
       const that = this;
       that.$http
@@ -405,7 +410,7 @@ export default {
           method: "post",
           url: that.$url.lawConsult.add,
           params: {
-            city: that.form.city,
+            city: sessionStorage.getItem('userType') == 3?that.form.city:that.tableData[0].city,
             addressNumber: that.form.cityId,
             phone: that.form.phone,
             roomNumber: that.form.roomId,
@@ -433,22 +438,17 @@ export default {
             that.$message.success("新增成功！");
           }
         })
-        .catch(function(error) {
-          console.log(error);
-        });
-      //   console.log(document.querySelector('.el-upload .el-upload__input').files[0])
     },
+    //修改数据
      onSubmit1() {
       const that = this;
-      // console.log(that.form)
-      // return false
       that.$http
         .axios({
           method: "post",
           url: that.$url.lawConsult.update,
           params: {
             id:that.form.id,
-            city: that.form.city,
+            city: sessionStorage.getItem('userType') == 3?that.form.city:that.tableData[0].city,
             addressNumber: that.form.cityId,
             phone: that.form.phone,
             roomNumber: that.form.roomId,
@@ -465,10 +465,6 @@ export default {
             that.$message.success("修改成功！");
           }
         })
-        .catch(function(error) {
-          console.log(error);
-        });
-      //   console.log(document.querySelector('.el-upload .el-upload__input').files[0])
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);
@@ -478,17 +474,18 @@ export default {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
+    //只可上传一张图片  超出限制触发回调函数   提示
     onExceed() {
       console.log("超出限制");
       this.$message.error("只能上传一张图片哦,如需修改请先删除图片~");
     },
+    //重置表单
     reset() {
       this.$refs.form.resetFields();
       this.fileList = [];
     },
     fileChange(file, filelist) {
       console.log(file);
-      // this.form.file = file
     }
   }
 };

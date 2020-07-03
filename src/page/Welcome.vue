@@ -37,10 +37,13 @@ export default {
            console.log('用户信息',res)
            
            if(res.data.code == 200){
-               sessionStorage.setItem('unitId',res.data.data.unitId)
                sessionStorage.setItem('userType',res.data.data.userType)
-               sessionStorage.setItem('userPhone',res.data.data.phone)
                sessionStorage.setItem('userId',res.data.data.id)
+               sessionStorage.setItem('userPhone',res.data.data.phone)
+               sessionStorage.setItem('unitId',res.data.data.unitId)
+               
+               
+               
            }
         })
         .catch(function(error) {

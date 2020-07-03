@@ -2,7 +2,7 @@
   <!-- 待审批状态 -->
   <div class="step0">
     <!--------------------------------------- 线上调解 ------------------------------------------------->
-    <div class="step0_up" v-if="role != 1">
+    <div class="step0_up" v-if="role != 1 || status == 1 ">
       <!-- 审批拒绝显示内容 -->
       <div class="step0_up_no" v-if="upPass === false || (status == 1 && isUp === true)">
         <p class="add_key">拒绝原因</p>
@@ -15,7 +15,7 @@
         ></el-input>
       </div>
       <div class="step0_up_button" v-if="upPass === false && status == 0">
-        <el-button type="danger" size="small" @click="applyRes('1')">提交</el-button>
+        <el-button type="danger" size="small" :loading="btnLoading" @click="applyRes('1')">提交</el-button>
         <el-button type="primary" size="small" @click="upPass = ''">返回上一步</el-button>
       </div>
       <!-- 审批通过显示内容 -->
@@ -52,7 +52,7 @@
         </div>
       </div>
       <div class="step0_up_button" v-if="upPass === true && status == 0">
-        <el-button type="danger" size="small" @click="applyRes('2')">提交</el-button>
+        <el-button type="danger" size="small" :loading="btnLoading" @click="applyRes('2')">提交</el-button>
         <el-button type="primary" size="small" @click="upPass = ''">返回上一步</el-button>
       </div>
 
@@ -64,7 +64,7 @@
     </div>
 
     <!--------------------------------------------- 线下调解 ----------------------------------------------->
-    <div class="step0_low" v-if="role == 1">
+    <div class="step0_low" v-if="role == 1 || status == 1 ">
       <!-- 线下审批拒绝显示内容 -->
       <div class="step0_up_no" v-if="lowPass === false ||  (status == 1 && isUp === false)">
         <div class="step0_low_item">
@@ -89,7 +89,7 @@
         ></el-input>
       </div>
       <div class="step0_up_button" v-if="lowPass === false && status == 0">
-        <el-button type="danger" size="small" @click="applyRes('1')">提交</el-button>
+        <el-button type="danger" size="small" :loading="btnLoading" @click="applyRes('1')">提交</el-button>
         <el-button type="primary" size="small" @click="lowPass = ''">返回上一步</el-button>
       </div>
 
@@ -120,7 +120,7 @@
           </div>
         </div>
         <div class="step0_up_button">
-          <el-button type="danger" size="small" @click="applyRes('3')">提交</el-button>
+          <el-button type="danger" size="small" :loading="btnLoading"  @click="applyRes('3')">提交</el-button>
           <el-button type="primary" size="small" @click="lowPass = ''">返回上一步</el-button>
         </div>
       </div>
@@ -139,6 +139,7 @@ export default {
   props: ["upDown", "status", "rejReason", "obj", "role"],
   data() {
     return {
+      btnLoading:false,
       isUp: true, //true线上审批  false 线下审批
       //线上审批
       upPass: "", //线上审批通过   线上审批拒绝
@@ -221,12 +222,12 @@ export default {
         sessionStorage.getItem("unitId") == null
       ) {
         param = {
-          roomStatus: "0"
+          roomStatus: 0
         };
       } else {
         param = {
           institutionalCode: sessionStorage.getItem("unitId"),
-          roomStatus: "0"
+          roomStatus: 0
         };
       }
 
@@ -290,7 +291,7 @@ export default {
     subResHttp(res) {
       const that = this;
       let param = {};
-
+      that.btnLoading = true
       if (that.isUp == true && res == 1) {
         param = {
           reservationNumber: that.obj.reservationNumber,
@@ -336,6 +337,7 @@ export default {
         })
         .then(function(res) {
           console.log("更新人民调解信息", res);
+           that.btnLoading = false
           if (res.data.code == 200) {
             that.$emit("res", res);
           }
