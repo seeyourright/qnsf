@@ -119,15 +119,7 @@ export default {
       tableData: [],
       dialogVisible: false,
       roomNumber: '',
-      rules: {
-        a: [
-          {required: true, message: '县/市不能为空', trigger: 'blur'}
-        ],
-        b: [
-          {required: true, message: '房间号不能为空', trigger: 'blur'}
-        ]
-      },
-      areas: ['都匀市', '福泉市', '三都县']
+      areas: []
     }
   },
   created () {
@@ -185,6 +177,10 @@ export default {
       this.dialogVisible = true
     },
     submit () {
+      if (!this.roomNumber) {
+        this.$message.warning('请输入房间号')
+        return false
+      }
       this.$http.post(this.$url.Add_Room, {roomNumber: this.roomNumber}).then(res => {
         if (res.code === 200) {
           this.$message.success('新增成功')

@@ -117,7 +117,7 @@ export default {
       })
     },
     roominit () {
-      this.$http.get(this.$url.Room_List, {page: 0, limit: 0, institutionalCode: 0}).then(res => {
+      this.$http.get(this.$url.Room_List, {page: 0, limit: 0, institutionalCode: 0, roomStatus: 0}).then(res => {
         if (res.code === 200) {
           this.rooms = res.data
         }

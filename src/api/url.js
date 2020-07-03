@@ -1,6 +1,7 @@
-const path = `http://192.168.0.127:8080`
-const path1 = `http://192.168.0.127:8080`
-// const path = `http://192.168.1.155:9001`
+// const path = `http://116.63.56.151:8080`
+// const path1 = `http://116.63.56.151:8080`
+const path = `http://192.168.0.145:8080`
+const path1 = `http://192.168.0.145:8080`
 
 const url = {
   login: `${path}/api/auth/oauth/token`, // 登录获取token

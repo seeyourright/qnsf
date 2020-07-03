@@ -6,7 +6,7 @@
 
     <!-- 分割线 -->
     <el-divider></el-divider>
-    
+
     <!-- <el-button type="primary" size="small"  style="position:absolute;right:50px;top:80px;" @click="expWord" >导出申请表</el-button> -->
     <a :href="wordUrl" class="expWord">导出申请表</a>
     <!-- 申请基础信息 -->
@@ -133,8 +133,8 @@ export default {
   created() {
     // console.log()
     this.id = sessionStorage.getItem('lawHelpId')    //this.$route.params.id
-    this.wordUrl = `${this.$url.lawHelp.expWord}?id=${this.id}` 
-    this.zipUrl = `${this.$url.lawHelp.downFile}?id=${this.id}` 
+    this.wordUrl = `${this.$url.lawHelp.expWord}?id=${this.id}`
+    this.zipUrl = `${this.$url.lawHelp.downFile}?id=${this.id}`
     this.searchDetail();
     this.netFileAddr()
   },
@@ -294,11 +294,11 @@ export default {
         .then(function(res) {
           console.log("导出word结果", res);
           if (res.data.code == 200) {
-              
+
           }
         })
         .catch(function(error) {
-         
+
           console.log(error);
         });
     }

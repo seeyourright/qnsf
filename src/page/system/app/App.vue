@@ -231,6 +231,7 @@ export default {
       this.$http.axios.post(this.$url.Add_App, formdata).then(res => {
         if (res.data.code === 200) {
           this.$message.success('新增成功')
+          this.getData(1)
           this.dialogVisible = false
         }
       })
