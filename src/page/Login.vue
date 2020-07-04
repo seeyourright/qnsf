@@ -1,27 +1,27 @@
 <template>
-  <div class="container">
-    <img v-if="$store.state.isIE" class="image" src="http://img.yangrq.com/qnsfbgimg2" alt="">
-    <video v-else class="video" autoplay muted loop src="http://img.yangrq.com/qnsfbgvd2"></video>
-    <div class="mask">
-      <div class="box">
+  <div class='container'>
+    <img v-if='$store.state.isIE' class='image' src='http://img.yangrq.com/qnsfbgimg2' alt=''>
+    <video v-else class='video' autoplay muted loop src='http://img.yangrq.com/qnsfbgvd2'></video>
+    <div class='mask'>
+      <div class='box'>
         <form>
           <fieldset>
             <legend>黔南司法后台管理系统</legend>
-            <div class="item">
-              <input type="text" v-model="username">
-              <div class="label">用户名</div>
+            <div class='item'>
+              <input type='text' v-model='username'>
+              <div class='label'>用户名</div>
             </div>
-            <div class="item">
-              <input type="password" v-model="password">
-              <div class="label">密码</div>
+            <div class='item'>
+              <input type='password' v-model='password'>
+              <div class='label'>密码</div>
             </div>
-            <div class="item code">
-              <input type="text" @keydown.enter="submit" v-model="code">
-              <div class="label">验证码</div>
-              <VerificationCode ref="code"></VerificationCode>
+            <div class='item code'>
+              <input type='text' @keydown.enter='submit' v-model='code'>
+              <div class='label'>验证码</div>
+              <VerificationCode ref='code'></VerificationCode>
             </div>
-            <div class="">
-              <el-button type="text" class="btn" :loading="loading" @click="submit">登录</el-button>
+            <div class=''>
+              <el-button type='text' class='btn' :loading='loading' @click='submit'>登录</el-button>
             </div>
           </fieldset>
         </form>
