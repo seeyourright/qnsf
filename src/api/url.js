@@ -61,7 +61,8 @@ const url = {
     imgUrl:`${path}/api/rmtj/static/`,
     downZip:`${path}/api/rmtj/rmtj/verifyMaterialDownloadZip`,
     tjyList:`${path}/api/system-management/sysuser/select_user_all`,
-    roomList:`${path}/api/system-management/room/getRoomAll`
+    roomList:`${path}/api/system-management/room/getRoomAll`,
+    jgdm:`${path}/api/system-management/department/getAll`
   },
   lawHelp:{
       getList:`${path1}/api/lawAid/lawAidApplyForm/findlist`,

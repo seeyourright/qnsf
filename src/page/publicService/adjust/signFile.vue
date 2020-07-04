@@ -75,7 +75,7 @@
     </div>
 
     <div class="step0_up_button" v-if="obj.peacemakerSignature  && obj.proposerSignature && obj.recipientSignature && showLowRej == false">
-      <el-button type="danger" size="small"  v-if="obj.reconcileWay == '线下调解'"  @click="showLowRej = true" >未达成调解</el-button>
+      <!-- <el-button type="danger" size="small"  v-if="obj.reconcileWay == '线下调解'"  @click="showLowRej = true" >未达成调解</el-button> -->
       <el-button type="primary" size="small"  :loading="btnLoading1"  @click="applyRes('4')">完成调解</el-button>
     </div>
 

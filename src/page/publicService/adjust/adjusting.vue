@@ -58,7 +58,7 @@
                </div>
             </div>
             
-              <div class="step0_up_button" v-if="lowPass === ''">
+              <div class="step0_up_button" v-if="lowPass === '' && role == 1">
                    <el-button type="danger" size="small" @click="lowPass = false">未达成调解</el-button>
                    <el-button type="primary" size="small"  @click="applyRes('3')">达成调解推送调解员</el-button>
              </div>
@@ -69,7 +69,7 @@
 <script>
 import moment from 'moment'
 export default {
-    props: ['upDown',"upBaseObj","lowBaseObj",'obj'],
+    props: ['upDown',"upBaseObj","lowBaseObj",'obj','role'],
     data() {
         return {
            isUp:true,
@@ -108,7 +108,8 @@ export default {
            that.isUp = that.upDown
            that.upBaseObj.reconcileTime =  moment(that.upBaseObj.reconcileTime).format('YYYY-MM-DD HH:mm:ss') // that.$util.timeFormat(that.upBaseObj.reconcileTime)
            that.lowBaseObj.reconcileTime = moment(that.lowBaseObj.reconcileTime).format('YYYY-MM-DD HH:mm:ss') //that.$util.timeFormat(that.lowBaseObj.reconcileTime)
-           if(that.isUp == true && new Date() >= new Date(that.obj.reconcileTime)){
+
+           if(that.isUp == true && new Date() >= new Date(that.obj.reconcileTime.replace(/-/g, '/'))){
                   //到线上开始调解的时候，才显示  达成调解或者未达成调解按钮
                   that.isTime = true
            }

@@ -47,6 +47,7 @@
             size="small"
             v-model="upTime"
             type="datetime"
+            :picker-options="startTime"
             placeholder="选择调解时间"
           ></el-date-picker>
         </div>
@@ -102,6 +103,7 @@
         <div class="step0_low_item">
           <span class="add_key">调解时间:</span>
           <el-date-picker
+           :picker-options="startTime"
             value-format="yyyy-MM-dd HH:mm:ss"
             size="small"
             v-model="lowTime"
@@ -120,7 +122,7 @@
           </div>
         </div>
         <div class="step0_up_button">
-          <el-button type="danger" size="small" :loading="btnLoading"  @click="applyRes('3')">提交</el-button>
+          <el-button type="danger" size="small" :loading="btnLoading"  @click="applyRes('2')">提交</el-button>
           <el-button type="primary" size="small" @click="lowPass = ''">返回上一步</el-button>
         </div>
       </div>
@@ -151,7 +153,12 @@ export default {
       upRoomId: "", //线上审批通过  分配调解室
       upRoomList: [], // 调解室列表
       upTime: "", //线上审批通过  分配调解时间
-
+      startTime: {
+        disabledDate(time){
+            let t=new Date().getTime()-1000*60*60*24
+            return time.getTime() < new Date(t).getTime()
+          }
+        },
       //线下审批
       lowPass: "", //线上审批通过   线上审批拒绝
       lowReason: "", //线下审批拒绝原因
@@ -172,7 +179,9 @@ export default {
     }
   },
   created() {
+   
     this.init();
+
   },
   methods: {
     init() {
@@ -183,7 +192,8 @@ export default {
         this.lowReason = this.obj.refuseReason;
       }
       this.getTJYlist(); //获取调解员列表
-      this.getRoomList(); //获取调解室列表
+    //   this.getRoomList(); //获取调解室列表
+      this.getJgdm()
       console.log(sessionStorage.getItem("unitId"));
     },
     getTJYlist() {
@@ -209,33 +219,36 @@ export default {
             });
           }
         })
-        .catch(function(error) {
-          that.loading = false;
-          console.log(error);
-        });
     },
-    getRoomList() {
+    getJgdm(){
+      const that = this
+      console.log(that.obj.recordAffiliation)
+      that.$http
+        .axios({
+          method: "post",
+          url: that.$url.adjust.jgdm,
+          params:{
+              area:that.obj.recordAffiliation,
+              departmentType:'人民调解'
+          } 
+        })
+        .then(function(res) {
+          console.log("机构代码", res);
+          if (res.data.code == 200) {
+               that.getRoomList(res.data.data[0].institutionalCode)
+          }
+        })
+    },
+    getRoomList(val) {
       const that = this;
-      let param = {};
-      if (
-        sessionStorage.getItem("unitId") == "null" ||
-        sessionStorage.getItem("unitId") == null
-      ) {
-        param = {
-          roomStatus: 0
-        };
-      } else {
-        param = {
-          institutionalCode: sessionStorage.getItem("unitId"),
-          roomStatus: 0
-        };
-      }
-
       that.$http
         .axios({
           method: "post",
           url: that.$url.adjust.roomList,
-          params: param
+          params: {
+              institutionalCode: val,
+              roomStatus: 0
+           }
         })
         .then(function(res) {
           console.log("房间列表", res);
@@ -248,13 +261,8 @@ export default {
                 id: val.roomNumber
               });
             });
-            console.log(that.upRoomList);
           }
         })
-        .catch(function(error) {
-          that.loading = false;
-          console.log(error);
-        });
     },
     applyRes(res) {
       const that = this;
@@ -318,11 +326,11 @@ export default {
           refuseReason: that.lowReason
           //   endTime:that.$util.getDateTime()
         };
-      } else if (that.isUp == false && res == 3) {
+      } else if (that.isUp == false && res == 2) {
         param = {
           reservationNumber: that.obj.reservationNumber,
           id: that.obj.id,
-          applyForStatus: 3,
+          applyForStatus: 2,
           reconcileTime: that.lowTime,
           reconcileAddress: that.obj.applyForAddress + that.lowAddr
         };

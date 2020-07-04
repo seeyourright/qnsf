@@ -70,7 +70,6 @@
             :page-size="1"
             :total="pdfTotals"
           ></el-pagination>
-          
       </div> 
       <!-- <iframe :src='previewUrl' width='100%' height='500px' frameborder='1'></iframe> -->
     </el-dialog>  

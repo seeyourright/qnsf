@@ -99,7 +99,7 @@
         ></el-image>
         <div v-else class="add_row3_file">
           <img src="../../../../static/img/file.png" alt />
-          <div>item.name</div>
+          <div> {{item.name}}</div>
         </div>
       </div>
     </div>
@@ -147,6 +147,7 @@
     <!-- 调解中 -->
     <adjusting 
          :upDown = 'isUp'  
+         :role = "role"
          :status = "status" 
          :upBaseObj = "obj"
          :lowBaseObj = "obj"
@@ -304,9 +305,9 @@ export default {
                    if(['jpg','JPG','png','PNG','JPEG','jpeg'].includes(s)){
                            that.url.push({
                              type:'img',
-                             name: `${that.$url.adjust.imgUrl}/${val}`,
+                             name: `${that.$url.adjust.imgUrl}${val}`,
                            })
-                           that.srcList.push(`${that.$url.adjust.imgUrl}/${val}`)
+                           that.srcList.push(`${that.$url.adjust.imgUrl}${val}`)
                    }else{
                           that.url.push({
                              type:'text',
@@ -316,10 +317,10 @@ export default {
                    
                 })
                 }
-                
+                console.log(that.srcList)
                 //查询预约和被预约人列表
                 that.lookMorePeople()
-                console.log(that.isUp)
+                
            }
         })
         .catch(function(error) {
