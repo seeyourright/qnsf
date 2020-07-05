@@ -157,19 +157,16 @@ export default {
           }
         })
         .then(function(res) {
-          console.log('批量删除',res);
+          // console.log('批量删除',res);
           if(res.data.code == 200){
               that.getApplyList()
                that.$message.success('删除成功！');
           }
         })
-        .catch(function(error) {
-          console.log(error);
-        });
     },
     //查看详情
     lookDetail(val) {
-      console.log(val);
+      // console.log(val);
       sessionStorage.setItem('lawHelpId',val.id)
       this.$router.push({ name: "helpDetail", params: { id: val.id } });
     },

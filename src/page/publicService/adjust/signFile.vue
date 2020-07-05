@@ -123,13 +123,13 @@ export default {
           this.isUp = v
        },
     obj(val){
-      console.log(val)
+      // console.log(val)
     }
   },
   created() {
     this.init();
-    console.log(this.previewUrl)
-    console.log(this.agreeUrl)
+    // console.log(this.previewUrl)
+    // console.log(this.agreeUrl)
   },
   computed: {
     isSign() {
@@ -150,7 +150,7 @@ export default {
       that.lowBaseObj.reconcileTime = moment(that.lowBaseObj.reconcileTime).format('YYYY-MM-DD HH:mm:ss') //that.$util.timeFormat(that.lowBaseObj.reconcileTime)
       let diffDays = that.$util.datedifference(that.obj.protocolPushTime)
 
-      console.log('与推送协议相差天数',diffDays)
+      // console.log('与推送协议相差天数',diffDays)
       if( !that.obj.peacemakerSignature && !that.obj.proposerSignature && !that.obj.recipientSignature  && diffDays >7){
               that.autoRej()    //7天内未签署完成   自动改为未达成调解状态
       }
@@ -171,16 +171,12 @@ export default {
           }
         })
         .then(function(res) {
-          console.log("更新人民调解信息(调解中)", res);
+          // console.log("更新人民调解信息(调解中)", res);
            that.btnLoading1 = false
           if (res.data.code == 200) {
                 that.$emit('res',res) 
           }
         })
-        .catch(function(error) {
-          that.loading = false;
-          console.log(error);
-        });
            
 
        },
@@ -221,7 +217,7 @@ export default {
           }
         })
         .then(function(res) {
-          console.log("系统自动归为未调节状态", res);
+          // console.log("系统自动归为未调节状态", res);
           if (res.data.code == 200) {
                 that.$emit('res',res) 
           }
@@ -235,12 +231,9 @@ export default {
       this.pdfUrl
         .then(pdf => {
           //拿到pdf的总页码数
-          console.log(pdf)
+          // console.log(pdf)
           this.pdfTotals = pdf.numPages;
         })
-        .catch(err => {
-          console.log(err);
-        });
       this.showPDF = true; //弹框开关
     },
      //点击分页触发函数

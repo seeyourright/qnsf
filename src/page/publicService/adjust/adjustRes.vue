@@ -95,7 +95,7 @@ export default {
     },
     created() {
         this.init()
-        console.log(this.agreeUrl)
+        // console.log(this.agreeUrl)
     },
     mounted() {
 
@@ -107,7 +107,7 @@ export default {
            that.upBaseObj.reconcileTime = moment(that.obj.reconcileTime).format('YYYY-MM-DD HH:mm:ss') //that.$util.timeFormat(that.upBaseObj.reconcileTime)
            that.lowBaseObj.reconcileTime = moment(that.obj.reconcileTime).format('YYYY-MM-DD HH:mm:ss') //that.$util.timeFormat(that.lowBaseObj.reconcileTime)
            that.obj.endTime = moment(that.obj.endTime).format('YYYY-MM-DD HH:mm:ss') //that.$util.timeFormat(that.obj.endTime)
-           console.log(this.isUp)
+            // console.log(this.isUp)
        },
         //点击分页触发函数
     handleCurrentChange(val) {

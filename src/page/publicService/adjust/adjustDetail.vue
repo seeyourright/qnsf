@@ -297,7 +297,7 @@ export default {
                 //  相关证明材料数据处理
                 if(r.testifyMaterials){
                     let tym =  r.testifyMaterials.split(',')
-                console.log(tym)
+                // console.log(tym)
                 that.url = []
                 that.srcList = []
                 tym.forEach(val=>{
@@ -317,15 +317,12 @@ export default {
                    
                 })
                 }
-                console.log(that.srcList)
+                // console.log(that.srcList)
                 //查询预约和被预约人列表
                 that.lookMorePeople()
                 
            }
         })
-        .catch(function(error) {
-          console.log(error);
-        });
     },
     lookMorePeople(){
       const that = this
@@ -337,7 +334,7 @@ export default {
           }
         })
         .then(function(res) {
-           console.log('预约人被预约人列表',res)
+          //  console.log('预约人被预约人列表',res)
             that.applyMan = []
             that.oppositeMan = []
            if(res.data.code == 200){
@@ -345,9 +342,6 @@ export default {
                that.oppositeMan = res.data.data.moreByyr
            }
         })
-        .catch(function(error) {
-          console.log(error);
-        });
     },
     getRes(e){
       // this.status = e
@@ -368,15 +362,11 @@ export default {
           }
         })
         .then(function(res) {
-          console.log("重置人民调解信息", res);
+          // console.log("重置人民调解信息", res);
           if (res.data.code == 200) {
                 that.getDetail()
           }
         })
-        .catch(function(error) {
-          
-          console.log(error);
-        });
     }
   }
 };

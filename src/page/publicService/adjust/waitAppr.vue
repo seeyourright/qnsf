@@ -59,8 +59,8 @@
 
       <!-- 线上审批按钮 -->
       <div class="step0_up_button" v-if="upPass === '' && isUp === true &&  status == 0">
-        <el-button type="danger" size="small" @click="upPass = false">线上拒绝</el-button>
-        <el-button type="primary" size="small" @click="upPass = true">线上通过</el-button>
+        <el-button type="danger" size="small" @click="upPass = false">拒绝</el-button>
+        <el-button type="primary" size="small" @click="upPass = true">通过</el-button>
       </div>
     </div>
 
@@ -129,8 +129,8 @@
 
       <!-- 线下审批按钮 -->
       <div class="step0_up_button" v-if="lowPass === '' && isUp === false && status == 0">
-        <el-button type="danger" size="small" @click="lowPass = false">线下拒绝</el-button>
-        <el-button type="primary" size="small" @click="lowPass = true">线下通过</el-button>
+        <el-button type="danger" size="small" @click="lowPass = false">拒绝</el-button>
+        <el-button type="primary" size="small" @click="lowPass = true">通过</el-button>
       </div>
     </div>
   </div>

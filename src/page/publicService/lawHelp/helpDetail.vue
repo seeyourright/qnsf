@@ -152,7 +152,7 @@ export default {
           }
         })
         .then(function(res) {
-          console.log("法律援助详情", res);
+          // console.log("法律援助详情", res);
 
           if (res.data.code == 200) {
             let obj = res.data.data.lawAidApplyPerson;
@@ -188,10 +188,6 @@ export default {
             };
           }
         })
-        .catch(function(error) {
-          that.loading = false;
-          console.log(error);
-        });
     },
      dealStatusShow(e){
        if(e == 0){
@@ -213,7 +209,7 @@ export default {
           }
         })
         .then(function(res) {
-          console.log("相关证明材料", res);
+          // console.log("相关证明材料", res);
                 that.url = []
                 that.srcList = []
           if (res.data.code == 200) {
@@ -236,10 +232,6 @@ export default {
                });
           }
         })
-        .catch(function(error) {
-          that.loading = false;
-          console.log(error);
-        });
     },
     pass() {
       this.isPass = true;
@@ -268,15 +260,11 @@ export default {
           }
         })
         .then(function(res) {
-          console.log("审批结果", res);
+          // console.log("审批结果", res);
           if (res.data.code == 200) {
                that.searchDetail()
           }
         })
-        .catch(function(error) {
-          that.loading = false;
-          console.log(error);
-        });
     },
     expWord(){
       const that = this;
@@ -292,15 +280,11 @@ export default {
           }
         })
         .then(function(res) {
-          console.log("导出word结果", res);
+          // console.log("导出word结果", res);
           if (res.data.code == 200) {
 
           }
         })
-        .catch(function(error) {
-
-          console.log(error);
-        });
     }
   }
 };

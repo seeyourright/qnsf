@@ -113,7 +113,7 @@ export default {
                   //到线上开始调解的时候，才显示  达成调解或者未达成调解按钮
                   that.isTime = true
            }
-           console.log(this.isUp)
+          //  console.log(this.isUp)
        },
         applyRes(res){
           const that = this
@@ -177,17 +177,13 @@ export default {
           params: param
         })
         .then(function(res) {
-          console.log("更新人民调解信息(调解中)", res);
+          // console.log("更新人民调解信息(调解中)", res);
           that.btnLoading = false
           that.btnLoading1 = false
           if (res.data.code == 200) {
                 that.$emit('res',res) 
           }
         })
-        .catch(function(error) {
-          that.loading = false;
-          console.log(error);
-        });
        }
     },
 };

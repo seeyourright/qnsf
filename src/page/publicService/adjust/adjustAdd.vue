@@ -150,7 +150,7 @@ export default {
     // console.log(s.substring(s.lastIndexOf("-")+1));
     this.upUrl = this.$url.upUrl
     let res = JSON.parse(sessionStorage.getItem("adjustHome"));
-    console.log(res);
+    // console.log(res);
     this.mode = res.mode;
     if (res.id) {
       this.id = res.id;
@@ -170,7 +170,7 @@ export default {
           }
         })
         .then(function(res) {
-          console.log("基础信息id", res);
+          // console.log("基础信息id", res);
           if (res.data.code == 200) {
               let arr = res.data.data.roomNumber.split(',')
               let arr1 = []
@@ -190,16 +190,12 @@ export default {
                  addr: res.data.data.address,
                  imgUrl: res.data.data.imgUrl
               }
-              console.log(that.form)
+              // console.log(that.form)
               that.preImg = res.data.data.imgUrl
 
 
           }
         })
-        .catch(function(error) {
-          that.loading = false;
-          console.log(error);
-        });
     },
     getCity() {
       const that = this;
@@ -210,7 +206,7 @@ export default {
           params: {}
         })
         .then(function(res) {
-          console.log("获取行政单位", res);
+          // console.log("获取行政单位", res);
           that.cityList = [];
           if (res.data.code == 200) {
             res.data.data.forEach(val => {
@@ -224,10 +220,6 @@ export default {
             // that.getApplyList();
           }
         })
-        .catch(function(error) {
-          that.loading = false;
-          console.log(error);
-        });
     },
     removeDomain(item) {
       var index = this.form.roomId.indexOf(item);
@@ -242,7 +234,7 @@ export default {
       });
     },
     selectChange(e) {
-      console.log()
+      // console.log()
       this.cityList.forEach(val => {
         if(e == val.value){
            this.form.city = val.name;
@@ -262,7 +254,7 @@ export default {
           params: {}
         })
         .then(function(res) {
-          console.log("获取行政单位", res);
+          // console.log("获取行政单位", res);
           that.cityList = [];
           if (res.data.code == 200) {
             res.data.data.forEach(val => {
@@ -273,10 +265,6 @@ export default {
             });
           }
         })
-        .catch(function(error) {
-          that.loading = false;
-          console.log(error);
-        });
     },
     add() {
       this.mode = "add";
@@ -296,7 +284,7 @@ export default {
       this.show1 = true;
     },
     update(val) {
-      console.log(val);
+      // console.log(val);
       this.mode = "update";
       this.form = val;
       this.show1 = true;
@@ -307,11 +295,11 @@ export default {
       this.form.imgUrl = `${this.$url.imgUrl}${e.data.split("\\").pop()}`;
     },
     uploadErr(e) {
-      console.log(e);
+      // console.log(e);
     },
     onSubmit() {
       const that = this;
-      console.log(that.form);
+      // console.log(that.form);
       let arr = [];
       that.form.roomId.forEach(val => {
         arr.push(val.value);
@@ -332,7 +320,7 @@ export default {
           }
         })
         .then(function(res) {
-          console.log("新增法律咨询", res);
+          // console.log("新增法律咨询", res);
           if (res.data.code == 200) {
             that.form = {
               roomId: [
@@ -351,9 +339,6 @@ export default {
             that.$message.success("新增成功！");
           }
         })
-        .catch(function(error) {
-          console.log(error);
-        });
       //   console.log(document.querySelector('.el-upload .el-upload__input').files[0])
     },
     onSubmit1() {
@@ -385,9 +370,6 @@ export default {
             that.$message.success("修改成功！");
           }
         })
-        .catch(function(error) {
-          console.log(error);
-        });
       //   console.log(document.querySelector('.el-upload .el-upload__input').files[0])
     },
     handleRemove(file, fileList) {
@@ -399,7 +381,7 @@ export default {
       this.dialogVisible = true;
     },
     onExceed() {
-      console.log("超出限制");
+      // console.log("超出限制");
       this.$message.error("只能上传一张图片哦,如需修改请先删除图片~");
     },
     reset() {
@@ -407,7 +389,7 @@ export default {
       this.fileList = [];
     },
     fileChange(file, filelist) {
-      console.log(file);
+      // console.log(file);
       // this.form.file = file
     }
   }

@@ -83,7 +83,7 @@ export default {
   },
   created() {
     this.getApplyList()
-    console.log(this.$store.state.userInfo)
+    // console.log(this.$store.state.userInfo)
   },
   mounted() {},
   methods: {
@@ -108,7 +108,7 @@ export default {
           }
         })
         .then(function(res) {
-           console.log('人民调解列表',res)
+          //  console.log('人民调解列表',res)
            that.tableData = []
            if(res.data.code == 200){
                that.loading = false
@@ -168,7 +168,7 @@ export default {
           }
         })
         .then(function(res) {
-          console.log('批量删除',res);
+          // console.log('批量删除',res);
           if(res.data.code == 200){
               that.getApplyList()
                that.$message.success('删除成功！');
