@@ -64,7 +64,7 @@ const util = {
     mask.style.alignItems = 'center'
     mask.style.fontSize = '30px'
     mask.innerHTML = '<i class="el-icon-loading">'
-    table.append(mask)
+    table.appendChild(mask)
   },
   tableLoaded () {
     const mask = document.querySelector('.t-mask')
@@ -74,7 +74,7 @@ const util = {
     mask.parentNode.removeChild(mask)
   },
   //计算两个时间相差天数
-  datedifference(sDate1) {    //sDate1和sDate2是2006-12-18格式 
+  datedifference(sDate1) {    //sDate1和sDate2是2006-12-18格式
     var dateSpan,
         tempDate,
         iDays;
@@ -87,40 +87,40 @@ const util = {
   },
   //时间格式转化
   timeFormat(time) {
- 
+
      var d = new Date(time)
      var a= d.getFullYear() + '-' + (d.getMonth() + 1 < 10 ? "0" + (d.getMonth() + 1) : d.getMonth() + 1) + '-' + (d.getDate()<10 ? "0" +d.getDate():d.getDate())+ ' ' + (d.getHours()<10 ?"0"+d.getDate():d.getDate()) + ':' + (d.getMinutes()<10 ? "0" + d.getMinutes(): d.getMinutes()) + ':' + (d.getSeconds()<10 ? "0" + d.getSeconds() : d.getSeconds() );
      return a
-  
+
     // var d = new Date(time);
- 
-    // var year = d.getFullYear();       //年  
-    // var month = d.getMonth() + 1;     //月  
-    // var day = d.getDate();            //日  
- 
-    // var hh = d.getHours();            //时  
-    // var mm = d.getMinutes();          //分  
-    // var ss = d.getSeconds();           //秒  
- 
+
+    // var year = d.getFullYear();       //年
+    // var month = d.getMonth() + 1;     //月
+    // var day = d.getDate();            //日
+
+    // var hh = d.getHours();            //时
+    // var mm = d.getMinutes();          //分
+    // var ss = d.getSeconds();           //秒
+
     // var clock = year + "/";
- 
+
     // if (month < 10)
     //     clock += "0";
- 
+
     // clock += month + "/";
- 
+
     // if (day < 10)
     //     clock += "0";
- 
+
     // clock += day + " ";
- 
+
     // if (hh < 10)
     //     clock += "0";
- 
+
     // clock += hh + ":";
     // if (mm < 10) clock += '0';
     // clock += mm + ":";
- 
+
     // if (ss < 10) clock += '0';
     // clock += ss;
     // return (clock);
@@ -136,8 +136,8 @@ getDateTime(){
   let h = myDate.getHours()*1>=10?myDate.getHours():'0'+myDate.getHours()
   let m = myDate.getMinutes()*1>=10?myDate.getMinutes():'0'+myDate.getMinutes()
   let s = myDate.getSeconds()*1>=10?myDate.getSeconds():'0'+myDate.getSeconds()
-  str =  `${yyyy}-${MM}-${dd} ${h}:${m}:${s}` 
-  
+  str =  `${yyyy}-${MM}-${dd} ${h}:${m}:${s}`
+
   return str
 }
 }

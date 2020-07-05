@@ -1,7 +1,7 @@
-// const path = `http://116.63.56.151:8080`
-// const path1 = `http://116.63.56.151:8080`
-const path = `http://192.168.0.127:8080`
-const path1 = `http://192.168.0.127:8080`
+const path = `http://116.63.56.151:8080`
+const path1 = `http://116.63.56.151:8080`
+// const path = `http://192.168.0.127:8080`
+// const path1 = `http://192.168.0.127:8080`
 
 const url = {
   login: `${path}/api/auth/oauth/token`, // 登录获取token
@@ -31,7 +31,7 @@ const url = {
   App_List: `${path}/api/system-management/sysappversion/getAppALL`, // app列表
   Add_App: `${path}/api/system-management/sysappversion/insertApp`, // app添加
   Delete_App: `${path}/api/system-management/sysappversion/deleteAppMore`, // app删除
-  Download_App: `${path}/api/system-management/sysappversion/appDownload`, // app下载
+  Download_App: `${path}/api/system-management/static/app/`, // app下载
   // 单位管理
   Unit_List: `${path}/api/system-management/department/getAll`, // 单位列表
   Add_Unit: `${path}/api/system-management/department/insertDepartment`, // 单位添加

@@ -26,36 +26,36 @@
       </el-table-column>
       <el-table-column
         align="center"
-        prop="appVersion"
+        prop="versionName"
         label="版本号"
       ></el-table-column>
       <el-table-column
         style="white-space: pre-wrap"
         align="center"
-        prop="updateContent"
+        prop="modifyContent"
         label="更新内容"
       >
         <template slot-scope="scope">
-          <div style="white-space: pre-wrap">{{scope.row.updateContent}}</div>
+          <div style="white-space: pre-wrap">{{scope.row.modifyContent}}</div>
         </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-        prop="updateStatus"
-        label="强制更新"
-      >
-        <template slot-scope="scope">
-          <span v-if="scope.row.updateStatus === 1">是</span>
-          <span v-else>否</span>
-        </template>
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        align="center"-->
+<!--        prop="updateStatus"-->
+<!--        label="强制更新"-->
+<!--      >-->
+<!--        <template slot-scope="scope">-->
+<!--          <span v-if="scope.row.updateStatus === 1">是</span>-->
+<!--          <span v-else>否</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column
         align="center"
         prop="id"
         label="下载地址"
       >
         <template slot-scope="scope">
-          <a :href="$url.Download_App+'?fileId='+scope.row.id">{{$url.Download_App+'?fileId='+scope.row.id}}</a>
+          <a :href="$url.Download_App+scope.row.downloadUrl">{{$url.Download_App+scope.row.downloadUrl}}</a>
         </template>
       </el-table-column>
       <el-table-column
@@ -91,11 +91,15 @@
       title="新增"
     >
       <el-form ref="form" class="form" label-width="100px" :rules="rules" :model="form">
-        <el-form-item label="版本号" prop="appVersion">
-          <el-input-number :controls="false" v-model="form.appVersion"></el-input-number>
+        <el-form-item label="版本号" prop="versionName">
+          <el-input-number style="width: 50px" step-strictly :controls="false" v-model="versionName[0]"></el-input-number>
+          <span>.</span>
+          <el-input-number style="width: 50px" step-strictly :controls="false" v-model="versionName[1]"></el-input-number>
+          <span>.</span>
+          <el-input-number style="width: 50px" step-strictly :controls="false" v-model="versionName[2]"></el-input-number>
         </el-form-item>
-        <el-form-item label="更新内容" prop="updateContent">
-          <el-input v-model="form.updateContent" type="textarea"></el-input>
+        <el-form-item label="更新内容" prop="modifyContent">
+          <el-input v-model="form.modifyContent" type="textarea"></el-input>
         </el-form-item>
         <el-form-item label="上传文件" prop="up_file">
           <el-upload
@@ -107,18 +111,18 @@
             <span>{{form.up_file ? form.up_file.name : ''}}</span>
           </el-upload>
         </el-form-item>
-        <el-form-item label="强制更新" prop="a">
-          <el-switch
-            v-model="form.updateStatus"
-            active-value="1"
-            inactive-value="2"
-            active-text="是"
-            inactive-text="否"
-          ></el-switch>
-        </el-form-item>
+<!--        <el-form-item label="强制更新" prop="a">-->
+<!--          <el-switch-->
+<!--            v-model="form.modifyContent"-->
+<!--            active-value="1"-->
+<!--            inactive-value="2"-->
+<!--            active-text="是"-->
+<!--            inactive-text="否"-->
+<!--          ></el-switch>-->
+<!--        </el-form-item>-->
         <div style="text-align: right">
           <el-button @click="dialogVisible=false">取消</el-button>
-          <el-button type="primary" @click="submit">保存</el-button>
+          <el-button type="primary" @click="submit" :loading="loading">保存</el-button>
         </div>
       </el-form>
     </el-dialog>
@@ -130,22 +134,24 @@ export default {
   name: 'App',
   data () {
     return {
+      loading: false,
       page: 1,
       size: 10,
       total: 100,
       tableData: [],
       dialogVisible: false,
       form: {
-        appVersion: '',
-        updateContent: '',
+        versionName: '',
+        modifyContent: '',
         'up_file': null,
         updateStatus: '1'
       },
+      versionName: ['', '', ''],
       rules: {
-        appVersion: [
-          {required: true, message: '版本名称不能为空', trigger: 'blur'}
+        versionName: [
+          {validator: this.nameValidator, trigger: 'blur'}
         ],
-        updateContent: [
+        modifyContent: [
           {required: true, message: '更新内容不能为空', trigger: 'blur'}
         ],
         'up_file': [
@@ -174,13 +180,22 @@ export default {
         this.$util.tableLoaded()
       })
     },
+    nameValidator (rule, value, callback) {
+      for (let i = 0; i < this.versionName.length; i++) {
+        if (this.versionName[i] === undefined) {
+          callback(new Error('版本好不能为空'))
+          return false
+        }
+      }
+      callback()
+    },
     beforeUpload (file) {
       this.form.up_file = file
       return false
     },
     deleteHandler (row) {
       this.$confirm('确定删除吗').then(() => {
-        this.$http.post(this.$url.Delete_App, {ids: [row.id]}).then(res => {
+        this.$http.post(this.$url.Delete_App, {ids: [row.versionCode]}).then(res => {
           if (res.code === 200) {
             this.$message.success('删除成功')
             this.getData(this.page)
@@ -196,7 +211,7 @@ export default {
       }
       const ids = []
       for (let i = 0; i < selection.length; i++) {
-        ids.push(selection[i].id)
+        ids.push(selection[i].versionCode)
       }
       this.$confirm('确定删除吗').then(() => {
         this.$http.post(this.$url.Delete_App, {ids: ids}).then(res => {
@@ -225,18 +240,22 @@ export default {
     },
     add () {
       const formdata = new FormData()
+      this.form.versionName = this.versionName.join('.')
       for (let key in this.form) {
         formdata.append(key, this.form[key])
       }
+      this.loading = true
       this.$http.axios.post(this.$url.Add_App, formdata).then(res => {
         if (res.data.code === 200) {
           this.$message.success('新增成功')
           this.getData(1)
           this.dialogVisible = false
         }
+      }).finally(res => {
+        this.loading = false
       })
     }
-  }
+  },
 }
 </script>
 
