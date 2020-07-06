@@ -61,7 +61,11 @@
 
            <!-- 协议预览 -->
     <el-dialog title="协议预览" :visible.sync="showPDF" width="1000px">
-     <pdf :src="previewUrl" :page="pdfPage"></pdf> 
+     <pdf 
+         :src="previewUrl" 
+         :page="pdfPage"
+         @num-pages='pdfCounts'
+         ></pdf> 
       <div class="ad_row3">
           <el-pagination
             @current-change="handleCurrentChange"
@@ -90,12 +94,11 @@ export default {
           isPass:false,  //true完成调解  false调解失败
           showPDF: false,
           pdfPage:1,
-          pdfTotals:10
+          pdfTotals:1
         };
     },
     created() {
         this.init()
-        // console.log(this.agreeUrl)
     },
     mounted() {
 
@@ -113,6 +116,10 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       
+    },
+    pdfCounts(num){
+      console.log(num)
+      this.pdfTotals = num
     }
     },
 };

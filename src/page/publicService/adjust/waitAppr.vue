@@ -193,7 +193,7 @@ export default {
       this.getTJYlist(); //获取调解员列表
       //this.getRoomList(); //获取调解室列表
       this.getJgdm()
-      console.log(sessionStorage.getItem("unitId"));
+      // console.log(sessionStorage.getItem("unitId"));
     },
     getTJYlist() {
       const that = this;
@@ -206,7 +206,7 @@ export default {
           }
         })
         .then(function(res) {
-          console.log("调解员列表", res);
+          // console.log("调解员列表", res);
           if (res.data.code == 200) {
             // that.$emit('res',res)
             that.upPeopleList = [];
@@ -221,7 +221,7 @@ export default {
     },
     getJgdm(){
       const that = this
-      console.log(that.obj.recordAffiliation)
+      // console.log(that.obj.recordAffiliation)
       that.$http
         .axios({
           method: "post",
@@ -232,7 +232,7 @@ export default {
           } 
         })
         .then(function(res) {
-          console.log("机构代码", res);
+          // console.log("机构代码", res);
           if (res.data.code == 200) {
                that.getRoomList(res.data.data[0].institutionalCode)
           }
@@ -250,7 +250,7 @@ export default {
            }
         })
         .then(function(res) {
-          console.log("房间列表", res);
+          // console.log("房间列表", res);
           if (res.data.code == 200) {
             // that.$emit('res',res)
             that.upRoomList = [];
@@ -342,7 +342,7 @@ export default {
           params: param
         })
         .then(function(res) {
-          console.log("更新人民调解信息", res);
+          // console.log("更新人民调解信息", res);
            that.btnLoading = false
           if (res.data.code == 200) {
             that.$emit("res", res);

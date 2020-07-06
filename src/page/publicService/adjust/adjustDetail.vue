@@ -286,6 +286,7 @@ export default {
                  that.applyAddr = r.applyForAddress    //申请地址
                  that.adjustContent = r.reconcileContent  //调解内容
                  that.previewUrl =  r.reconcileProtocolb?`${that.$url.adjust.imgUrl}${r.reconcileProtocolb.split('.')[0]}.pdf`:''
+                //  console.log(that.previewUrl)
                  that.agreeUrl =  r.reconcileProtocolb?`${that.$url.adjust.imgUrl}${r.reconcileProtocolb.split('.')[0]}.doc`:''
                 //  that.agreeUrl = r.reconcileProtocolb?`${that.$url.adjust.imgUrl   }${r.reconcileProtocolb}`:''
                  that.applyManId = r.yyrSfzhm
