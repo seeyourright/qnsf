@@ -15,11 +15,6 @@
                 <el-radio label="1">调解员</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item v-if="form.userType==='1'" label="所属地区" prop="unitId">
-              <el-select style="width: 100%" v-model="form.unitId" :disabled="$store.state.user.userType === '2'">
-                <el-option v-for="area in areas" :label="area.institutionalName" :value="area.id" :key="area.id"></el-option>
-              </el-select>
-            </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="最后登录时间" prop="lastLoginTime">
@@ -30,6 +25,14 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-form-item v-if="form.userType==='1'" label="所属地区" prop="unitId">
+          <el-cascader
+            style="width: 100%"
+            :props="{value: 'id', label: 'institutionalName'}"
+            v-model="area"
+            :options="areas"
+          ></el-cascader>
+        </el-form-item>
         <el-form-item label="实名认证">
           <span v-if="form.idCardNo" style="color: green">已认证</span>
           <span v-else style="color: red">未认证</span>
@@ -44,7 +47,7 @@
           {{form.address || '未填写'}}
         </el-form-item>
         <div style="text-align: center;letter-spacing: 50px;margin-top: 30px">
-          <el-button>取消</el-button>
+          <el-button @click="$router.back()">取消</el-button>
           <el-button type="primary" @click="submit">保存</el-button>
         </div>
       </el-form>
@@ -64,7 +67,6 @@ export default {
         idCardNo: '',
         password: '',
         userType: '0',
-        unitId: '',
         createTime: '',
         lastLoginTime: '',
         address: ''
@@ -75,6 +77,7 @@ export default {
           {pattern: this.$util.phoneReg, message: '联系电话格式错误', trigger: 'blur'}
         ]
       },
+      area: null,
       areas: []
     }
   },
@@ -91,24 +94,33 @@ export default {
         if (res.code === 200) {
           delete res.data.password
           this.form = res.data
+          this.area = [this.form.unitId, this.form.townId, this.form.communityId]
         }
       })
     },
     areaInit () {
-      this.$http.get(this.$url.Area_All).then(res => {
-        if (res.code === 200) {
-          const area = []
-          for (let i = 0; i < res.data.length; i++) {
-            if (res.data[i].pid === 0) {
-              area.push(res.data[i])
-            }
-            if (area.length > 0 && area[0].id === res.data[i].pid.toString()) {
-              area.push(res.data[i])
+      this.$http.get(this.$url.Area_Tree).then(res => {
+        let areas = res.data[0].children
+        if (this.$store.state.user.userType === '2') {
+          for (let i = 0; i < areas.length; i++) {
+            if (this.$store.state.user.unitId === areas[i].id) {
+              areas = [areas[i]]
+              break
             }
           }
-          this.areas = area
         }
+        this.filterChildren(areas)
+        this.areas = areas
       })
+    },
+    filterChildren (arr) {
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].children.length > 0) {
+          this.filterChildren(arr[i].children)
+        } else {
+          arr[i].children = null
+        }
+      }
     },
     submit () {
       this.$refs.form.validate(valid => {
@@ -121,11 +133,16 @@ export default {
       const params = {
         id: this.id,
         phone: this.form.phone,
-        userType: this.form.userType,
-        unitId: this.form.unitId
+        userType: this.form.userType
       }
       if (this.form.password) {
         params.password = this.form.password
+      }
+      if (params.userType === '1') {
+        params.roleid = 2
+        params.unitId = this.area[0]
+        params.townId = this.area[1]
+        params.communityId = this.area[2]
       }
       this.$http.post(this.$url.Update_User, params).then(res => {
         if (res.code === 200) {

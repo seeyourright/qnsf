@@ -35,8 +35,11 @@ const post = (url, params, config) => {
 }
 
 axios.interceptors.response.use(res => {
-  if (res.data.code && res.data.code != 200 && res.data.code != 203) {
-     Message.error(res.data.msg)
+  if (res.data.code && res.data.code !== 200 && res.data.code !== 203) {
+    Message.error(res.data.msg)
+  }
+  if (res.data.code && res.data.code === 412) {
+    router.push('/login')
   }
   return res
 }, (err) => {

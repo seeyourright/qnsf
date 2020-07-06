@@ -110,9 +110,12 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item v-if="form.userType==='1'" label="所属地区" prop="unitId">
-          <el-select v-model="form.unitId" :disabled="$store.state.user.userType === '2'">
-            <el-option v-for="area in areas" :label="area.institutionalName" :value="area.id" :key="area.id"></el-option>
-          </el-select>
+          <el-cascader
+            style="width: 100%"
+            :props="{value: 'id', label: 'institutionalName'}"
+            v-model="area"
+            :options="areas"
+            ></el-cascader>
           <div></div>
         </el-form-item>
         <div style="text-align: right">
@@ -142,9 +145,9 @@ export default {
         phone: '',
         idCardNo: '',
         password: '',
-        userType: '1',
-        unitId: ''
+        userType: '1'
       },
+      area: [],
       rules: {
         nickname: [
           {required: true, message: '姓名不能为空', trigger: 'blur'}
@@ -160,10 +163,10 @@ export default {
           {required: true, message: '密码不能为空', trigger: 'blur'}
         ],
         unitId: [
-          {required: true, message: '县/市不能为空', trigger: 'blur'}
+          {required: true, message: '所属地区不能为空', trigger: 'blur'}
         ]
       },
-      areas: []
+      areas: null
     }
   },
   mounted () {
@@ -187,20 +190,28 @@ export default {
       })
     },
     areaInit () {
-      this.$http.get(this.$url.Area_All).then(res => {
-        if (res.code === 200) {
-          const area = []
-          for (let i = 0; i < res.data.length; i++) {
-            if (res.data[i].pid === 0) {
-              area.push(res.data[i])
-            }
-            if (area.length > 0 && area[0].id === res.data[i].pid.toString()) {
-              area.push(res.data[i])
+      this.$http.get(this.$url.Area_Tree).then(res => {
+        let areas = res.data[0].children
+        if (this.$store.state.user.userType === '2') {
+          for (let i = 0; i < areas.length; i++) {
+            if (this.$store.state.user.unitId === areas[i].id) {
+              areas = [areas[i]]
+              break
             }
           }
-          this.areas = area
         }
+        this.filterChildren(areas)
+        this.areas = areas
       })
+    },
+    filterChildren (arr) {
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].children.length > 0) {
+          this.filterChildren(arr[i].children)
+        } else {
+          arr[i].children = null
+        }
+      }
     },
     validateIdNumber (rule, value, callback) {
       if (this.$util.idCheck(value)) {
@@ -254,13 +265,13 @@ export default {
     },
     add () {
       const form = {...this.form}
-      if (form.userType === '0') {
-        delete form.unitId
-      }
       if (form.userType === '1') {
         form.roleid = 2
+        form.unitId = this.area[0]
+        form.townId = this.area[1]
+        form.communityId = this.area[2]
       }
-      this.form.username = this.form.phone
+      form.username = form.phone
       this.$http.post(this.$url.Add_User, form).then(res => {
         if (res.code === 200) {
           this.$message.success('新增成功')
@@ -268,6 +279,11 @@ export default {
           this.dialogVisible = false
         }
       })
+    }
+  },
+  watch: {
+    area (newVal) {
+      console.log(newVal)
     }
   }
 }
