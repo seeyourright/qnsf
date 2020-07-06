@@ -239,10 +239,11 @@ export default {
       this.subRes()
     },
     noPass() {
-      if(this.rejReason == ''){
+      if(!this.rejReason){
          this.$message.warning('请填写拒绝理由！');
          return false
       }
+      
       this.isPass = true;
       this.status = 2;
       this.subRes()

@@ -202,8 +202,8 @@ export default {
       dialogImageUrl: "",
       dialogVisible: false,
       show1: false,
-      roomList: ["001", "002", "003", "004", "005"],
-      cityList: ["都匀市", "独山县", "平塘县"],
+      roomList: [],
+      cityList: [],
       form: {
         roomId: "",
         city: "",
