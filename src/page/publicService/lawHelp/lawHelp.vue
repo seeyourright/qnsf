@@ -99,7 +99,7 @@ export default {
           }
         })
         .then(function(res) {
-          console.log('法律援助列表',res);
+          // console.log('法律援助列表',res);
           that.loading = false
           that.tableData = []
           if(res.data.code == 200){
@@ -116,10 +116,6 @@ export default {
               });
           }
         })
-        .catch(function(error) {
-          that.loading = false
-          console.log(error);
-        });
     },
     dealStatusShow(e){
        if(e == 0){

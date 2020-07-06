@@ -36,14 +36,13 @@
     <div class="sf_file">
       <div>
         <span class="add_key">双方签署调解协议:</span>
-        <img @click="showPDF = true" src="../../../../static/img/file.png" alt />
+        <img src="../../../../static/img/file.png" alt />
       </div>
 
-      <div style="height:30px;">
+      <!-- <div style="height:30px;">
         <el-button type="primary" size="small" style="margin-right:20px;" @click="showPDF = true">预览</el-button>
         <a :href="agreeUrl" class="expWord1"  style="top:15px;right:10px;">下载</a>
-        <!-- <el-button type="primary" size="small">下载</el-button> -->
-      </div>
+      </div> -->
     </div>
 
     <div style="width:100%;margin:40px 0;">

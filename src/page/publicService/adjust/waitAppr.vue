@@ -186,13 +186,12 @@ export default {
   methods: {
     init() {
       this.isUp = this.upDown;
-      console.log(this.role);
       if (this.obj.applyForStatus == 1) {
         this.upReason = this.obj.refuseReason;
         this.lowReason = this.obj.refuseReason;
       }
       this.getTJYlist(); //获取调解员列表
-    //   this.getRoomList(); //获取调解室列表
+      //this.getRoomList(); //获取调解室列表
       this.getJgdm()
       console.log(sessionStorage.getItem("unitId"));
     },
@@ -335,8 +334,7 @@ export default {
           reconcileAddress: that.obj.applyForAddress + that.lowAddr
         };
       }
-      console.log(param);
-      //   return false
+
       that.$http
         .axios({
           method: "post",
@@ -350,15 +348,8 @@ export default {
             that.$emit("res", res);
           }
         })
-        .catch(function(error) {
-          that.loading = false;
-          console.log(error);
-        });
-
-      //
     },
     upChange1(e) {
-      console.log(e);
       const that = this;
       that.upPeopleList.forEach(val => {
         if (val.id == e) {
@@ -369,9 +360,6 @@ export default {
     },
     upChange2(e) {
       const that = this;
-      //  that.upPeople = that.upPeopleList.filter(val=>{
-      //      return val.id == e.detail.value
-      //  })
       that.upRoomList.forEach(val => {
         if (val.id == e) {
           that.upRoom = val.name;
