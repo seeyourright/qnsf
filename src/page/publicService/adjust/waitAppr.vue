@@ -178,7 +178,10 @@ export default {
       this.lowReason = v;
     },
      "obj.recordAffiliation"(v) {
-       this.getJgdm()
+       if(this.isUp){
+           this.getJgdm()
+       }
+       
     }
   },
   created() {
