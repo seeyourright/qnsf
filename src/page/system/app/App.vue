@@ -55,7 +55,7 @@
         label="下载地址"
       >
         <template slot-scope="scope">
-          <a :href="$url.Download_App+scope.row.downloadUrl">{{$url.Download_App+scope.row.downloadUrl}}</a>
+          <a :href="scope.row.downloadUrl">{{scope.row.downloadUrl}}</a>
         </template>
       </el-table-column>
       <el-table-column
@@ -122,7 +122,7 @@
 <!--        </el-form-item>-->
         <div style="text-align: right">
           <el-button @click="dialogVisible=false">取消</el-button>
-          <el-button type="primary" @click="submit" :loading="loading">保存</el-button>
+          <el-button type="primary" @click="submit" :loading="loading">{{loading? percent+'%':'保存'}}</el-button>
         </div>
       </el-form>
     </el-dialog>
@@ -135,6 +135,7 @@ export default {
   data () {
     return {
       loading: false,
+      percent: 0,
       page: 1,
       size: 10,
       total: 100,
@@ -245,7 +246,11 @@ export default {
         formdata.append(key, this.form[key])
       }
       this.loading = true
-      this.$http.axios.post(this.$url.Add_App, formdata).then(res => {
+      this.$http.axios.post(this.$url.Add_App, formdata, {
+        onUploadProgress: (progressEvent) => {
+          this.percent = Math.floor(progressEvent.loaded / progressEvent.total * 100)
+        }
+      }).then(res => {
         if (res.data.code === 200) {
           this.$message.success('新增成功')
           this.getData(1)
@@ -253,9 +258,10 @@ export default {
         }
       }).finally(res => {
         this.loading = false
+        this.percent = 0
       })
     }
-  },
+  }
 }
 </script>
 

@@ -147,7 +147,7 @@ export default {
         password: '',
         userType: '1'
       },
-      area: [],
+      area: null,
       rules: {
         nickname: [
           {required: true, message: '姓名不能为空', trigger: 'blur'}
@@ -163,7 +163,7 @@ export default {
           {required: true, message: '密码不能为空', trigger: 'blur'}
         ],
         unitId: [
-          {required: true, message: '所属地区不能为空', trigger: 'blur'}
+          {validator: this.validateArea, trigger: 'blur'}
         ]
       },
       areas: null
@@ -215,6 +215,13 @@ export default {
     },
     validateIdNumber (rule, value, callback) {
       if (this.$util.idCheck(value)) {
+        callback()
+      } else {
+        callback(new Error('身份证格式错误'))
+      }
+    },
+    validateArea (rule, value, callback) {
+      if (this.area) {
         callback()
       } else {
         callback(new Error('身份证格式错误'))
