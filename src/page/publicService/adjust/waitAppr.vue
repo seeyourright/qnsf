@@ -176,6 +176,9 @@ export default {
     "obj.refuseReason"(v) {
       this.upReason = v;
       this.lowReason = v;
+    },
+     "obj.recordAffiliation"(v) {
+       this.getJgdm()
     }
   },
   created() {
@@ -192,7 +195,7 @@ export default {
       }
       this.getTJYlist(); //获取调解员列表
       //this.getRoomList(); //获取调解室列表
-      this.getJgdm()
+      
       // console.log(sessionStorage.getItem("unitId"));
     },
     getTJYlist() {
@@ -221,13 +224,14 @@ export default {
     },
     getJgdm(){
       const that = this
-      // console.log(that.obj.recordAffiliation)
+      console.log(that.obj)
+      console.log(that.obj.recordAffiliation)
       that.$http
         .axios({
           method: "post",
           url: that.$url.adjust.jgdm,
           params:{
-              area:that.obj.recordAffiliation,
+              area:that.obj.recordAffiliation.split('-')[0],
               departmentType:'人民调解'
           } 
         })
