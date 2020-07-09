@@ -26,11 +26,10 @@
                    <el-button type="primary" size="small"  @click="upPass = ''">返回上一步</el-button>
                </div>
             </div>
-            
-              <div class="step0_up_button" v-if="upPass === '' && isTime == true">
-                   <el-button type="danger" size="small"  @click="upPass = false">未达成调解</el-button>
-                   <el-button type="primary" size="small" :loading="btnLoading1"  @click="applyRes('3')">达成调解推送调解员</el-button>
-             </div>
+              <div class="step0_up_button" v-if="upPass === '' && isTime == true && role == 1">
+                <el-button type="danger" size="small"  @click="upPass = false">未达成调解</el-button>
+                <el-button type="primary" size="small" :loading="btnLoading1"  @click="dialogVisible = true">推送调解协议书</el-button>
+              </div>
          </div>
 
          <!---------------------------------------------------- 线下调解中 -------------------------------------------->
@@ -45,7 +44,7 @@
                       <span class="add_key">调解时间:</span>
                       <span class="add_value">{{lowBaseObj.reconcileTime}}</span>
                 </div>
-                <div class="step0_low_item"> 
+                <div class="step0_low_item">
                       <span class="add_key" style="width:72px;">调解地点:</span>
                       <span class="add_value"  style="white-space:nowrap;margin-right:10px;">{{lowBaseObj.reconcileAddress}}</span>
                 </div>
@@ -57,12 +56,32 @@
                    <el-button type="primary" size="small"  @click="lowPass = ''">返回上一步</el-button>
                </div>
             </div>
-            
+
               <div class="step0_up_button" v-if="lowPass === '' && role == 1">
                    <el-button type="danger" size="small" @click="lowPass = false">未达成调解</el-button>
-                   <el-button type="primary" size="small"  @click="applyRes('3')">达成调解推送调解员</el-button>
+                   <el-button type="primary" size="small" @click="dialogVisible = true">推送调解协议书</el-button>
              </div>
          </div>
+
+        <!-- <iframe :src='previewUrl' width='100%' height='500px' frameborder='1'></iframe> -->
+      <el-dialog
+        :visible="dialogVisible"
+      >
+        <div style="padding: 20px">
+          <el-form>
+            <el-form-item label="经调解，自愿达成如下协议:" required>
+              <el-input type="textarea" v-model="comeToAnAgreement"></el-input>
+            </el-form-item>
+            <el-form-item label="履行协议方式、地点、期限：" required>
+              <el-input type="textarea" v-model="fulfilWayAddressTime"></el-input>
+            </el-form-item>
+          </el-form>
+          <div style="text-align: right">
+            <el-button @click="dialogVisible=false">取消</el-button>
+            <el-button type="primary" @click="submit" :loading="loading">提交</el-button>
+          </div>
+        </div>
+      </el-dialog>
     </div>
 </template>
 
@@ -78,7 +97,7 @@ export default {
            //线上审批
            isTime:false,
            upPass:'',//线上审批通过   线上审批拒绝
-           upReason:'',//线上审批拒绝原因  
+           upReason:'',//线上审批拒绝原因
            upPeople:'',//线上审批通过  分配调解员
            upRoom:'',//线上审批通过  分配调解室
            upTime:'',//线上审批通过  分配调解时间
@@ -88,6 +107,10 @@ export default {
            lowReason:'', //线下审批拒绝原因
            lowTime:'',//线下调节时间
            lowAddr:'', //线下调解地点
+
+          comeToAnAgreement: '',
+          fulfilWayAddressTime: '',
+          dialogVisible: false
         };
     },
     watch:{
@@ -115,6 +138,17 @@ export default {
            }
           //  console.log(this.isUp)
        },
+      submit () {
+         if (!this.comeToAnAgreement) {
+           this.$message.warning('达成协议不能为空')
+           return false
+         }
+          if (!this.fulfilWayAddressTime) {
+            this.$message.warning('履行协议方式、地点、期限不能为空')
+            return false
+          }
+        this.applyRes('3')
+      },
         applyRes(res){
           const that = this
           if(that.isUp == true && res == '5' && that.upReason == ''){
@@ -126,7 +160,7 @@ export default {
               that.$message.error('请填写未达成原因');
               return false
           }
-            
+
           that.resSubHttp(res)
        },
        resSubHttp(res){
@@ -137,10 +171,12 @@ export default {
          }else{
              that.btnLoading = true
          }
-        
+
          if(that.isUp == true && res == '3'){
               param = {
                   reservationNumber: that.obj.reservationNumber,
+                  comeToAnAgreement: that.comeToAnAgreement,
+                  fulfilWayAddressTime: that.fulfilWayAddressTime,
                   id:that.obj.id,
                   applyForStatus:3,
                   protocolPushTime: that.$util.getDateTime()
@@ -156,6 +192,8 @@ export default {
           }else if(that.isUp == false && res == '3'){
               param = {
                   reservationNumber: that.obj.reservationNumber,
+                  comeToAnAgreement: that.comeToAnAgreement,
+                  fulfilWayAddressTime: that.fulfilWayAddressTime,
                   id:that.obj.id,
                   applyForStatus:3,
                   protocolPushTime: that.$util.getDateTime()
@@ -169,7 +207,7 @@ export default {
                   endTime:that.$util.getDateTime()
               }
           }
-         
+
         that.$http
         .axios({
           method: "post",
@@ -181,10 +219,11 @@ export default {
           that.btnLoading = false
           that.btnLoading1 = false
           if (res.data.code == 200) {
-                that.$emit('res',res) 
+                that.$emit('res',res)
           }
         })
-       }
+       },
+
     },
 };
 </script>
@@ -194,7 +233,6 @@ export default {
     width: 100%;
     margin-top: 40px;
   }
-  
  .step0_up_button{
     width: 100%;
     height: 50px;
@@ -242,5 +280,9 @@ export default {
     height: 50px;
     display: flex;
     align-items: center;
+}
+/deep/ .el-dialog__header {
+  background: #fff;
+  color: white !important;
 }
 </style>

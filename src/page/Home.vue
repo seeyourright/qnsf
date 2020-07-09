@@ -28,7 +28,62 @@ export default {
   name: 'Home',
   components: {
     Header, Sider
-  }
+  },
+  created () {
+    this.$store.state.ws = new WebSocket('ws://139.9.249.249:8087/ws/' + this.$store.state.user.id)
+    this.$store.state.ws.onmessage = (res) => {
+      console.log(res)
+      const data = JSON.parse(res.data)
+      if (data.type === '法律援助') {
+        this.flyz(data)
+      }
+      if (data.type === '人民调解') {
+        this.rmtj(data)
+      }
+    }
+  },
+  methods: {
+    flyz (data) {
+      const that = this
+      sessionStorage.setItem('lawHelpId', data.applyId)
+      this.$notify({
+        duration: 0,
+        position: 'bottom-right',
+        message: `${data.applyForMan}在${this.$util.dateFormat(data.applyForTime)}申请了一条${data.type}信息`,
+        onClick () {
+          that.$router.push('helpDetail')
+          this.type = 'success'
+        }
+      })
+    },
+    rmtj (data) {
+      const that = this
+      sessionStorage.setItem('adjustObj', data.yyNumber)
+      const message = this.$store.state.user.userType === '2'
+                      ? `${data.applyForMan}在${this.$util.dateFormat(data.applyForTime)}申请了一条${data.type}信息`
+                      : `有一条${data.type}信息更新了`
+      this.$notify({
+        duration: 0,
+        position: 'bottom-right',
+        message: message,
+        onClick () {
+          that.$router.push('adjustDetail')
+          this.type = 'success'
+        }
+      })
+    },
+    // test () {
+    //   this.$notify({
+    //     duration: 0,
+    //     position: 'bottom-right',
+    //     message: `111`,
+    //     onClick () {
+    //       console.log(this)
+    //       this.type = 'success'
+    //     }
+    //   })
+    // }
+  },
 }
 </script>
 

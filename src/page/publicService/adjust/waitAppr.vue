@@ -58,14 +58,14 @@
       </div>
 
       <!-- 线上审批按钮 -->
-      <div class="step0_up_button" v-if="upPass === '' && isUp === true &&  status == 0">
+      <div class="step0_up_button" v-if="upPass === '' && isUp === true &&  status == 0 ">
         <el-button type="danger" size="small" @click="upPass = false">拒绝</el-button>
         <el-button type="primary" size="small" @click="upPass = true">通过</el-button>
       </div>
     </div>
 
     <!--------------------------------------------- 线下调解 ----------------------------------------------->
-    <div class="step0_low" v-if="role == 1 || status == 1 ">
+    <div class="step0_low">
       <!-- 线下审批拒绝显示内容 -->
       <div class="step0_up_no" v-if="lowPass === false ||  (status == 1 && isUp === false)">
         <div class="step0_low_item">
@@ -181,11 +181,11 @@ export default {
        if(this.isUp){
            this.getJgdm()
        }
-       
+
     }
   },
   created() {
-   
+
     this.init();
 
   },
@@ -198,7 +198,7 @@ export default {
       }
       this.getTJYlist(); //获取调解员列表
       //this.getRoomList(); //获取调解室列表
-      
+
       // console.log(sessionStorage.getItem("unitId"));
     },
     getTJYlist() {
@@ -236,7 +236,7 @@ export default {
           params:{
               area:that.obj.recordAffiliation.split('-')[0],
               departmentType:'人民调解'
-          } 
+          }
         })
         .then(function(res) {
           // console.log("机构代码", res);

@@ -9,6 +9,7 @@ const user = localStorage.getItem('user')
 const config = {
   state: {
     isIE: isIE,
+    ws: null,
     userInfo: userInfo ? JSON.parse(userInfo) : {},
     permission: permission ? JSON.parse(permission) : [],
     user: user ? JSON.parse(user) : {}

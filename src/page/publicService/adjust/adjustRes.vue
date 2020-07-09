@@ -26,7 +26,7 @@
                       <span class="add_key">调解时间:</span>
                       <span class="add_value">{{lowBaseObj.reconcileTime}}</span>
                 </div>
-                <div class="step0_low_item"> 
+                <div class="step0_low_item">
                       <span class="add_key" style="width:72px;">调解地点:</span>
                       <span class="add_value"  style="white-space:nowrap;margin-right:10px;">{{lowBaseObj.reconcileAddress}}</span>
                 </div>
@@ -43,7 +43,7 @@
              <div  style="height:30px;">
                  <el-button type="primary" size="small" style="margin-right:20px;" @click="showPDF = true">预览</el-button>
                  <!-- <a target='_black' :href='previewUrl'>在线预览</a> -->
-                  <a :href="agreeUrl" class="expWord1"  style="top:15px;right:10px;">下载</a>
+                  <a :href="agreeUrl" class="expWord1"  style="top:15px;right:10px;" target="_blank">下载</a>
                  <!-- <el-button type="primary" size="small">下载</el-button> -->
              </div>
           </div>
@@ -61,11 +61,11 @@
 
            <!-- 协议预览 -->
     <el-dialog title="协议预览" :visible.sync="showPDF" width="1000px">
-     <pdf 
-         :src="previewUrl" 
+     <pdf
+         :src="previewUrl"
          :page="pdfPage"
          @num-pages='pdfCounts'
-         ></pdf> 
+         ></pdf>
       <div class="ad_row3">
           <el-pagination
             @current-change="handleCurrentChange"
@@ -74,9 +74,9 @@
             :page-size="1"
             :total="pdfTotals"
           ></el-pagination>
-      </div> 
+      </div>
       <!-- <iframe :src='previewUrl' width='100%' height='500px' frameborder='1'></iframe> -->
-    </el-dialog>  
+    </el-dialog>
     </div>
 </template>
 
@@ -115,7 +115,7 @@ export default {
         //点击分页触发函数
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
-      
+
     },
     pdfCounts(num){
       console.log(num)

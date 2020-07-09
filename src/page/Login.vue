@@ -81,7 +81,6 @@ export default {
           localStorage.setItem('userInfo', JSON.stringify(res.data))
           localStorage.setItem('token', res.data.token_type + res.data.access_token)
           this.$store.state.userInfo = res.data
-          this.$router.push('home')
         } else {
           this.$message.error('用户名或密码错误')
         }
@@ -108,6 +107,7 @@ export default {
         if (res.code === 200) {
           localStorage.setItem('user', JSON.stringify(res.data))
           this.$store.state.user = res.data
+          this.$router.push('home')
         }
       })
     }

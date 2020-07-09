@@ -8,7 +8,7 @@
     <el-divider></el-divider>
 
     <!-- <el-button type="primary" size="small"  style="position:absolute;right:50px;top:80px;" @click="expWord" >导出申请表</el-button> -->
-    <a :href="wordUrl" class="expWord">导出申请表</a>
+    <a :href="wordUrl" class="expWord" target="_blank">导出申请表</a>
     <!-- 申请基础信息 -->
     <div class="step0_low_item" v-for="(item,index) in applyInfo.baseInfo" :key="index">
       <span class="add_key">{{item.name}}:</span>
@@ -36,7 +36,7 @@
     <!-- 相关证明材料 -->
     <div class="add_row2" style="position:relative;" v-if="url.length != 0"   >
       <span class="add_key">相关证明材料:</span>
-      <a :href="zipUrl" class="expWord"  style="top:15px;right:10px;">下载材料</a>
+      <a :href="zipUrl" class="expWord"  style="top:15px;right:10px;" target="_blank">下载材料</a>
       <!-- <el-button type="primary" size="small" icon="el-icon-download">下载材料</el-button> -->
     </div>
 
@@ -243,7 +243,7 @@ export default {
          this.$message.warning('请填写拒绝理由！');
          return false
       }
-      
+
       this.isPass = true;
       this.status = 2;
       this.subRes()

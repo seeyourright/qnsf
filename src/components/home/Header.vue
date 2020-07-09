@@ -23,6 +23,7 @@ export default {
     logout () {
       localStorage.removeItem('userInfo')
       localStorage.removeItem('token')
+      localStorage.removeItem('user')
       this.$store.state.userInfo = {}
       this.$router.push('login')
     }

@@ -129,6 +129,9 @@ export default {
     }
   },
   mounted () {
+    if (this.$store.state.user.userType === '2') {
+      this.condition.unitId = this.$store.state.user.unitId
+    }
     this.getData(1)
     this.roleInit()
   },

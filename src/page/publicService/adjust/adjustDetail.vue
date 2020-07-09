@@ -1,6 +1,6 @@
 <template>
   <div class="adjust_detail" >
-   
+
     <!-- <p class="lawTitle" @click="reset">reset</p> -->
     <!-- 申请信息 -->
     <div class="add_row1">
@@ -86,7 +86,7 @@
     <div class="add_row2"  v-if="url.length != 0" >
       <span class="add_key">相关证明材料:</span>
       <!-- <el-button type="primary" size="small" icon="el-icon-download" @click="downZip">下载材料</el-button> -->
-      <a :href="zipUrl" class="expWord1"  style="top:15px;right:10px;">下载材料</a>
+      <a :href="zipUrl" class="expWord1"  style="top:15px;right:10px;" target="_blank">下载材料</a>
     </div>
 
     <div class="add_row3"  v-if="url.length != 0" >
@@ -136,47 +136,47 @@
 
 
     <!-- 待审批状态 -->
-    <waitAppr :upDown = 'isUp'  
-              :status="status" 
+    <waitAppr :upDown = 'isUp'
+              :status="status"
               :role = "role"
               :rejReason = 'rejReasonStatus1'
               :obj = "obj"
-              v-if = "status == 0 || status == 1"  
+              v-if = "status == 0 || status == 1"
               @res="getRes"></waitAppr>
-    
+
     <!-- 调解中 -->
-    <adjusting 
-         :upDown = 'isUp'  
+    <adjusting
+         :upDown = 'isUp'
          :role = "role"
-         :status = "status" 
+         :status = "status"
          :upBaseObj = "obj"
          :lowBaseObj = "obj"
          :obj = "obj"
           v-if = "status==2" @res="getRes"></adjusting>
-    
+
     <!-- 文件签署 -->
-    <signFile :upDown = 'isUp'  
-              :status="status"  
+    <signFile :upDown = 'isUp'
+              :status="status"
               v-if = "status == 3"
               :upBaseObj = "obj"
               :lowBaseObj = "obj"
-              :obj = "obj" 
-              :signProgress = "signProgress" 
+              :obj = "obj"
+              :signProgress = "signProgress"
               :previewUrl = "previewUrl"
               :agreeUrl = "agreeUrl"
               @res="getRes"></signFile>
 
     <!-- 调解结果 -->
-    <adjustRes :upDown = 'isUp'  
-               :status="status"  
+    <adjustRes :upDown = 'isUp'
+               :status="status"
                :upBaseObj = "obj"
                :lowBaseObj = "obj"
-               :obj = "obj" 
+               :obj = "obj"
                :previewUrl = "previewUrl"
-               :agreeUrl = "agreeUrl" 
+               :agreeUrl = "agreeUrl"
                :rejReason = 'rejReasonStatus5'
                :completeTime = 'completeTime'
-               v-if = "status == 4 || status == 5"  
+               v-if = "status == 4 || status == 5"
                 ></adjustRes>
   </div>
 </template>
@@ -315,13 +315,13 @@ export default {
                              name:val,
                            })
                    }
-                   
+
                 })
                 }
                 // console.log(that.srcList)
                 //查询预约和被预约人列表
                 that.lookMorePeople()
-                
+
            }
         })
     },
@@ -456,7 +456,7 @@ export default {
 
 /deep/ .el-dialog__body {
     padding: 0;
-    
+
 }
 
 .expWord1{
@@ -464,7 +464,7 @@ export default {
     background: #409EFF;
     padding: 5px 10px;
     font-size: 14px;
-    
+
 }
 
 .lawTitle {

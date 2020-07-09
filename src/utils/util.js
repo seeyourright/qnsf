@@ -29,9 +29,9 @@ const util = {
     }
     if (typeof date === 'string') {
       if (date.indexOf('+') > -1) {
-        date = date.substring(0, date.indexOf('+'))
-        date = new Date(date)
-        date.setHours(date.getHours() + 8)
+        const arr = date.split('+')
+        date = new Date(arr[0])
+        date.setHours(date.getHours() + 8 - arr[1][1])
       }
     }
     date = new Date(date)

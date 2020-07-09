@@ -1,7 +1,7 @@
-// const path = `http://116.63.56.151:8080`
-// const path1 = `http://116.63.56.151:8080`
-const path = `http://192.168.0.127:8080`
-const path1 = `http://192.168.0.127:8080`
+const path = `http://139.9.249.249:8080`
+const path1 = `http://139.9.249.249:8080`
+// const path = `http://192.168.0.127:8080`
+// const path1 = `http://192.168.0.127:8080`
 
 const url = {
   login: `${path}/api/auth/oauth/token`, // 登录获取token
@@ -63,6 +63,7 @@ const url = {
     downZip:`${path}/api/rmtj/rmtj/verifyMaterialDownloadZip`,
     tjyList:`${path}/api/system-management/sysuser/select_user_all`,
     roomList:`${path}/api/system-management/room/getRoomAll`,
+    signatureUpload:`${path}/api/rmtj/rmtj/signatureUpload`,
     jgdm:`${path}/api/system-management/department/getAll`
   },
   lawHelp:{

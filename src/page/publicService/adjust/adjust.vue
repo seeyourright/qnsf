@@ -98,10 +98,10 @@ export default {
           url: that.$url.adjust.getList,
           params: {
             applyForStatus: that.status === ''?null:that.status,
-            yyrName:isHz?that.condition:null,   
+            yyrName:isHz?that.condition:null,
             reservationNumber:isHz?null:that.condition,
             recordAffiliation:sessionStorage.getItem('userType') == 2?sessionStorage.getItem('unitId'):null,  //管理员按归属单位查找  超级管理员可查看所有
-            reconcileId: sessionStorage.getItem('userType') == 1?sessionStorage.getItem('userId'):null,  //调解员按id查找  
+            reconcileId: sessionStorage.getItem('userType') == 1?sessionStorage.getItem('userId'):null,  //调解员按id查找
             reconcileWay: sessionStorage.getItem('userType') != 1 && that.status === '0'?'线上调解':null,  //查询审批状态的数据时   调解员只能获取线下调解的  管理员和超级管理员只能获取线上
             page:that.currentPage,
             limit:that.size
@@ -115,10 +115,10 @@ export default {
                that.totals = res.data.totals
                that.tableData = res.data.data.map(val=>{
                      val.applyForTime = moment(val.applyForTime).format('YYYY-MM-DD HH:mm:ss')// that.$util.timeFormat()
-                     val.applyForStatus = that.dealStatusShow(val.applyForStatus)  
+                     val.applyForStatus = that.dealStatusShow(val.applyForStatus)
                      return val
                })
-               
+
            }
         })
     },
@@ -145,7 +145,7 @@ export default {
     //批量删除
     delMore() {
      const that = this;
-    
+
       if(that.multipleSelection.length == 0){
             that.$message.warning('请选择需要删除的记录！');
             return false
@@ -163,7 +163,7 @@ export default {
           params: {
             ids:arr
           },
-           paramsSerializer: function(params) {
+          paramsSerializer: function(params) {
                return qs.stringify(params, {arrayFormat: 'repeat'})
           }
         })

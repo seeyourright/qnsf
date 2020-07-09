@@ -65,7 +65,14 @@
         <span style="color:red;" v-else>（未签署）、</span>
       </span>
     </div>
-    
+    <div style="width:100%;margin:40px 0;" v-if="!obj.peacemakerSignature && obj.proposerSignature && obj.recipientSignature && $store.state.user.userType === '1'">
+      <span class="add_key">调解员签字:</span>
+      <writingBoard ref="writingBoard"></writingBoard>
+      <div style="margin-top: 10px;text-align: center">
+        <el-button @click="$refs.writingBoard.clear()">清空</el-button>
+        <el-button type="primary" @click="submitSign">提交签名</el-button>
+      </div>
+    </div>
     <p class="add_key" v-if="showLowRej" >未达成原因</p>
     <el-input v-if="showLowRej"  v-model="lowReason"    style="margin:10px 0 30px;"  type="textarea" :rows="5" ></el-input>
     <div class="step0_up_button" v-if="showLowRej">
@@ -73,7 +80,7 @@
         <el-button type="primary" size="small"  @click="showLowRej = false">返回上一步</el-button>
     </div>
 
-    <div class="step0_up_button" v-if="obj.peacemakerSignature  && obj.proposerSignature && obj.recipientSignature && showLowRej == false">
+    <div class="step0_up_button" v-if="obj.peacemakerSignature  && obj.proposerSignature && obj.recipientSignature && showLowRej == false && $store.state.user.userType === '1'">
       <!-- <el-button type="danger" size="small"  v-if="obj.reconcileWay == '线下调解'"  @click="showLowRej = true" >未达成调解</el-button> -->
       <el-button type="primary" size="small"  :loading="btnLoading1"  @click="applyRes('4')">完成调解</el-button>
     </div>
@@ -88,8 +95,8 @@
             layout="prev, pager, next"
             :page-size="1"
             :total="pdfTotals"
-          ></el-pagination> 
-          
+          ></el-pagination>
+
       </div>
         <!-- <iframe :src='previewUrl' width='100%' height='500px' frameborder='1'></iframe> -->
     </el-dialog>
@@ -99,11 +106,12 @@
 <script>
 import moment from 'moment'
 import pdf from "vue-pdf";
+import writingBoard from "../../../components/writingBoard";
 
 export default {
   props: ["upDown","upBaseObj","lowBaseObj","signProgress","previewUrl","agreeUrl","obj"],
   components: {
-    pdf
+    pdf,writingBoard
   },
   data() {
     return {
@@ -148,7 +156,6 @@ export default {
       that.upBaseObj.reconcileTime = moment(that.upBaseObj.reconcileTime).format('YYYY-MM-DD HH:mm:ss') //that.$util.timeFormat(that.upBaseObj.reconcileTime)
       that.lowBaseObj.reconcileTime = moment(that.lowBaseObj.reconcileTime).format('YYYY-MM-DD HH:mm:ss') //that.$util.timeFormat(that.lowBaseObj.reconcileTime)
       let diffDays = that.$util.datedifference(that.obj.protocolPushTime)
-
       // console.log('与推送协议相差天数',diffDays)
       if( !that.obj.peacemakerSignature && !that.obj.proposerSignature && !that.obj.recipientSignature  && diffDays >7){
               that.autoRej()    //7天内未签署完成   自动改为未达成调解状态
@@ -173,10 +180,10 @@ export default {
           // console.log("更新人民调解信息(调解中)", res);
            that.btnLoading1 = false
           if (res.data.code == 200) {
-                that.$emit('res',res) 
+                that.$emit('res',res)
           }
         })
-           
+
 
        },
        applyRes1(){
@@ -197,7 +204,7 @@ export default {
         .then(function(res) {
           that.btnLoading = false
           if (res.data.code == 200) {
-                that.$emit('res',res) 
+                that.$emit('res',res)
           }
         })
        },
@@ -218,10 +225,10 @@ export default {
         .then(function(res) {
           // console.log("系统自动归为未调节状态", res);
           if (res.data.code == 200) {
-                that.$emit('res',res) 
+                that.$emit('res',res)
           }
         })
-        
+
     },
     preview(row) {
       //createLoadingTask方法，参数为pdf的文件地址，此方法可返回pdf文件的一些参数，例如页码总数，等；会返回一个promise对象；
@@ -238,7 +245,20 @@ export default {
      //点击分页触发函数
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
-      
+
+    },
+    submitSign () {
+      const peacemakerSignature = this.$refs.writingBoard.getImg()
+      const formdata = new FormData()
+      formdata.append('sign', peacemakerSignature)
+      formdata.append('signMan', 'peacemakerSignature')
+      formdata.append('id', this.obj.id)
+      this.$http.axios.post(this.$url.adjust.signatureUpload, formdata).then(res => {
+        if (res.data.code === 200) {
+          this.$message.success('提交成功')
+          this.obj.peacemakerSignature = true
+        }
+      })
     }
   }
 };
@@ -317,6 +337,6 @@ export default {
     font-size: 13px;
     display: flex;
     align-items: center;
-    
+
 }
 </style>

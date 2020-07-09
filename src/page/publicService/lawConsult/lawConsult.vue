@@ -135,16 +135,16 @@
                 <i class="el-icon-plus"></i>
               </el-upload>
 
-               <el-image 
+               <el-image
                  v-if="mode == 'look'"
                  style="width: 100px; height: 100px"
-                 :src="form.imgUrl" 
+                 :src="form.imgUrl"
                  :preview-src-list="srcList">
               </el-image>
             </div>
           </div>
 
-         
+
 
           <el-form-item v-if="mode == 'add'">
             <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -180,17 +180,17 @@ export default {
       totals: 1, //总条数
       multipleSelection: [], //批量选择列表
       tableData: [
-        {
-          id: "0",
-          roomId: "335",
-          city: "都匀",
-          phone: "13595026341",
-          email: "2225942@qq.com",
-          intro: "1",
-          addr: "1",
-          file: "",
-          imgUrl:''
-        }
+        // {
+        //   id: "0",
+        //   roomId: "335",
+        //   city: "都匀",
+        //   phone: "13595026341",
+        //   email: "2225942@qq.com",
+        //   intro: "1",
+        //   addr: "1",
+        //   file: "",
+        //   imgUrl:''
+        // }
       ],
       // --------------------------------------------------------------------------------------------------------
      role:'',
@@ -235,7 +235,7 @@ export default {
   created() {
     this.upUrl = this.$url.upUrl  //初始化上传地址
     this.role = sessionStorage.getItem('userType')
-    
+
     this.getApplyList();
     this.getCity()
 
@@ -351,7 +351,7 @@ export default {
                      value:val.id
                    })
               })
-            
+
             //添加二级行政单位
               res.data.data[0].children.forEach(val=>{
                    that.cityList.push({
@@ -368,7 +368,7 @@ export default {
            this.form.city = val.name;
            this.form.cityId = val.value;
         }
-        
+
       });
     },
     //添加按钮触发事件
