@@ -49,7 +49,10 @@
         while(n--){
           u8arr[n] = bstr.charCodeAt(n);
         }
-        return new File([u8arr], filename, {type: mime})
+        const blob = new Blob([u8arr], {type: mime})
+        blob.lastModifiedDate = new Date()
+        blob.name = filename
+        return blob
       },
     }
   }

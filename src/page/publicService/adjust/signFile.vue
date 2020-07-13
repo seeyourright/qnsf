@@ -248,17 +248,20 @@ export default {
 
     },
     submitSign () {
-      const peacemakerSignature = this.$refs.writingBoard.getImg()
-      const formdata = new FormData()
-      formdata.append('sign', peacemakerSignature)
-      formdata.append('signMan', 'peacemakerSignature')
-      formdata.append('id', this.obj.id)
-      this.$http.axios.post(this.$url.adjust.signatureUpload, formdata).then(res => {
-        if (res.data.code === 200) {
-          this.$message.success('提交成功')
-          this.obj.peacemakerSignature = true
-        }
-      })
+      this.$confirm('确定提交吗').then(() => {
+        const peacemakerSignature = this.$refs.writingBoard.getImg()
+        const formdata = new FormData()
+        formdata.append('sign', peacemakerSignature)
+        formdata.append('signMan', 'peacemakerSignature')
+        formdata.append('id', this.obj.id)
+        this.$http.axios.post(this.$url.adjust.signatureUpload, formdata).then(res => {
+          if (res.data.code === 200) {
+            this.$message.success('提交成功')
+            this.obj.peacemakerSignature = true
+          }
+        })
+      }, () => {})
+
     }
   }
 };

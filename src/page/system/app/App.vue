@@ -111,15 +111,15 @@
             <span>{{form.up_file ? form.up_file.name : ''}}</span>
           </el-upload>
         </el-form-item>
-<!--        <el-form-item label="强制更新" prop="a">-->
-<!--          <el-switch-->
-<!--            v-model="form.modifyContent"-->
-<!--            active-value="1"-->
-<!--            inactive-value="2"-->
-<!--            active-text="是"-->
-<!--            inactive-text="否"-->
-<!--          ></el-switch>-->
-<!--        </el-form-item>-->
+        <el-form-item label="强制更新" prop="a">
+          <el-switch
+            v-model="form.updateStatus"
+            active-value="1"
+            inactive-value="2"
+            active-text="是"
+            inactive-text="否"
+          ></el-switch>
+        </el-form-item>
         <div style="text-align: right">
           <el-button @click="dialogVisible=false">取消</el-button>
           <el-button type="primary" @click="submit" :loading="loading">{{loading? percent+'%':'保存'}}</el-button>

@@ -143,11 +143,20 @@ export default {
         params.unitId = this.area[0]
         params.townId = this.area[1]
         params.communityId = this.area[2]
+      } else {
+        params.roleid = 0
       }
       this.$http.post(this.$url.Update_User, params).then(res => {
         if (res.code === 200) {
           this.$message.success('修改成功')
           this.$router.back()
+          this.roleChange(params.roleid)
+        }
+      })
+    },
+    roleChange (rid) {
+      this.$http.post(this.$url.Give_User_Role, {uid: this.id, roleid: rid}).then(res => {
+        if (res.code === 200) {
         }
       })
     }
