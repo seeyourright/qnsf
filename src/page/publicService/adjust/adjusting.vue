@@ -94,6 +94,7 @@ export default {
            isUp:true,
            btnLoading:false,
            btnLoading1:false,
+           loading:false,
            //线上审批
            isTime:false,
            upPass:'',//线上审批通过   线上审批拒绝
@@ -136,6 +137,8 @@ export default {
                   //到线上开始调解的时候，才显示  达成调解或者未达成调解按钮
                   that.isTime = true
            }
+            console.log(that.isTime)   
+           
           //  console.log(this.isUp)
        },
       submit () {

@@ -47,12 +47,12 @@
 
     <div style="width:100%;margin:40px 0;">
       <span class="add_key">协议签署进度:</span>
-      <span class="add_value" >
+      <!-- <span class="add_value" >
         调解员
         <span style="color:green;" v-if="obj.peacemakerSignature ">（已签署）、</span>
         <span style="color:red;" v-else>（未签署）、</span>
       </span>
-
+       
       <span class="add_value" >
         预约人
         <span style="color:green;" v-if="obj.proposerSignature">（已签署）、</span>
@@ -63,7 +63,24 @@
         被预约人
         <span style="color:green;" v-if="obj.recipientSignature">（已签署）、</span>
         <span style="color:red;" v-else>（未签署）、</span>
-      </span>
+      </span> -->
+      <p class="add_value" style="padding:10px 0 15px 60px;" >
+        调解员
+        <span style="color:green;" v-if="obj.peacemakerSignature ">（已签署）、</span>
+        <span style="color:red;" v-else>（未签署）、</span>
+      </p>
+
+      <p class="add_value" style="padding:10px 0 15px 60px;">
+        预约人
+        <span style="color:green;" v-if="obj.proposerSignature">（已签署）、<el-button type="primary" size="small"  @click="lookQM('proposerSignature')">查看签名</el-button>   </span>
+        <span style="color:red;" v-else>（未签署）、</span>
+      </p>
+
+      <p class="add_value" style="padding:10px 0 15px 60px;">
+        被预约人
+        <span style="color:green;" v-if="obj.recipientSignature">（已签署）、<el-button type="primary" size="small"  @click="lookQM('recipientSignature')">查看签名</el-button> </span>
+        <span style="color:red;" v-else>（未签署）、</span>
+      </p>
     </div>
     <div style="width:100%;margin:40px 0;" v-if="!obj.peacemakerSignature && obj.proposerSignature && obj.recipientSignature && $store.state.user.userType === '1'">
       <span class="add_key">调解员签字:</span>
@@ -80,7 +97,7 @@
         <el-button type="primary" size="small"  @click="showLowRej = false">返回上一步</el-button>
     </div>
 
-    <div class="step0_up_button" v-if="obj.peacemakerSignature  && obj.proposerSignature && obj.recipientSignature && showLowRej == false && $store.state.user.userType === '1'">
+    <div class="step0_up_button" v-if="obj.peacemakerSignature  && obj.proposerSignature && obj.recipientSignature && $store.state.user.userType === '1'">
       <!-- <el-button type="danger" size="small"  v-if="obj.reconcileWay == '线下调解'"  @click="showLowRej = true" >未达成调解</el-button> -->
       <el-button type="primary" size="small"  :loading="btnLoading1"  @click="applyRes('4')">完成调解</el-button>
     </div>
@@ -100,6 +117,20 @@
       </div>
         <!-- <iframe :src='previewUrl' width='100%' height='500px' frameborder='1'></iframe> -->
     </el-dialog>
+
+    <!-- 签名预览预览 -->
+    <el-dialog title="签名预览" :visible.sync="showSign" width="665px" >
+       <el-image
+          style="width: 600px;margin:20px auto;"
+          :src="signUrl"
+        ></el-image>
+         <div  style="width:100%;padding:15px 0;display:flex;justify-content:center;">
+           <el-button   v-if="$store.state.user.userType === '1'"    type="danger" size="small"  style="margin:15px auto;" @click="signSecond"  :loading="btnLoading2" >签名不通过，退回重新签名</el-button>  
+        </div>
+        
+       
+        <!-- <iframe :src='previewUrl' width='100%' height='500px' frameborder='1'></iframe> -->
+    </el-dialog>
   </div>
 </template>
 
@@ -117,12 +148,16 @@ export default {
     return {
       btnLoading:false,
       btnLoading1:false,
+      btnLoading2:false,
       showLowRej:false,
       lowReason:'',
       isUp: true, //true线上审批  false 线下审批
       showPDF: false,
       pdfPage:1,
       pdfTotals:10,
+      signUrl:'',
+      showSign:false,
+      needSignMan:'',
     };
   },
   watch:{
@@ -161,6 +196,52 @@ export default {
               that.autoRej()    //7天内未签署完成   自动改为未达成调解状态
       }
 
+    },
+    
+    lookQM(v){
+        const that = this
+        that.needSignMan = v
+        if(v == 'proposerSignature'){
+          //预约人签名
+          that.signUrl = `${that.$url.adjust.imgUrl}${that.obj.proposerSignature}`
+         
+        }else{
+          //预约人签名
+          that.signUrl = `${that.$url.adjust.imgUrl}${that.obj.recipientSignature}`
+        }
+        that.showSign = true
+
+    },
+    signSecond(){
+      const that = this
+      this.$confirm('将退回签名, 是否确定?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          that.signSecond1()
+        })
+    },
+    signSecond1(){
+         const that = this
+           that.btnLoading2 = true
+          that.$http
+          .axios({
+          method: "post",
+          url: that.$url.adjust.signSecond,
+          params: {
+             id:that.obj.id,
+             signMan:that.needSignMan
+          }
+        })
+        .then(function(res) {
+          // console.log("更新人民调解信息(调解中)", res);
+           that.btnLoading2 = false
+           that.showSign = false
+          if (res.data.code == 200) {
+                that.$emit('res',res)
+          }
+        })
     },
      applyRes(res){
           const that = this
