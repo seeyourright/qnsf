@@ -66,14 +66,45 @@
       type="textarea"
       :rows="5"
     ></el-input>
+    <div v-if="isPass === true || status === 1" style="margin-top:40px;">
+      <div>
+        <p class="add_key" style="margin-top:40px;">援助人姓名</p>
+        <el-input
+          :disabled="status == 1"
+          style="margin:10px 0 0;width: 200px"
+          v-model="aidName"
+        ></el-input>
+      </div>
+      <div>
+        <p class="add_key" style="margin-top:20px;">援助人电话</p>
+        <el-input
+          :disabled="status == 1"
+          style="margin:10px 0 0;width: 200px"
+          v-model="aidPhone"
+        ></el-input>
+      </div>
+      <div>
+        <p class="add_key" style="margin-top:20px;">备注</p>
+        <el-input
+          :disabled="status == 1"
+          style="margin:10px 0 0;"
+          v-model="aidRemark"
+          type="textarea"
+          :rows="5"
+        ></el-input>
+      </div>
+    </div>
     <div class="step0_up_button" v-if="isPass === false">
       <el-button type="danger" size="small" @click="noPass">提交</el-button>
       <el-button type="primary" size="small" @click="isPass = ''">返回上一步</el-button>
     </div>
-
+    <div class="step0_up_button" v-if="isPass === true">
+      <el-button type="danger" size="small" @click="pass">提交</el-button>
+      <el-button type="primary" size="small" @click="isPass = ''">返回上一步</el-button>
+    </div>
     <div class="step0_up_button" v-if="isPass === '' && status == 0">
       <el-button type="danger" size="small" @click="isPass = false">拒绝</el-button>
-      <el-button type="primary" size="small" @click="pass">通过</el-button>
+      <el-button type="primary" size="small" @click="isPass = true">通过</el-button>
     </div>
 
     <!-- 完成时间 -->
@@ -94,6 +125,9 @@ export default {
       isPass: "",
       status: "0", //0待审核  1审核通过  2审核拒绝
       rejReason: "", //拒绝原因
+      aidName: '',
+      aidPhone: '',
+      aidRemark: '',
       completeTime: "2020-06-22 10:00:00",
       wordUrl:'',
       zipUrl:'',
@@ -153,12 +187,14 @@ export default {
         })
         .then(function(res) {
           // console.log("法律援助详情", res);
-
           if (res.data.code == 200) {
             let obj = res.data.data.lawAidApplyPerson;
             that.completeTime = res.data.data.examineTime
             that.status = res.data.data.status
             that.rejReason = res.data.data.remarks
+            that.aidName = res.data.data.aidName
+            that.aidPhone = res.data.data.aidPhone
+            that.aidRemark = res.data.data.aidRemark
             that.applyInfo = {
               baseInfo: [
                 { name: "预约号", value: res.data.data.reservationNumber },
@@ -234,19 +270,46 @@ export default {
         })
     },
     pass() {
-      this.isPass = true;
-      this.status = 1;
-      this.subRes()
+      // this.isPass = '';
+      // this.status = 1;
+      if(!this.aidName){
+        this.$message.warning('请填写援助人姓名！');
+        return false
+      }
+      if(!this.aidPhone){
+        this.$message.warning('请填写援助人电话！');
+        return false
+      }
+      if(!this.$util.phoneReg.test(this.aidPhone)){
+        this.$message.warning('电话号码格式错误！');
+        return false
+      }
+      if(!this.aidRemark){
+        this.$message.warning('请填写备注！');
+        return false
+      }
+      const params = {
+        id: this.id,
+        status : 1,
+        aidName: this.aidName,
+        aidPhone: this.aidPhone,
+        aidRemark: this.aidRemark,
+      }
+      this.$http.post(this.$url.lawHelp.subRes, params).then(res => {
+        if (res.code === 200) {
+          this.searchDetail()
+          this.isPass = '';
+        }
+      })
+      // this.subRes()
     },
     noPass() {
       if(!this.rejReason){
          this.$message.warning('请填写拒绝理由！');
          return false
       }
-
-      this.isPass = true;
-      this.status = 2;
       this.subRes()
+      // this.status = 2;
     },
     subRes(){
       const that = this;
@@ -256,14 +319,14 @@ export default {
           url: that.$url.lawHelp.subRes,
           params: {
             id: that.id,
-            status: that.status,
-            remarks: that.status == 2?that.rejReason:''
+            status: 2,
+            remarks: that.rejReason
           }
         })
         .then(function(res) {
-          // console.log("审批结果", res);
           if (res.data.code == 200) {
                that.searchDetail()
+                that.isPass = '';
           }
         })
     },

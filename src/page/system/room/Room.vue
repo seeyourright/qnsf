@@ -96,6 +96,9 @@
     >
       <div>
         <el-input v-model="roomNumber" placeholder="请输入新的房间号"></el-input>
+        <el-select style="width: 100%;margin-top: 20px" v-model="roomType"  placeholder="请选择房间类型">
+          <el-option v-for="item in unitType" :label="item" :value="item" :key="item"></el-option>
+        </el-select>
         <div style="text-align: center;margin-top: 20px">
           <el-button @click="dialogVisible=false">取消</el-button>
           <el-button type="primary" @click="submit">保存</el-button>
@@ -119,7 +122,13 @@ export default {
       tableData: [],
       dialogVisible: false,
       roomNumber: '',
-      areas: []
+      roomType: '',
+      areas: [],
+      unitType: [
+        '人民调解',
+        '法律援助',
+        '法律咨询'
+      ]
     }
   },
   created () {
@@ -181,7 +190,11 @@ export default {
         this.$message.warning('请输入房间号')
         return false
       }
-      this.$http.post(this.$url.Add_Room, {roomNumber: this.roomNumber}).then(res => {
+      if (!this.roomType) {
+        this.$message.warning('请选择房间类型')
+        return false
+      }
+      this.$http.post(this.$url.Add_Room, {roomNumber: this.roomNumber, roomType: this.roomType}).then(res => {
         if (res.code === 200) {
           this.$message.success('新增成功')
           this.getData(1)

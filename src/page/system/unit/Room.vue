@@ -117,7 +117,7 @@ export default {
       })
     },
     roominit () {
-      this.$http.get(this.$url.Room_List, {page: 0, limit: 0, institutionalCode: 0, roomStatus: 0}).then(res => {
+      this.$http.get(this.$url.Room_List, {page: 0, limit: 0, institutionalCode: 0, roomStatus: 0, roomType: this.type}).then(res => {
         if (res.code === 200) {
           this.rooms = res.data
         }
@@ -129,7 +129,6 @@ export default {
           id: row.id,
           institutionalCode: 0,
           institutionalName: '',
-          roomType: ''
         }
         this.$http.post(this.$url.Update_Room, params).then(res => {
           if (res.code === 200) {
@@ -152,7 +151,6 @@ export default {
         id: this.selectRoom,
         institutionalCode: this.id,
         institutionalName: this.name,
-        roomType: this.type
       }
       this.$http.post(this.$url.Distribution_Room, params).then(res => {
         if (res.code === 200) {
