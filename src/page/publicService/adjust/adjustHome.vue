@@ -79,7 +79,7 @@ export default {
           phone: "",
           status: ""
         }
-      
+
       ]
     };
   },
@@ -111,7 +111,7 @@ export default {
                      value:val.id
                    })
               })
-            
+
               that.city = that.cityList[0].name
               that.getApplyList()
           }
@@ -147,7 +147,7 @@ export default {
                          city: val.city,
                          phone: val.phone,
                          status: val.status == 0?'未启用':'启用',
-                         roomNumber: val.roomNumber  
+                         roomNumber: val.roomNumber
                    })
               });
           }
@@ -181,7 +181,7 @@ export default {
           method: "post",
           url: that.$url.lawHelp.delMore1,
           params: {
-            ids:arr.join(',')
+            ids:arr.join(','),
           }
         })
         .then(function(res) {

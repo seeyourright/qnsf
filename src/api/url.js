@@ -1,10 +1,12 @@
 const path = `http://139.9.249.249:8080`
 const path1 = `http://139.9.249.249:8080`
-// const path = `http://192.168.0.130:8080`
-// const path1 = `http://192.168.0.130:8080`
+// const path = `http://192.168.0.145:8080`
+// const path1 = `http://192.168.0.145:8080`
 
 const url = {
   login: `${path}/api/auth/oauth/token`, // 登录获取token
+  // obs
+  OBS_Path: `https://zhsf.obs.cn-east-3.myhuaweicloud.com/`, // 获取obs上传url
   // 用户
   User_List: `${path}/api/system-management/sysuser/select_user_all`, // 用户列表
   User_List_No_Admin: `${path}/api/system-management/sysuser/selectUserByUserType`, // 用户列表(不含管理员)
@@ -48,6 +50,21 @@ const url = {
   Area_Tree: `${path}/api/system-management/sysunit/getUnitTree`, // 地区列表
   // tupian
   Img_Path: `${path}/api/rmtj/static/`,
+
+  //banner
+  Banner_List: `${path}/api/lawConsult/banner/findlist`, // banner列表
+  Banner_By_Id: `${path}/api/lawConsult/banner/findbyid`, // banner根据id查询
+  Add_Banner: `${path}/api/lawConsult/banner/add`, // banner添加
+  Update_Banner: `${path}/api/lawConsult/banner/update`, // banner更新
+  Delete_Banner: `${path}/api/lawConsult/banner/removes`, // banner批量删除
+
+  // 司法所
+  Judicial_List: `${path}/api/lawConsult/judicialOffice/findlist`, // 司法所列表
+  Judicial_By_Id: `${path}/api/lawConsult/judicialOffice/findbyid`, // 司法所根据id查询
+  Add_Judicial: `${path}/api/lawConsult/judicialOffice/add`, // 司法所添加
+  Update_Judicial: `${path}/api/lawConsult/judicialOffice/update`, // 司法所更新
+  Delete_Judicial: `${path}/api/lawConsult/judicialOffice/removes`, // 司法所批量删除
+
   doNotDelete: 'doNotDelete', // 别删
   // ----------------------------------ly---------------------------------------
   getUserInfo:`${path}/api/system-management/sysuser/select_user_one`,

@@ -7,6 +7,7 @@ import store from './store'
 import http from './api/http'
 import url from './api/url'
 import util from './utils/util'
+import ObsClient from './utils/hwobs'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
@@ -28,6 +29,7 @@ Vue.config.productionTip = false
 Vue.prototype.$http = http
 Vue.prototype.$url = url
 Vue.prototype.$util = util
+Vue.prototype.$ObsClient = ObsClient
 
 /* eslint-disable no-new */
 new Vue({

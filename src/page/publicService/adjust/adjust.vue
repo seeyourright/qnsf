@@ -153,15 +153,18 @@ export default {
 
       that.loading = true
       let arr = []
+      let yyNumber = []
       that.multipleSelection.forEach(val=>{
-            arr.push(val.id)
+        arr.push(val.id)
+        yyNumber.push(val.reservationNumber)
       })
 
       that.$http.axios({
           method: "post",
           url: that.$url.adjust.delMore,
           params: {
-            ids:arr
+            ids:arr,
+            yyNumber
           },
           paramsSerializer: function(params) {
                return qs.stringify(params, {arrayFormat: 'repeat'})

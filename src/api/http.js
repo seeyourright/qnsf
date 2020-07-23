@@ -6,7 +6,7 @@ import {Message} from 'element-ui'
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 axios.interceptors.request.use(config => {
   const token = localStorage.getItem('token')
-  token && (config.headers.Authorization = token)
+  token && !config.headers.Authorization && (config.headers.Authorization = token)
   return config
 })
 

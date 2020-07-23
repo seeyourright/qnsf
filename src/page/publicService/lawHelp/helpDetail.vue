@@ -10,7 +10,7 @@
     <!-- <el-button type="primary" size="small"  style="position:absolute;right:50px;top:80px;" @click="expWord" >导出申请表</el-button> -->
     <a :href="wordUrl" class="expWord" target="_blank">导出申请表</a>
     <!-- 申请基础信息 -->
-    <div class="step0_low_item" v-for="(item,index) in applyInfo.baseInfo" :key="index">
+    <div class="step0_low_item" v-for="(item,index) in applyInfo.baseInfo" :key="'1'+index">
       <span class="add_key">{{item.name}}:</span>
       <span class="add_value" :style="{'color':item.name == '状态'?'red':''}">{{item.value}}</span>
     </div>
@@ -19,7 +19,7 @@
     <el-divider></el-divider>
 
     <div class="hd_box">
-      <div class="hd_box_item" v-for="(item,index) in applyInfo.people1" :key="index">
+      <div class="hd_box_item" v-for="(item,index) in applyInfo.people1" :key="'2'+index">
         <span class="add_key">{{item.name}}:</span>
         <span class="add_value">{{item.value}}</span>
       </div>
@@ -28,7 +28,7 @@
     <!-- 分割线 -->
     <el-divider></el-divider>
 
-    <div class="step0_low_item" v-for="(item,index) in applyInfo.proxy" :key="index">
+    <div class="step0_low_item" v-for="(item,index) in applyInfo.proxy" :key="'3'+index">
       <span class="add_key">{{item.name}}:</span>
       <span class="add_value">{{item.value}}</span>
     </div>
@@ -68,7 +68,15 @@
     ></el-input>
     <div v-if="isPass === true || status === 1" style="margin-top:40px;">
       <div>
-        <p class="add_key" style="margin-top:40px;">援助人姓名</p>
+        <p class="add_key rq" style="margin-top:20px;">律所名称</p>
+        <el-input
+          :disabled="status == 1"
+          style="margin:10px 0 0;width: 200px"
+          v-model="aidLawFirm"
+        ></el-input>
+      </div>
+      <div>
+        <p class="add_key rq" style="margin-top:40px;">律师姓名</p>
         <el-input
           :disabled="status == 1"
           style="margin:10px 0 0;width: 200px"
@@ -76,7 +84,7 @@
         ></el-input>
       </div>
       <div>
-        <p class="add_key" style="margin-top:20px;">援助人电话</p>
+        <p class="add_key rq" style="margin-top:20px;">律师电话</p>
         <el-input
           :disabled="status == 1"
           style="margin:10px 0 0;width: 200px"
@@ -128,6 +136,7 @@ export default {
       aidName: '',
       aidPhone: '',
       aidRemark: '',
+      aidLawFirm: '',
       completeTime: "2020-06-22 10:00:00",
       wordUrl:'',
       zipUrl:'',
@@ -195,6 +204,7 @@ export default {
             that.aidName = res.data.data.aidName
             that.aidPhone = res.data.data.aidPhone
             that.aidRemark = res.data.data.aidRemark
+            that.aidLawFirm = res.data.data.aidLawFirm
             that.applyInfo = {
               baseInfo: [
                 { name: "预约号", value: res.data.data.reservationNumber },
@@ -272,20 +282,20 @@ export default {
     pass() {
       // this.isPass = '';
       // this.status = 1;
+      if(!this.aidLawFirm){
+        this.$message.warning('请填写律所名称！');
+        return false
+      }
       if(!this.aidName){
-        this.$message.warning('请填写援助人姓名！');
+        this.$message.warning('请填写律师姓名！');
         return false
       }
       if(!this.aidPhone){
-        this.$message.warning('请填写援助人电话！');
+        this.$message.warning('请填写律师电话！');
         return false
       }
       if(!this.$util.phoneReg.test(this.aidPhone)){
         this.$message.warning('电话号码格式错误！');
-        return false
-      }
-      if(!this.aidRemark){
-        this.$message.warning('请填写备注！');
         return false
       }
       const params = {
@@ -294,6 +304,7 @@ export default {
         aidName: this.aidName,
         aidPhone: this.aidPhone,
         aidRemark: this.aidRemark,
+        aidLawFirm: this.aidLawFirm
       }
       this.$http.post(this.$url.lawHelp.subRes, params).then(res => {
         if (res.code === 200) {
@@ -449,5 +460,9 @@ export default {
     position: absolute;
     right: 50px;
     top: 85px;
+}
+.rq:before {
+  content: '*';
+  color: red;
 }
 </style>

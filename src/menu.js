@@ -67,11 +67,17 @@ const menu = [
         path: '/home/lawHelp',
         permission: 'lawHelp'
       },
+      // {
+      //   title: '法律咨询',
+      //   icon: '',
+      //   path: '/home/lawConsult',
+      //   permission: 'lawConsult'
+      // },
       {
-        title: '法律咨询',
+        title: '司法所',
         icon: '',
-        path: '/home/lawConsult',
-        permission: 'lawConsult'
+        path: '/home/judicial',
+        permission: 'judicial'
       }
     ]
   },
@@ -79,13 +85,14 @@ const menu = [
     title: '内容管理',
     icon: 'icon-xitong',
     path: '3',
-    permission: 'content',
+    //permission: 'content',
+    permission: '',
     children: [
       {
         title: 'Banner管理',
         icon: '',
         path: '/home/banner',
-        permission: 'banner'
+        permission: ''
       },
       {
         title: '系统推送',
@@ -97,13 +104,13 @@ const menu = [
         title: '法制政府',
         icon: '',
         path: '/home/government',
-        permission: ''
+        permission: '1'
       },
       {
         title: '法制宣传',
         icon: '',
         path: '/home/propaganda',
-        permission: ''
+        permission: '1'
       }
     ]
   },

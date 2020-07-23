@@ -4,6 +4,13 @@
       <div>系统管理—用户管理</div>
       <el-form size="small" inline>
         <el-form-item>
+          <el-select v-model="condition.userType">
+            <el-option label="全部类型" :value="null"></el-option>
+            <el-option label="普通用户" value="0"></el-option>
+            <el-option label="调解员" value="1"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
           <el-input placeholder="输入姓名" v-model="condition.nickname"></el-input>
         </el-form-item>
         <el-form-item>
@@ -136,7 +143,8 @@ export default {
       size: 10,
       total: 100,
       condition: {
-        nickname: null
+        nickname: null,
+        userType: null
       },
       tableData: [],
       dialogVisible: false,
@@ -145,7 +153,7 @@ export default {
         phone: '',
         idCardNo: '',
         password: '',
-        userType: '1'
+        userType: '0'
       },
       area: null,
       rules: {

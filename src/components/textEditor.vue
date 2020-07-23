@@ -20,21 +20,21 @@ export default {
     const el = this.$refs.editor
     this.editor = new Editor(el)
     // 图片上传
-    // let params = {}
-    // this.$http.get(this.url.QiNiuCustomToken).then(res => {
-    //   params.token = res.uptoken
-    // })
-    // this.editor.customConfig.uploadImgServer = this.url.QiNiuUpload
-    // this.editor.customConfig.uploadFileName = 'file'
-    // this.editor.customConfig.uploadImgParams = params
-    // this.editor.customConfig.uploadImgHooks = {
-    //   customInsert: (insertImg, result, editor) => {
-    //     insertImg(this.$store.state.qnyPath + result.key)
-    //   }
-    // }
+    this.editor.customConfig.zIndex = 100
+    this.editor.customConfig.customUploadImg = (files, insert) => {
+      const key = 'editor' + new Date().getTime()
+      this.$ObsClient.putObject({
+        Bucket: 'zhsf',
+        Key: key,
+        SourceFile: files[0],
+      }).then(res => {
+        insert(this.$url.OBS_Path + key)
+      })
+    }
     // 触发change事件
     this.editor.customConfig.onchange = html => {
       this.$emit('update:text', html)
+      this.$emit('change', html)
     }
     // 菜单控制
     if (this.menus) {

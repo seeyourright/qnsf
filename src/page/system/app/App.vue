@@ -39,16 +39,16 @@
           <div style="white-space: pre-wrap">{{scope.row.modifyContent}}</div>
         </template>
       </el-table-column>
-<!--      <el-table-column-->
-<!--        align="center"-->
-<!--        prop="updateStatus"-->
-<!--        label="强制更新"-->
-<!--      >-->
-<!--        <template slot-scope="scope">-->
-<!--          <span v-if="scope.row.updateStatus === 1">是</span>-->
-<!--          <span v-else>否</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+      <el-table-column
+        align="center"
+        prop="updateStatus"
+        label="强制更新"
+      >
+        <template slot-scope="scope">
+          <span v-if="scope.row.updateStatus === 1">是</span>
+          <span v-else>否</span>
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
         prop="id"
@@ -184,7 +184,7 @@ export default {
     nameValidator (rule, value, callback) {
       for (let i = 0; i < this.versionName.length; i++) {
         if (this.versionName[i] === undefined) {
-          callback(new Error('版本好不能为空'))
+          callback(new Error('版本号不能为空'))
           return false
         }
       }

@@ -146,6 +146,12 @@ const router = new Router({
             ppath: '/home/push'
           }
         },
+        // 公共服务
+        {
+          path: 'judicial',
+          name: 'judicial',
+          component: () => import('../page/publicService/judicial/judicial')
+        },
         // ---------------------------ly------------------------------------
         {
           path: 'adjust',

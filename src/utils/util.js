@@ -1,3 +1,6 @@
+import url from '../api/url'
+import http from '../api/http'
+
 const util = {
   phoneReg: /^1[3-9]\d{9}$/,
   emailReg: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
@@ -72,6 +75,28 @@ const util = {
       return false
     }
     mask.parentNode.removeChild(mask)
+  },
+  imgBase64 (file, fn) {
+    const fileReader = new FileReader()
+    fileReader.onload = (e) => {
+      fn(e.target.result)
+    }
+    fileReader.readAsDataURL(file)
+  },
+  async uploadToOBS (file, objectName) {
+    const sign = await http.get(url.Get_Upload_Sign, {objectName})
+    const formdata = new FormData()
+    formdata.append('file', file)
+    const res = await http.axios({
+      method: 'put',
+      url:'https://zhsf.obs.cn-east-3.myhuaweicloud.com/'+objectName,
+      data: file,
+      headers: {
+        Authorization: sign.data,
+        'cache-control': 'no-cache'
+      }
+    })
+    return res
   },
   //计算两个时间相差天数
   datedifference(sDate1) {    //sDate1和sDate2是2006-12-18格式
