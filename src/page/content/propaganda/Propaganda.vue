@@ -1,7 +1,9 @@
 <template>
   <div class="mm">
     <div class="condition">
-      <div>内容管理—Banner管理</div>
+      <div>
+        内容管理-法制宣传
+      </div>
       <el-form size="small" inline>
         <el-form-item>
           <el-button type="primary" @click="addHandler">新增</el-button>
@@ -43,7 +45,7 @@
       </el-table-column>
       <el-table-column
         align="center"
-        prop="bannerTitle"
+        prop="title"
         label="标题"
       ></el-table-column>
       <el-table-column
@@ -83,63 +85,63 @@
 </template>
 
 <script>
-export default {
-  name: 'Banner',
-  data () {
-    return {
-      page: 1,
-      size: 10,
-      total: 100,
-      tableData: []
-    }
-  },
-  created () {
-    this.getData(1)
-  },
-  methods: {
-    getData (page) {
-      this.$util.tableLoading()
-      this.$http.get(this.$url.Banner_List, {page, size: this.size}).then(res => {
-        if (res.code === 200) {
-          this.tableData = res.data
-          this.page = page
-          this.total = res.totals
-        } else if (res.code === 203) {
-          this.tableData = []
-          this.page = 1
-          this.total = 0
-        }
-      }).finally(res => {
-        this.$util.tableLoaded()
-      })
-    },
-    detailHandler (row) {
-      this.$router.push('bannerAdd?id=' + row.id)
-    },
-    deleteAllHandler () {
-      const selection = this.$refs.table.selection
-      if (selection.length === 0) {
-        this.$message.warning('至少选择一条数据')
-        return false
+  export default {
+    name: 'Propaganda',
+    data () {
+      return {
+        page: 1,
+        size: 10,
+        total: 100,
+        tableData: []
       }
-      const ids = []
-      for (let i = 0; i < selection.length; i++) {
-        ids.push(selection[i].id)
-      }
-      this.$confirm('确定删除吗').then(() => {
-        this.$http.post(this.$url.Delete_Banner, {ids: ids.join(',')}).then(res => {
+    },
+    created () {
+      this.getData(1)
+    },
+    methods: {
+      getData (page) {
+        this.$util.tableLoading()
+        this.$http.get(this.$url.Propaganda_List, {page, size: this.size}).then(res => {
           if (res.code === 200) {
-            this.$message.success('删除成功')
-            this.getData(this.page)
+            this.tableData = res.data
+            this.page = page
+            this.total = res.totals
+          } else if (res.code === 203) {
+            this.tableData = []
+            this.page = 1
+            this.total = 0
           }
+        }).finally(res => {
+          this.$util.tableLoaded()
         })
-      }, () => {})
-    },
-    addHandler () {
-      this.$router.push('bannerAdd')
+      },
+      detailHandler (row) {
+        this.$router.push('propagandaAdd?id=' + row.id)
+      },
+      deleteAllHandler () {
+        const selection = this.$refs.table.selection
+        if (selection.length === 0) {
+          this.$message.warning('至少选择一条数据')
+          return false
+        }
+        const ids = []
+        for (let i = 0; i < selection.length; i++) {
+          ids.push(selection[i].id)
+        }
+        this.$confirm('确定删除吗').then(() => {
+          this.$http.post(this.$url.Delete_Propaganda, {ids: ids.join(',')}).then(res => {
+            if (res.code === 200) {
+              this.$message.success('删除成功')
+              this.getData(this.page)
+            }
+          })
+        }, () => {})
+      },
+      addHandler () {
+        this.$router.push('propagandaAdd')
+      }
     }
   }
-}
 </script>
 
 <style lang='stylus' scoped>

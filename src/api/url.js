@@ -1,7 +1,7 @@
 const path = `http://139.9.249.249:8080`
 const path1 = `http://139.9.249.249:8080`
-// const path = `http://192.168.0.145:8080`
-// const path1 = `http://192.168.0.145:8080`
+// const path = `http://192.168.0.105:8080`
+// const path1 = `http://192.168.0.105:8080`
 
 const url = {
   login: `${path}/api/auth/oauth/token`, // 登录获取token
@@ -57,6 +57,18 @@ const url = {
   Add_Banner: `${path}/api/lawConsult/banner/add`, // banner添加
   Update_Banner: `${path}/api/lawConsult/banner/update`, // banner更新
   Delete_Banner: `${path}/api/lawConsult/banner/removes`, // banner批量删除
+  // 法制政府
+  Government_Information_List: `${path}/api/lawConsult/legalGovernment/findlist`, // 法制政府资讯列表
+  Add_Government_Information: `${path}/api/lawConsult/legalGovernment/add`,  // 法制政府资讯添加
+  Update_Government_Information: `${path}/api/lawConsult/legalGovernment/update`, // 法制政府资讯修改
+  Delete_Government_Information: `${path}/api/lawConsult/legalGovernment/removes`, // 法制政府资讯删除
+  Government_Information_By_Id: `${path}/api/lawConsult/legalGovernment/findbyid`, // 法制政府资讯根据id查询
+  // 法制宣传
+  Propaganda_List: `${path}/api/lawConsult/lawPropaganda/findlist`, // 法制宣传列表
+  Add_Propaganda: `${path}/api/lawConsult/lawPropaganda/add`,  // 法制宣传添加
+  Update_Propaganda: `${path}/api/lawConsult/lawPropaganda/update`, // 法制宣传修改
+  Delete_Propaganda: `${path}/api/lawConsult/lawPropaganda/removes`, // 法制宣传删除
+  Propaganda_By_Id: `${path}/api/lawConsult/lawPropaganda/findbyid`, // 法制宣传根据id查询
 
   // 司法所
   Judicial_List: `${path}/api/lawConsult/judicialOffice/findlist`, // 司法所列表
@@ -64,6 +76,16 @@ const url = {
   Add_Judicial: `${path}/api/lawConsult/judicialOffice/add`, // 司法所添加
   Update_Judicial: `${path}/api/lawConsult/judicialOffice/update`, // 司法所更新
   Delete_Judicial: `${path}/api/lawConsult/judicialOffice/removes`, // 司法所批量删除
+
+  // 法制学堂
+  School_Live_List: `${path}/api/fzxt/zhibo/selectAll`, // 法制学堂直播列表
+  School_Live_By_Id: `${path}/api/lawConsult/judicialOffice/findbyid`, // 法制学堂直播根据id查询
+  Add_School_Live: `${path}/api/fzxt/zhibo/add`, // 法制学堂直播添加
+  Delete_School_Live: `${path}/api/fzxt/zhibo/add`, // 法制学堂直播批量删除
+  School_Lived_List: `${path}/api/fzxt/FzxtJxsp/all`, // 法制学堂录播列表
+  School_Lived_By_Id: `${path}/api/lawConsult/judicialOffice/findbyid`, // 法制学堂录播根据id查询
+  Add_School_Lived: `${path}/api/fzxt/FzxtJxsp/add`, // 法制学堂录播添加
+  Delete_School_Lived: `${path}/api/fzxt/zhibo/add`, // 法制学堂录播批量删除
 
   doNotDelete: 'doNotDelete', // 别删
   // ----------------------------------ly---------------------------------------

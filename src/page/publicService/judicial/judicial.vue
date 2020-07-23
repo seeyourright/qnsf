@@ -84,7 +84,6 @@
     <el-dialog
       :visible="dialogVisible"
       :show-close="false"
-      title="新增"
     >
       <el-form ref="form" class="form" label-width="100px" :rules="rules" :model="form">
         <el-form-item label="司法所名称" prop="judicialName">

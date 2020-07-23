@@ -78,6 +78,12 @@ const menu = [
         icon: '',
         path: '/home/judicial',
         permission: 'judicial'
+      },
+      {
+        title: '法制学堂',
+        icon: '',
+        path: '/home/school',
+        permission: ''
       }
     ]
   },
@@ -85,14 +91,13 @@ const menu = [
     title: '内容管理',
     icon: 'icon-xitong',
     path: '3',
-    //permission: 'content',
-    permission: '',
+    permission: 'content',
     children: [
       {
         title: 'Banner管理',
         icon: '',
         path: '/home/banner',
-        permission: ''
+        permission: 'banner'
       },
       {
         title: '系统推送',
@@ -104,13 +109,13 @@ const menu = [
         title: '法制政府',
         icon: '',
         path: '/home/government',
-        permission: '1'
+        permission: 'government'
       },
       {
         title: '法制宣传',
         icon: '',
         path: '/home/propaganda',
-        permission: '1'
+        permission: 'propaganda'
       }
     ]
   },

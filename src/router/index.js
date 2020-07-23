@@ -146,11 +146,77 @@ const router = new Router({
             ppath: '/home/push'
           }
         },
+        {
+          path: 'government',
+          name: 'government',
+          component: () => import('../page/content/government/Government'),
+          redirect: 'government/information',
+          children: [
+            {
+              path: 'information',
+              name: 'information',
+              component: () => import('../page/content/government/Information'),
+              meta: {
+                ppath: '/home/government'
+              }
+            },
+            {
+              path: 'evaluation',
+              name: 'evaluation',
+              component: () => import('../page/content/government/Evaluation'),
+              meta: {
+                ppath: '/home/government'
+              }
+            }
+          ]
+        },
+        {
+          path: 'government/informationAdd',
+          name: 'information',
+          component: () => import('../page/content/government/InformationAdd'),
+          meta: {
+            ppath: '/home/government'
+          }
+        },
+        {
+          path: 'propaganda',
+          name: 'propaganda',
+          component: () => import('../page/content/propaganda/Propaganda')
+        },
+        {
+          path: 'propagandaAdd',
+          name: 'PropagandaAdd',
+          component: () => import('../page/content/propaganda/PropagandaAdd')
+        },
         // 公共服务
         {
           path: 'judicial',
           name: 'judicial',
           component: () => import('../page/publicService/judicial/judicial')
+        },
+        {
+          path: 'school',
+          name: 'school',
+          component: () => import('../page/publicService/school/School'),
+          redirect: 'school/live',
+          children: [
+            {
+              path: 'live',
+              name: 'live',
+              component: () => import('../page/publicService/school/Live'),
+              meta: {
+                ppath: '/home/school'
+              }
+            },
+            {
+              path: 'lived',
+              name: 'lived',
+              component: () => import('../page/publicService/school/Lived'),
+              meta: {
+                ppath: '/home/school'
+              }
+            }
+          ]
         },
         // ---------------------------ly------------------------------------
         {

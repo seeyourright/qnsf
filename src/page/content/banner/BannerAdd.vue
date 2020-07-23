@@ -121,7 +121,7 @@ export default {
       return Promise.reject(new Error())
     },
     imgValidator (rule, value, callback) {
-      if (!this.file) {
+      if (!this.imgUrl) {
         callback(new Error('图片不能为空'))
         return false
       }
@@ -131,7 +131,7 @@ export default {
       let c = this.form.content
       c = c.replace(/<p.*?>/g, '').replace(/<\/p>/g, '').replace(/<br>/g, '')
       if (!c.trim()) {
-        callback(new Error('展示内容不能为空'))
+        callback(new Error('内容不能为空'))
       } else {
         callback()
       }
