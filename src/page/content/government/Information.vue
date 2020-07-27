@@ -105,7 +105,7 @@
     methods: {
       getData (page) {
         this.$util.tableLoading()
-        this.$http.get(this.$url.Government_Information_List, {page, size: this.size}).then(res => {
+        this.$http.get(this.$url.Government_Information_List, {page, limit: this.size}).then(res => {
           if (res.code === 200) {
             this.tableData = res.data
             this.page = page

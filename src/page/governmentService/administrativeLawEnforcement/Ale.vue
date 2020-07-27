@@ -1,8 +1,20 @@
 <template>
-  <div style="margin-top: 20px">
+  <div class="mm">
     <div class="condition">
-      <div></div>
+      <div>政府服务—行政执法</div>
       <el-form size="small" inline>
+        <el-form-item>
+          <el-select v-model="condition.did">
+            <el-option label="全部地区" :value="null"></el-option>
+            <el-option v-for="area in areas" :label="area.institutionalName" :value="area.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-input placeholder="输入司法所名称" v-model="condition.zfsname"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="getData(1)">查询</el-button>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="addHandler">新增</el-button>
         </el-form-item>
@@ -26,39 +38,27 @@
       </el-table-column>
       <el-table-column
         align="center"
-        prop="id"
-        label="序号"
+        prop="zfsname"
+        label="执法单位"
       ></el-table-column>
       <el-table-column
         align="center"
-        :show-overflow-tooltip="true"
-        prop="zlogo"
-        label="图片"
-      >
-        <template slot-scope="scope">
-          <div style="line-height: 0">
-            <el-image :src="scope.row.zlogo" :preview-src-list="[scope.row.zlogo]"></el-image>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="zname"
-        label="标题"
+        prop="region"
+        label="县/市"
       ></el-table-column>
       <el-table-column
         align="center"
-        prop="zstatus"
+        prop="status"
         label="状态"
       >
         <template slot-scope="scope">
-          <span v-if="scope.row.zstatus === 0">停用</span>
-          <span v-if="scope.row.zstatus === 1">启用</span>
+          <span v-if="scope.row.status === 0">停用</span>
+          <span v-if="scope.row.status === 1">启用</span>
         </template>
       </el-table-column>
       <el-table-column
         align="center"
-        prop="zcreate"
+        prop="zfscreate"
         label="创建时间"
       ></el-table-column>
       <el-table-column
@@ -67,7 +67,8 @@
         label="操作"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="detailHandler(scope.row)">详情</el-button>
+          <el-button type="text" size="small" @click="detailHandler(scope.row)">基础信息</el-button>
+          <el-button type="text" size="small" @click="officer(scope.row)">执法人员</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -84,22 +85,28 @@
 
 <script>
   export default {
-    name: 'Live',
+    name: 'Ale',
     data () {
       return {
         page: 1,
         size: 10,
         total: 100,
-        tableData: []
+        condition: {
+          did: null,
+          zfsname: ''
+        },
+        tableData: [],
+        areas: []
       }
     },
     created () {
       this.getData(1)
+      this.areaInit()
     },
     methods: {
       getData (page) {
         this.$util.tableLoading()
-        this.$http.get(this.$url.School_Live_List, {page, limit: this.size}).then(res => {
+        this.$http.get(this.$url.Law_Enforcement_Agencies_List, {page, limit: this.size, ...this.condition}).then(res => {
           if (res.code === 200) {
             this.tableData = res.data
             this.page = page
@@ -113,8 +120,25 @@
           this.$util.tableLoaded()
         })
       },
+      areaInit () {
+        this.$http.get(this.$url.Area_Tree).then(res => {
+          if (res.code === 200) {
+            const area = []
+            for (let i = 0; i < res.data.length; i++) {
+              area.push(res.data[i])
+              for (let j = 0; j < res.data[i].children.length; j++) {
+                area.push(res.data[i].children[j])
+              }
+            }
+            this.areas = area
+          }
+        })
+      },
       detailHandler (row) {
-        this.$router.push('LiveAdd?id=' + row.id)
+        this.$router.push('aleAdd?id=' + row.id)
+      },
+      officer (row) {
+        this.$router.push('leo?id=' + row.id)
       },
       deleteAllHandler () {
         const selection = this.$refs.table.selection
@@ -127,7 +151,7 @@
           ids.push(selection[i].id)
         }
         this.$confirm('确定删除吗').then(() => {
-          this.$http.post(this.$url.Delete_School_Live, {idList: ids.join(',')}).then(res => {
+          this.$http.post(this.$url.Delete_Law_Enforcement_Agencies, {idList: ids}).then(res => {
             if (res.code === 200) {
               this.$message.success('删除成功')
               this.getData(this.page)
@@ -136,7 +160,7 @@
         }, () => {})
       },
       addHandler () {
-        this.$router.push('LiveAdd')
+        this.$router.push('aleAdd')
       }
     }
   }

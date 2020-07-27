@@ -172,7 +172,7 @@ const router = new Router({
         },
         {
           path: 'government/informationAdd',
-          name: 'information',
+          name: 'informationAdd',
           component: () => import('../page/content/government/InformationAdd'),
           meta: {
             ppath: '/home/government'
@@ -187,6 +187,27 @@ const router = new Router({
           path: 'propagandaAdd',
           name: 'PropagandaAdd',
           component: () => import('../page/content/propaganda/PropagandaAdd')
+        },
+        // 政府服务
+        {
+          path: 'ale',
+          name: 'ale',
+          component: () => import('../page/governmentService/administrativeLawEnforcement/Ale')
+        },
+        {
+          path: 'aleAdd',
+          name: 'aleAdd',
+          component: () => import('../page/governmentService/administrativeLawEnforcement/AleAdd')
+        },
+        {
+          path: 'leo',
+          name: 'leo',
+          component: () => import('../page/governmentService/administrativeLawEnforcement/Leo')
+        },
+        {
+          path: 'leoAdd',
+          name: 'leoAdd',
+          component: () => import('../page/governmentService/administrativeLawEnforcement/LeoAdd')
         },
         // 公共服务
         {
@@ -217,6 +238,22 @@ const router = new Router({
               }
             }
           ]
+        },
+        {
+          path: 'school/liveAdd',
+          name: 'liveAdd',
+          component: () => import('../page/publicService/school/LiveAdd'),
+          meta: {
+            ppath: '/home/school'
+          }
+        },
+        {
+          path: 'school/livedAdd',
+          name: 'liveAdd',
+          component: () => import('../page/publicService/school/LivedAdd'),
+          meta: {
+            ppath: '/home/school'
+          }
         },
         // ---------------------------ly------------------------------------
         {

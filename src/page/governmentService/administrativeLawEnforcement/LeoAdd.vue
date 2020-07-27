@@ -1,10 +1,29 @@
 <template>
   <div class="mm">
     <el-form ref="form" class="form" label-width="150px" :rules="rules" :model="form">
-      <el-form-item label="标题" prop="title">
-        <el-input placeholder="请输入标题" v-model="form.title"></el-input>
+      <el-form-item label="姓名" prop="ryname">
+        <el-input style="width: 300px;" placeholder="请输入标题" v-model="form.ryname"></el-input>
       </el-form-item>
-      <el-form-item label="图片" prop="imgUrl">
+      <el-form-item label="性别" prop="sex">
+        <el-radio-group v-model="form.sex">
+          <el-radio :label="1">男</el-radio>
+          <el-radio :label="2">女</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="状态" prop="status">
+        <el-switch
+          v-model="form.status"
+          :active-value="1"
+          :inactive-value="0"
+          active-text="启用"
+          inactive-text="停用"
+        >
+        </el-switch>
+      </el-form-item>
+      <el-form-item label="证件号" prop="rynumber">
+        <el-input style="width: 300px;" placeholder="请输入标题" v-model="form.rynumber"></el-input>
+      </el-form-item>
+      <el-form-item label="图片" prop="rylogo">
         <el-upload
           action="#"
           type="file"
@@ -20,22 +39,6 @@
           <el-image :src="imgUrl" :preview-src-list="[imgUrl]"></el-image>
         </div>
       </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-switch
-          v-model="form.status"
-          :active-value="1"
-          :inactive-value="0"
-          active-text="启用"
-          inactive-text="停用"
-        >
-        </el-switch>
-      </el-form-item>
-      <el-form-item label="展示顺序" prop="sort">
-        <el-input-number placeholder="数字越大越靠前" :controls="false" v-model="form.sort"></el-input-number>
-      </el-form-item>
-      <el-form-item label="" prop="content">
-        <textEditor ref="editor" :text.sync="form.content" @change="$refs['form'].validateField('content')"></textEditor>
-      </el-form-item>
       <div style="text-align: center;letter-spacing: 50px;margin-top: 30px">
         <el-button>取消</el-button>
         <el-button type="primary" @click="submit" :loading="loading">保存</el-button>
@@ -45,55 +48,48 @@
 </template>
 
 <script>
-  import textEditor from '../../../components/textEditor'
   export default {
-    name: 'PropagandaAdd',
-    components: {
-      textEditor
-    },
+    name: 'LeoAdd',
     data () {
       return {
         loading: false,
         id: null,
         form: {
-          title: '',
+          ryname: '',
+          rynumber: '',
           status: 1,
-          sort: '',
-          content: ''
+          sex: 1
         },
         file: null,
         key: '',
         imgUrl: '',
         rules: {
-          title: [
-            {required: true, message: '标题不能为空', trigger: 'blur'}
+          ryname: [
+            {required: true, message: '姓名不能为空', trigger: 'blur'}
           ],
-          imgUrl: [
+          rynumber: [
+            {required: true, message: '证件号不能为空', trigger: 'blur'}
+          ],
+          rylogo: [
             {validator: this.imgValidator, trigger: 'blur'}
-          ],
-          sort: [
-            {required: true, message: '展示顺序不能为空', trigger: 'blur'}
-          ],
-          content: [
-            {validator: this.editorValidator, trigger: 'blur'}
           ],
         },
       }
     },
     created () {
       this.id = this.$route.query.id
+      this.did = this.$route.query.did
       if (this.id) {
         this.init()
       }
+      this.areaInit()
     },
     methods: {
       init () {
-        this.$http.get(this.$url.Propaganda_By_Id, {id: this.id}).then(res => {
+        this.$http.get(this.$url.Law_Enforcement_Officer_By_Id, {id: this.id}).then(res => {
           if (res.code === 200) {
             this.form = res.data
-            this.$refs.editor.editor.txt.html(res.data.content)
-            this.date = [this.form.startTime, this.form.endTime]
-            this.imgUrl = this.form.imgUrl
+            this.imgUrl = this.form.rylogo
           }
         })
       },
@@ -102,7 +98,7 @@
           this.$util.imgBase64(file, (res) => {
             this.file = file
             this.imgUrl = res
-            this.$refs.form.validateField('imgUrl')
+            this.$refs.form.validateField('rylogo')
           })
         }
         return Promise.reject(new Error())
@@ -113,15 +109,6 @@
           return false
         }
         callback()
-      },
-      editorValidator (rule, value, callback) {
-        let c = this.form.content
-        c = c.replace(/<p.*?>/g, '').replace(/<\/p>/g, '').replace(/<br>/g, '')
-        if (!c.trim()) {
-          callback(new Error('展示内容不能为空'))
-        } else {
-          callback()
-        }
       },
       async uploadFile (file, key) {
         return await this.$ObsClient.putObject({
@@ -144,18 +131,18 @@
       async add () {
         this.loading = true
         const params = {
-          title: this.form.title,
+          did: this.did,
+          ryname: this.form.ryname,
+          rynumber: this.form.rynumber,
           status: this.form.status,
-          sort: this.form.sort,
-          content: this.form.content
+          sex: this.form.sex
         }
         if (this.file) {
-          this.key = 'judicial'+new Date().getTime()
+          this.key = 'school'+new Date().getTime()
           await this.uploadFile(this.file, this.key)
-          params.imgKey = this.key
-          params.imgUrl = this.$url.OBS_Path + this.key
+          params.rylogo = this.$url.OBS_Path + this.key
         }
-        this.$http.post(this.$url.Add_Propaganda, params).then(res => {
+        this.$http.post(this.$url.Add_Law_Enforcement_Officer, params).then(res => {
           if (res.code === 200) {
             this.$message.success('新增成功')
             this.$router.back()
@@ -168,18 +155,17 @@
         this.loading = true
         const params = {
           id: this.form.id,
-          title: this.form.title,
+          ryname: this.form.ryname,
+          rynumber: this.form.rynumber,
           status: this.form.status,
-          sort: this.form.sort,
-          content: this.form.content
+          sex: this.form.sex
         }
         if (this.file) {
-          this.key = 'judicial'+new Date().getTime()
+          this.key = 'school'+new Date().getTime()
           await this.uploadFile(this.file, this.key)
-          params.imgKey = this.key
-          params.imgUrl = this.$url.OBS_Path + this.key
+          params.rylogo = this.$url.OBS_Path + this.key
         }
-        this.$http.post(this.$url.Update_Propaganda, params).then(res => {
+        this.$http.post(this.$url.Update_Law_Enforcement_Officer, params).then(res => {
           if (res.code === 200) {
             this.$message.success('修改成功')
             this.$router.back()
@@ -191,8 +177,8 @@
     },
     watch: {
       area (value) {
-        this.form.city = value && value.split('-')[0]
-        this.form.cityNumber = value && value.split('-')[1]
+        this.form.region = value && value.split('-')[0]
+        this.form.did = value && value.split('-')[1]
       }
     }
   }

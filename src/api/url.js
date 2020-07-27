@@ -1,7 +1,7 @@
-const path = `http://139.9.249.249:8080`
-const path1 = `http://139.9.249.249:8080`
-// const path = `http://192.168.0.105:8080`
-// const path1 = `http://192.168.0.105:8080`
+// const path = `http://139.9.249.249:8080`
+// const path1 = `http://139.9.249.249:8080`
+const path = `http://192.168.0.105:8080`
+const path1 = `http://192.168.0.105:8080`
 
 const url = {
   login: `${path}/api/auth/oauth/token`, // 登录获取token
@@ -79,13 +79,29 @@ const url = {
 
   // 法制学堂
   School_Live_List: `${path}/api/fzxt/zhibo/selectAll`, // 法制学堂直播列表
-  School_Live_By_Id: `${path}/api/lawConsult/judicialOffice/findbyid`, // 法制学堂直播根据id查询
+  School_Live_By_Id: `${path}/api/fzxt/zhibo/selectOne`, // 法制学堂直播根据id查询
   Add_School_Live: `${path}/api/fzxt/zhibo/add`, // 法制学堂直播添加
-  Delete_School_Live: `${path}/api/fzxt/zhibo/add`, // 法制学堂直播批量删除
+  Update_School_Live: `${path}/api/fzxt/zhibo/update`, // 法制学堂直播修改
+  Delete_School_Live: `${path}/api/fzxt/zhibo/delete`, // 法制学堂直播批量删除
+
   School_Lived_List: `${path}/api/fzxt/FzxtJxsp/all`, // 法制学堂录播列表
-  School_Lived_By_Id: `${path}/api/lawConsult/judicialOffice/findbyid`, // 法制学堂录播根据id查询
+  School_Lived_By_Id: `${path}/api/fzxt/FzxtJxsp/selectOne`, // 法制学堂录播根据id查询
   Add_School_Lived: `${path}/api/fzxt/FzxtJxsp/add`, // 法制学堂录播添加
-  Delete_School_Lived: `${path}/api/fzxt/zhibo/add`, // 法制学堂录播批量删除
+  Update_School_Lived: `${path}/api/fzxt/FzxtJxsp/update`, // 法制学堂录播修改
+  Delete_School_Lived: `${path}/api/fzxt/FzxtJxsp/delete`, // 法制学堂录播批量删除
+
+  // 行政执法
+  Law_Enforcement_Agencies_List: `${path}/api/xzzf/zfs/selectAll`, // 执法所列表
+  Law_Enforcement_Agencies_By_Id: `${path}/api/xzzf/zfs/selectById`, // 执法所根据id查询
+  Add_Law_Enforcement_Agencies: `${path}/api/xzzf/zfs/add`, // 执法所增加
+  Update_Law_Enforcement_Agencies: `${path}/api/xzzf/zfs/update`, // 执法所修改
+  Delete_Law_Enforcement_Agencies: `${path}/api/xzzf/zfs/delete`, // 执法所删除
+
+  Law_Enforcement_Officer_List: `${path}/api/xzzf/ryjs/selectAll`, // 执法人员列表
+  Law_Enforcement_Officer_By_Id: `${path}/api/xzzf/ryjs/selectOne`, // 执法人员根据id查询
+  Add_Law_Enforcement_Officer: `${path}/api/xzzf/ryjs/add`, // 执法人员增加
+  Update_Law_Enforcement_Officer: `${path}/api/xzzf/ryjs/update`, // 执法人员修改
+  Delete_Law_Enforcement_Officer: `${path}/api/xzzf/ryjs/delete`, // 执法人员删除
 
   doNotDelete: 'doNotDelete', // 别删
   // ----------------------------------ly---------------------------------------

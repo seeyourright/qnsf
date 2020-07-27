@@ -73,12 +73,12 @@ const menu = [
       //   path: '/home/lawConsult',
       //   permission: 'lawConsult'
       // },
-      {
-        title: '司法所',
-        icon: '',
-        path: '/home/judicial',
-        permission: 'judicial'
-      },
+      // {
+      //   title: '司法所',
+      //   icon: '',
+      //   path: '/home/judicial',
+      //   permission: 'judicial'
+      // },
       {
         title: '法制学堂',
         icon: '',
@@ -116,6 +116,21 @@ const menu = [
         icon: '',
         path: '/home/propaganda',
         permission: 'propaganda'
+      }
+    ]
+  },
+  {
+    title: '政府服务',
+    icon: 'icon-xitong',
+    path: '3',
+    //permission: 'government_service',
+    permission: '',
+    children: [
+      {
+        title: '行政执法',
+        icon: '',
+        path: '/home/ale',
+        permission: ''
       }
     ]
   },
