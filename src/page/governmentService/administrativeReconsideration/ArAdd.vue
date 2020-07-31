@@ -1,8 +1,20 @@
 <template>
   <div class="mm">
     <el-form ref="form" class="form" label-width="150px" :rules="rules" :model="form">
-      <el-form-item label="执法单位" prop="zfsname">
-        <el-input placeholder="请输入标题" v-model="form.zfsname"></el-input>
+      <el-form-item label="科室" prop="department">
+        <el-input placeholder="请输入标题" v-model="form.department"></el-input>
+      </el-form-item>
+      <el-form-item label="联系人" prop="chargePerson">
+        <el-input placeholder="请输入标题" v-model="form.chargePerson"></el-input>
+      </el-form-item>
+      <el-form-item label="联系电话" prop="phone">
+        <el-input placeholder="请输入标题" v-model="form.phone"></el-input>
+      </el-form-item>
+      <el-form-item label="房间号" prop="roomNumber">
+        <el-input placeholder="请输入标题" v-model="form.roomNumber"></el-input>
+      </el-form-item>
+      <el-form-item label="主要业务" prop="introduction">
+        <el-input type="textarea" placeholder="请输入标题" v-model="form.introduction"></el-input>
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-switch
@@ -14,10 +26,13 @@
         >
         </el-switch>
       </el-form-item>
-      <el-form-item label="所属县市" prop="did">
-        <el-select :disabled="!allper" v-model="area">
+      <el-form-item label="所属县市" prop="cityNumber">
+        <el-select v-model="area">
           <el-option v-for="area in areas" :label="area.name" :value="area.name+'-'+area.id"></el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="地址" prop="address">
+        <el-input placeholder="请输入标题" v-model="form.address"></el-input>
       </el-form-item>
       <div style="text-align: center;letter-spacing: 50px;margin-top: 30px">
         <el-button>取消</el-button>
@@ -29,34 +44,51 @@
 
 <script>
   export default {
-    name: 'AleAdd',
+    name: 'ArAdd',
     data () {
       return {
         loading: false,
         id: null,
         form: {
-          zfsname: '',
+          department: '',
+          city: '',
+          cityNumber: '',
+          chargePerson: '',
+          phone: '',
+          roomNumber: '',
+          address: '',
+          introduction: '',
           status: 1,
-          did: '',
-          region: ''
         },
         area: '',
         rules: {
-          zfsname: [
-            {required: true, message: '执法单位不能为空', trigger: 'blur'}
+          department: [
+            {required: true, message: '科室不能为空', trigger: 'blur'}
           ],
-          did: [
+          cityNumber: [
             {required: true, message: '所属县市不能为空', trigger: 'blur'}
           ],
+          chargePerson: [
+            {required: true, message: '联系人不能为空', trigger: 'blur'}
+          ],
+          phone: [
+            {required: true, message: '联系电话不能为空', trigger: 'blur'},
+            {pattern: this.$util.phoneReg, message: '联系电话格式错误', trigger: 'blur'}
+          ],
+          roomNumber: [
+            {required: true, message: '房间号不能为空', trigger: 'blur'}
+          ],
+          address: [
+            {required: true, message: '地址不能为空', trigger: 'blur'}
+          ],
+          introduction: [
+            {required: true, message: '主要业务不能为空', trigger: 'blur'}
+          ],
         },
-        areas: [],
-        allper: true
+        areas: []
       }
     },
     created () {
-      if (this.$store.state.user.userType === '2' && this.$store.state.user.unitId !== '5227000000') {
-        this.allper = false
-      }
       this.id = this.$route.query.id
       if (this.id) {
         this.init()
@@ -65,10 +97,10 @@
     },
     methods: {
       init () {
-        this.$http.get(this.$url.Law_Enforcement_Agencies_By_Id, {id: this.id}).then(res => {
+        this.$http.get(this.$url.Administrative_Reconsideration_By_Id, {id: this.id}).then(res => {
           if (res.code === 200) {
             this.form = res.data
-            this.area = this.form.region + '-' + this.form.did
+            this.area = this.form.city + '-' + this.form.cityNumber
           }
         })
       },
@@ -89,14 +121,6 @@
               }
             }
             this.areas = area
-            if (!this.allper) {
-              for (let i = 0; i < this.areas.length; i++) {
-                if (this.areas[i].id === this.$store.state.user.unitId) {
-                  this.area = this.areas[i].name + '-' + this.areas[i].id
-                  break
-                }
-              }
-            }
           }
         })
       },
@@ -113,7 +137,7 @@
       },
       async add () {
         this.loading = true
-        this.$http.post(this.$url.Add_Law_Enforcement_Agencies, this.form).then(res => {
+        this.$http.post(this.$url.Add_Administrative_Reconsideration, this.form).then(res => {
           if (res.code === 200) {
             this.$message.success('新增成功')
             this.$router.back()
@@ -126,12 +150,17 @@
         this.loading = true
         const params = {
           id: this.form.id,
-          zfsname: this.form.zfsname,
-          status: this.form.status,
-          did: this.form.did,
-          region: this.form.region
+          department: this.form.department,
+          city: this.form.city,
+          cityNumber: this.form.cityNumber,
+          chargePerson: this.form.chargePerson,
+          phone: this.form.phone,
+          roomNumber: this.form.roomNumber,
+          address: this.form.address,
+          introduction: this.form.introduction,
+          status: this.form.status
         }
-        this.$http.post(this.$url.Update_Law_Enforcement_Agencies, params).then(res => {
+        this.$http.post(this.$url.Update_Administrative_Reconsideration, params).then(res => {
           if (res.code === 200) {
             this.$message.success('修改成功')
             this.$router.back()
@@ -143,8 +172,8 @@
     },
     watch: {
       area (value) {
-        this.form.region = value && value.split('-')[0]
-        this.form.did = value && value.split('-')[1]
+        this.form.city = value && value.split('-')[0]
+        this.form.cityNumber = value && value.split('-')[1]
       }
     }
   }

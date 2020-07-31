@@ -209,6 +209,26 @@ const router = new Router({
           name: 'leoAdd',
           component: () => import('../page/governmentService/administrativeLawEnforcement/LeoAdd')
         },
+        {
+          path: 'ar',
+          name: 'ar',
+          component: () => import('../page/governmentService/administrativeReconsideration/Ar')
+        },
+        {
+          path: 'arAdd',
+          name: 'arAdd',
+          component: () => import('../page/governmentService/administrativeReconsideration/ArAdd')
+        },
+        {
+          path: 'massesLetter',
+          name: 'massesLetter',
+          component: () => import('../page/governmentService/massesLetter/Ml')
+        },
+        {
+          path: 'mlDetail',
+          name: 'mlDetail',
+          component: () => import('../page/governmentService/massesLetter/MlDetail')
+        },
         // 公共服务
         {
           path: 'judicial',

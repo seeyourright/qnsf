@@ -93,7 +93,7 @@ export default {
       tableData: []
     }
   },
-  created () {
+  mounted () {
     this.getData(1)
   },
   methods: {

@@ -178,7 +178,7 @@ export default {
     }
   },
   mounted () {
-    if (this.$store.state.user.userType === '2') {
+    if (this.$store.state.user.userType === '2' && this.$store.state.user.unitId !== '5227000000') {
       this.condition.unitId = this.$store.state.user.unitId
     }
     this.areaInit()

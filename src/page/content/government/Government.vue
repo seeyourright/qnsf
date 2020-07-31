@@ -1,7 +1,7 @@
 <template>
   <div class="mm">
     <div class="condition">
-      <div>内容管理—法制政府</div>
+      <div>内容管理—法治政府</div>
     </div>
     <div class="tabbar">
       <div v-for="(item, i) in arr" :key="item.name" :class="{'tabbar-item': true, 'active': i === active}" @click="tabChange(item, i)">{{item.name}}</div>

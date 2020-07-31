@@ -90,7 +90,8 @@
         page: 1,
         size: 10,
         total: 100,
-        tableData: []
+        condition: {},
+        tableData: [],
       }
     },
     created () {
@@ -99,7 +100,7 @@
     methods: {
       getData (page) {
         this.$util.tableLoading()
-        this.$http.get(this.$url.School_Live_List, {page, limit: this.size}).then(res => {
+        this.$http.get(this.$url.School_Live_List, {page, limit: this.size, ...this.condition}).then(res => {
           if (res.code === 200) {
             this.tableData = res.data
             this.page = page

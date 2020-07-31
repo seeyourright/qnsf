@@ -20,15 +20,50 @@
       </div>
       <!-- 审批通过显示内容 -->
       <div class="step0_up_yes" v-if="upPass === true && status == 0">
-        <div class="step0_up_yes_item">
-          <span class="add_key">选择调解员:</span>
-          <el-select v-model="upPeople" placeholder="请选择" size="small" @change="upChange1">
-            <el-option
-              :value="item.id"
-              v-for="(item,index) in upPeopleList"
-              :key="index"
-            >{{item.name}}</el-option>
-          </el-select>
+        <div>
+          <div class="step0_up_yes_item">
+            <span class="add_key">选择调解员:</span>
+            <el-select v-model="unitId" placeholder="请选择县/市" size="small" @change="unitChange">
+              <el-option
+                :value="item.id"
+                v-for="(item,index) in units"
+                :key="index"
+                :label='item.institutionalName'
+              ></el-option>
+            </el-select>
+            <el-select v-model="townId" placeholder="请选择乡/镇/街道" size="small" @change="townChange">
+              <el-option
+                :value="null"
+                label='全部'
+              ></el-option>
+              <el-option
+                :value="item.id"
+                v-for="(item,index) in towns"
+                :key="index"
+                :label='item.institutionalName'
+              ></el-option>
+            </el-select>
+            <el-select v-model="communityId" placeholder="请选择村/社区" size="small" @change="communityChange">
+              <el-option
+                :value="null"
+                label='全部'
+              ></el-option>
+              <el-option
+                :value="item.id"
+                v-for="(item,index) in communities"
+                :key="index"
+                :label='item.institutionalName'
+              ></el-option>
+            </el-select>
+            <el-select v-model="upPeopleId" placeholder="请选择" size="small" @change="upChange1">
+              <el-option
+                :value="item.id"
+                v-for="(item,index) in upPeopleList"
+                :key="index"
+                :label='item.name'
+              ></el-option>
+            </el-select>
+          </div>
         </div>
         <div class="step0_up_yes_item">
           <span class="add_key">选择调解室:</span>
@@ -157,8 +192,14 @@ export default {
         disabledDate(time){
             let t=new Date().getTime()-1000*60*60*24
             return time.getTime() < new Date(t).getTime()
-          }
-        },
+        }
+      },
+      units: [],
+      towns: [],
+      communities: [],
+      unitId: null,
+      townId: null,
+      communityId: null,
       //线下审批
       lowPass: "", //线上审批通过   线上审批拒绝
       lowReason: "", //线下审批拒绝原因
@@ -185,9 +226,8 @@ export default {
     }
   },
   created() {
-
     this.init();
-
+    this.areaInit();
   },
   methods: {
     init() {
@@ -196,20 +236,81 @@ export default {
         this.upReason = this.obj.refuseReason;
         this.lowReason = this.obj.refuseReason;
       }
-      this.getTJYlist(); //获取调解员列表
+
       //this.getRoomList(); //获取调解室列表
 
       // console.log(sessionStorage.getItem("unitId"));
     },
+    areaInit () {
+      this.$http.get(this.$url.Area_Tree).then(res => {
+        if (res.code === 200) {
+          this.areas = res.data
+          this.units = res.data[0].children
+          if (this.obj.recordAffiliation) {
+            const arr = this.obj.recordAffiliation.split('-')
+            for (let i = 0; i < this.units.length; i++) {
+              if (this.units[i].id === arr[0]) {
+                this.unitId = this.units[i].id
+                this.towns = this.units[i].children
+                this.units = [this.units[i]]
+                break
+              }
+            }
+          }
+          this.getTJYlist(); //获取调解员列表
+        }
+      })
+    },
+    unitChange (value) {
+      this.townId = null
+      this.communityId = null
+      this.communities = null
+      this.upPeopleId = null
+      if (!value) {
+        this.towns = null
+      } else {
+        for (let i = 0; i < this.units.length; i++) {
+          if (this.units[i].id === value) {
+            this.towns = this.units[i].children
+            break
+          }
+        }
+      }
+      this.getTJYlist()
+    },
+    townChange (value) {
+      this.communityId = null
+      this.upPeopleId = null
+      if (!value) {
+        this.communities = null
+      } else {
+        for (let i = 0; i < this.towns.length; i++) {
+          if (this.towns[i].id === value) {
+            this.communities = this.towns[i].children
+            break
+          }
+        }
+      }
+      this.getTJYlist()
+    },
+    communityChange (value) {
+      this.upPeopleId = null
+      this.getTJYlist()
+    },
     getTJYlist() {
       const that = this;
+      const params ={
+        userType: "1",
+        unitId: this.unitId,
+        townId: this.townId,
+        communityId: this.communityId,
+        limit: 100,
+      }
       that.$http
         .axios({
           method: "post",
           url: that.$url.adjust.tjyList,
-          params: {
-            userType: "1"
-          }
+          params
         })
         .then(function(res) {
           // console.log("调解员列表", res);
@@ -227,8 +328,6 @@ export default {
     },
     getJgdm(){
       const that = this
-      console.log(that.obj)
-      console.log(that.obj.recordAffiliation)
       that.$http
         .axios({
           method: "post",
@@ -275,7 +374,7 @@ export default {
       if (
         that.isUp == true &&
         res == "2" &&
-        (that.upPeople == "" || that.upRoom == "" || that.upTime == "")
+        (!that.upPeopleId || that.upRoom == "" || that.upTime == "")
       ) {
         that.$message.error("填写不能为空");
         return false;
@@ -408,16 +507,12 @@ export default {
 
 .step0_up_yes {
   width: 100%;
-  height: 50px;
-  display: flex;
-  /* justify-content: space-around; */
-  align-items: center;
   margin-top: 40px;
   margin-bottom: 30px;
 }
 
 .step0_up_yes_item {
-  width: 30%;
+  margin-bottom: 20px;
 }
 
 .add_key {

@@ -1,7 +1,7 @@
-// const path = `http://139.9.249.249:8080`
-// const path1 = `http://139.9.249.249:8080`
-const path = `http://192.168.0.105:8080`
-const path1 = `http://192.168.0.105:8080`
+const path = `http://139.9.249.249:8080`
+const path1 = `http://139.9.249.249:8080`
+// const path = `http://116.63.56.151:8080`
+// const path1 = `http://116.63.56.151:8080`
 
 const url = {
   login: `${path}/api/auth/oauth/token`, // 登录获取token
@@ -102,6 +102,22 @@ const url = {
   Add_Law_Enforcement_Officer: `${path}/api/xzzf/ryjs/add`, // 执法人员增加
   Update_Law_Enforcement_Officer: `${path}/api/xzzf/ryjs/update`, // 执法人员修改
   Delete_Law_Enforcement_Officer: `${path}/api/xzzf/ryjs/delete`, // 执法人员删除
+
+  // 行政复议
+  Administrative_Reconsideration_List: `${path}/api/lawConsult/administrativeReview/findlist`, // 行政复议列表
+  Administrative_Reconsideration_By_Id: `${path}/api/lawConsult/administrativeReview/findbyid`, // 行政复议根据id查询
+  Add_Administrative_Reconsideration: `${path}/api/lawConsult/administrativeReview/add`, // 行政复议增加
+  Update_Administrative_Reconsideration: `${path}/api/lawConsult/administrativeReview/update`, // 行政复议修改
+  Delete_Administrative_Reconsideration: `${path}/api/lawConsult/administrativeReview/removes`, // 行政复议删除
+
+  // 消息
+  Message_List: `${path}/api/message/sysMsg/findlist`, // 消息列表
+  Message_By_Id: `${path}/api/message/sysMsg/findbyid`, // 消息根据id查询
+  Add_Message: `${path}/api/message/sysMsg/add`, // 消息增加
+  Update_Message: `${path}/api/message/sysMsg/update`, // 消息修改
+  Delete_Message: `${path}/api/message/sysMsg/removes`, // 消息删除
+
+  // 群众来信
 
   doNotDelete: 'doNotDelete', // 别删
   // ----------------------------------ly---------------------------------------

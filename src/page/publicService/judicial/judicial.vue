@@ -127,8 +127,8 @@
           </div>
         </el-form-item>
         <el-form-item label="县/市" prop="cityNumber">
-          <el-select v-model="area">
-            <el-option v-for="area in areas" :label="area.institutionalName" :value="area.institutionalName+'-'+area.id"></el-option>
+          <el-select :disabled="!allper" v-model="area">
+            <el-option v-for="area in areas" :label="area.name" :value="area.name+'-'+area.id"></el-option>
           </el-select>
         </el-form-item>
         <div style="text-align: right">
@@ -150,6 +150,7 @@
         size: 10,
         total: 100,
         tableData: [],
+        condition: {},
         dialogVisible: false,
         form: {
           judicialName: '',
@@ -191,17 +192,22 @@
             {required: true, message: '请选择县/市', trigger: 'blur'}
           ],
         },
-        areas: []
+        areas: [],
+        allper: true,
       }
     },
     mounted () {
+      if (this.$store.state.user.userType === '2' && this.$store.state.user.unitId !== '5227000000') {
+        this.allper = false
+        this.condition.cityNumber = this.$store.state.user.unitId
+      }
       this.getData(1)
       this.areaInit()
     },
     methods: {
       getData (page) {
         this.$util.tableLoading()
-        this.$http.get(this.$url.Judicial_List, {page, limit: this.size}).then(res => {
+        this.$http.get(this.$url.Judicial_List, {page, limit: this.size, ...this.condition}).then(res => {
           if (res.code === 200) {
             this.tableData = res.data
             this.page = page
@@ -218,12 +224,12 @@
             for (let i = 0; i < res.data.length; i++) {
               area.push({
                 id: res.data[i].id,
-                institutionalName: res.data[i].institutionalName
+                name: res.data[i].institutionalName
               })
               for (let j = 0; j < res.data[i].children.length; j++) {
                 area.push({
                   id: res.data[i].children[j].id,
-                  institutionalName: res.data[i].children[j].institutionalName
+                  name: res.data[i].children[j].institutionalName
                 })
               }
             }
@@ -288,6 +294,14 @@
           status: 1
         }
         this.area = ''
+        if (!this.allper) {
+          for (let i = 0; i < this.areas.length; i++) {
+            if (this.areas[i].id === this.$store.state.user.unitId) {
+              this.area = this.areas[i].name + '-' + this.areas[i].id
+              break
+            }
+          }
+        }
         this.file = null
         this.imgUrl = ''
         this.key = ''

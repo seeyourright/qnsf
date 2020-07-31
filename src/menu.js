@@ -73,17 +73,17 @@ const menu = [
       //   path: '/home/lawConsult',
       //   permission: 'lawConsult'
       // },
-      // {
-      //   title: '司法所',
-      //   icon: '',
-      //   path: '/home/judicial',
-      //   permission: 'judicial'
-      // },
+      {
+        title: '司法所',
+        icon: '',
+        path: '/home/judicial',
+        permission: 'judicial'
+      },
       {
         title: '法制学堂',
         icon: '',
         path: '/home/school',
-        permission: ''
+        permission: 'school'
       }
     ]
   },
@@ -93,20 +93,20 @@ const menu = [
     path: '3',
     permission: 'content',
     children: [
+      // {
+      //   title: 'Banner管理',
+      //   icon: '',
+      //   path: '/home/banner',
+      //   permission: 'banner'
+      // },
+      // {
+      //   title: '系统推送',
+      //   icon: '',
+      //   path: '/home/push',
+      //   permission: 'push'
+      // },
       {
-        title: 'Banner管理',
-        icon: '',
-        path: '/home/banner',
-        permission: 'banner'
-      },
-      {
-        title: '系统推送',
-        icon: '',
-        path: '/home/push',
-        permission: 'push'
-      },
-      {
-        title: '法制政府',
+        title: '法治政府',
         icon: '',
         path: '/home/government',
         permission: 'government'
@@ -122,16 +122,27 @@ const menu = [
   {
     title: '政府服务',
     icon: 'icon-xitong',
-    path: '3',
-    //permission: 'government_service',
-    permission: '',
+    path: '4',
+    permission: 'government_service',
     children: [
       {
         title: '行政执法',
         icon: '',
         path: '/home/ale',
         permission: ''
-      }
+      },
+      // {
+      //   title: '行政复议',
+      //   icon: '',
+      //   path: '/home/ar',
+      //   permission: 'ar'
+      // },
+      /*{
+        title: '群众来信',
+        icon: '',
+        path: '/home/massesLetter',
+        permission: 'masses_letter'
+      }*/
     ]
   },
 ]

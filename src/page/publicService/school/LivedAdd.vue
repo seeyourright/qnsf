@@ -164,7 +164,6 @@
           SourceFile: file,
           ProgressCallback: (transferredAmount, totalAmount, totalSeconds) => {
             // speed.innerHTML = transferredAmount * 1.0 / totalSeconds / 1024;
-            console.log(transferredAmount * 100 / totalAmount)
             this.percent = transferredAmount * 100 / totalAmount
           }
         })

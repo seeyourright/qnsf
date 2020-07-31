@@ -3,7 +3,7 @@
     <div class="condition">
       <div>政府服务—行政执法</div>
       <el-form size="small" inline>
-        <el-form-item>
+        <el-form-item v-if="allper">
           <el-select v-model="condition.did">
             <el-option label="全部地区" :value="null"></el-option>
             <el-option v-for="area in areas" :label="area.institutionalName" :value="area.id"></el-option>
@@ -96,10 +96,15 @@
           zfsname: ''
         },
         tableData: [],
-        areas: []
+        areas: [],
+        allper: true,
       }
     },
     created () {
+      if (this.$store.state.user.userType === '2' && this.$store.state.user.unitId !== '5227000000') {
+        this.allper = false
+        this.condition.did = this.$store.state.user.unitId
+      }
       this.getData(1)
       this.areaInit()
     },

@@ -1,8 +1,17 @@
 <template>
-  <div style="margin-top: 20px">
+  <div class="mm">
     <div class="condition">
-      <div></div>
+      <div>政府服务—行政复议</div>
       <el-form size="small" inline>
+        <el-form-item>
+          <el-select v-model="condition.cityNumber">
+            <el-option label="全部地区" :value="null"></el-option>
+            <el-option v-for="area in areas" :label="area.institutionalName" :value="area.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="getData(1)">查询</el-button>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="addHandler">新增</el-button>
         </el-form-item>
@@ -24,34 +33,22 @@
         type="selection"
       >
       </el-table-column>
-      <el-table-column
-        align="center"
-        prop="id"
-        label="序号"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        :show-overflow-tooltip="true"
-        prop="imgUrl"
-        label="图片"
-      >
-        <template slot-scope="scope">
-          <div style="line-height: 0">
-            <el-image :src="scope.row.imgUrl" :preview-src-list="[scope.row.imgUrl]"></el-image>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="title"
-        label="标题"
-      ></el-table-column>
+
       <el-table-column
         align="center"
         prop="city"
         label="县/市"
-      >
-      </el-table-column>
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="department"
+        label="科室"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="roomNumber"
+        label="房间号"
+      ></el-table-column>
       <el-table-column
         align="center"
         prop="status"
@@ -62,11 +59,6 @@
           <span v-if="scope.row.status === 1">启用</span>
         </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-        prop="createTime"
-        label="创建时间"
-      ></el-table-column>
       <el-table-column
         align="center"
         prop="a"
@@ -90,26 +82,27 @@
 
 <script>
   export default {
-    name: 'Information',
+    name: 'Ar',
     data () {
       return {
         page: 1,
         size: 10,
         total: 100,
+        condition: {
+          cityNumber: null
+        },
         tableData: [],
-        condition: {},
+        areas: []
       }
     },
-    mounted () {
-      if (this.$store.state.user.userType === '2' && this.$store.state.user.unitId !== '5227000000') {
-        this.condition.cityNumber = this.$store.state.user.unitId
-      }
+    created () {
       this.getData(1)
+      this.areaInit()
     },
     methods: {
       getData (page) {
         this.$util.tableLoading()
-        this.$http.get(this.$url.Government_Information_List, {page, limit: this.size, ...this.condition}).then(res => {
+        this.$http.get(this.$url.Administrative_Reconsideration_List, {page, limit: this.size, ...this.condition}).then(res => {
           if (res.code === 200) {
             this.tableData = res.data
             this.page = page
@@ -123,8 +116,22 @@
           this.$util.tableLoaded()
         })
       },
+      areaInit () {
+        this.$http.get(this.$url.Area_Tree).then(res => {
+          if (res.code === 200) {
+            const area = []
+            for (let i = 0; i < res.data.length; i++) {
+              area.push(res.data[i])
+              for (let j = 0; j < res.data[i].children.length; j++) {
+                area.push(res.data[i].children[j])
+              }
+            }
+            this.areas = area
+          }
+        })
+      },
       detailHandler (row) {
-        this.$router.push('informationAdd?id=' + row.id)
+        this.$router.push('arAdd?id=' + row.id)
       },
       deleteAllHandler () {
         const selection = this.$refs.table.selection
@@ -137,7 +144,7 @@
           ids.push(selection[i].id)
         }
         this.$confirm('确定删除吗').then(() => {
-          this.$http.post(this.$url.Delete_Government_Information, {ids: ids.join(',')}).then(res => {
+          this.$http.post(this.$url.Delete_Administrative_Reconsideration, {ids: ids.join(',')}).then(res => {
             if (res.code === 200) {
               this.$message.success('删除成功')
               this.getData(this.page)
@@ -146,7 +153,7 @@
         }, () => {})
       },
       addHandler () {
-        this.$router.push('informationAdd')
+        this.$router.push('arAdd')
       }
     }
   }
