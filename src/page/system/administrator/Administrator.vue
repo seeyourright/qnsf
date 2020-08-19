@@ -89,7 +89,7 @@
       @current-change="getData"
       :current-page.sync="page"
       :page-size="size"
-      layout="prev, pager, next, jumper"
+      layout="total, prev, pager, next, jumper"
       :total="total"
     ></el-pagination>
     <el-dialog

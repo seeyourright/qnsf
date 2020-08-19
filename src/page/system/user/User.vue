@@ -11,7 +11,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-input placeholder="输入姓名" v-model="condition.nickname"></el-input>
+          <el-input placeholder="输入姓名或手机号" v-model="condition.nickname"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button @click="getData(1)">查询</el-button>
@@ -88,7 +88,7 @@
       @current-change="getData"
       :current-page.sync="page"
       :page-size="size"
-      layout="prev, pager, next, jumper"
+      layout="total, prev, pager, next, jumper"
       :total="total"
     ></el-pagination>
     <el-dialog
@@ -119,7 +119,7 @@
         <el-form-item v-if="form.userType==='1'" label="所属地区" prop="unitId">
           <el-cascader
             style="width: 100%"
-            :props="{value: 'id', label: 'institutionalName'}"
+            :props="{value: 'id', label: 'institutionalName', checkStrictly: true}"
             v-model="area"
             :options="areas"
             ></el-cascader>
@@ -232,7 +232,7 @@ export default {
       if (this.area) {
         callback()
       } else {
-        callback(new Error('身份证格式错误'))
+        callback(new Error('请选择地区'))
       }
     },
     detailHandler (row) {
@@ -281,10 +281,9 @@ export default {
     add () {
       const form = {...this.form}
       if (form.userType === '1') {
-        form.roleid = 2
         form.unitId = this.area[0]
-        form.townId = this.area[1]
-        form.communityId = this.area[2]
+        form.townId = this.area[1] || null
+        form.communityId = this.area[2] || null
       }
       form.username = form.phone
       this.$http.post(this.$url.Add_User, form).then(res => {
@@ -298,7 +297,6 @@ export default {
   },
   watch: {
     area (newVal) {
-      console.log(newVal)
     }
   }
 }

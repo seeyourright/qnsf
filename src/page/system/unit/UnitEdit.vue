@@ -44,7 +44,7 @@
           <img style="max-width: 600px" :src="imgUrl" alt="">
         </el-upload>
       </el-form-item>
-      <div style="text-align: center;letter-spacing: 50px;margin-top: 30px">
+      <div class="d-btns">
         <el-button @click="$router.back()">取消</el-button>
         <el-button type="primary" @click="submit">保存</el-button>
       </div>

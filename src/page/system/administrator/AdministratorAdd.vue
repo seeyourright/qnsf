@@ -44,8 +44,8 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <div style="text-align: center;letter-spacing: 50px;margin-top: 30px">
-        <el-button>取消</el-button>
+      <div class="d-btns">
+        <el-button @click="$router.back()">取消</el-button>
         <el-button type="primary" @click="submit">保存</el-button>
       </div>
     </el-form>
@@ -151,6 +151,7 @@ export default {
         phone: this.form.phone,
         username: this.form.username,
         email: this.form.email,
+        unitId: this.form.unitId,
         status: this.form.status
       }
       if (this.form.password) {

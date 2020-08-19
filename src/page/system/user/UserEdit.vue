@@ -28,7 +28,7 @@
         <el-form-item v-if="form.userType==='1'" label="所属地区" prop="unitId">
           <el-cascader
             style="width: 100%"
-            :props="{value: 'id', label: 'institutionalName'}"
+            :props="{value: 'id', label: 'institutionalName',checkStrictly: true}"
             v-model="area"
             :options="areas"
           ></el-cascader>
@@ -46,7 +46,7 @@
         <el-form-item label="户籍所在地" prop="address">
           {{form.address || '未填写'}}
         </el-form-item>
-        <div style="text-align: center;letter-spacing: 50px;margin-top: 30px">
+        <div class="d-btns">
           <el-button @click="$router.back()">取消</el-button>
           <el-button type="primary" @click="submit">保存</el-button>
         </div>
@@ -94,7 +94,10 @@ export default {
         if (res.code === 200) {
           delete res.data.password
           this.form = res.data
-          this.area = [this.form.unitId, this.form.townId, this.form.communityId]
+          this.area = []
+          this.form.unitId && this.area.push(this.form.unitId)
+          this.form.townId && this.area.push(this.form.townId)
+          this.form.communityId && this.area.push(this.form.communityId)
         }
       })
     },
@@ -141,8 +144,8 @@ export default {
       if (params.userType === '1') {
         params.roleid = 2
         params.unitId = this.area[0]
-        params.townId = this.area[1]
-        params.communityId = this.area[2]
+        params.townId = this.area[1] || null
+        params.communityId = this.area[2] || null
       } else {
         params.roleid = 0
       }
