@@ -179,6 +179,41 @@ const router = new Router({
           }
         },
         {
+          path: 'evaluationAdd',
+          name: 'evaluationAdd',
+          component: () => import('../page/content/government/EvaluationAdd'),
+          meta: {
+            ppath: '/home/government'
+          }
+        },
+        {
+          path: 'evaluationDetail',
+          name: 'evaluationDetail',
+          component: () => import('../page/content/government/EvaluationDetail'),
+          redirect: 'evaluationDetail/evaluationBase',
+          meta: {
+            ppath: '/home/government'
+          },
+          children: [
+            {
+              path: 'evaluationBase',
+              name: 'evaluationBase',
+              component: () => import('../page/content/government/EvaluationBase'),
+              meta: {
+                ppath: '/home/government'
+              }
+            },
+            {
+              path: 'evaluationStatistics',
+              name: 'evaluationStatistics',
+              component: () => import('../page/content/government/EvaluationStatistics'),
+              meta: {
+                ppath: '/home/government'
+              }
+            },
+          ]
+        },
+        {
           path: 'propaganda',
           name: 'propaganda',
           component: () => import('../page/content/propaganda/Propaganda')
@@ -186,13 +221,59 @@ const router = new Router({
         {
           path: 'propagandaAdd',
           name: 'PropagandaAdd',
-          component: () => import('../page/content/propaganda/PropagandaAdd')
+          component: () => import('../page/content/propaganda/PropagandaAdd'),
+          meta: {
+            ppath: '/home/propaganda'
+          }
+        },
+        {
+          path: 'questionnaire',
+          name: 'questionnaire',
+          component: () => import('../page/content/questionnaire/Questionnaire')
+        },
+        {
+          path: 'questionnaireAdd',
+          name: 'questionnaireAdd',
+          component: () => import('../page/content/questionnaire/QuestionnaireAdd'),
+          meta: {
+            ppath: '/home/questionnaire'
+          }
+        },
+        {
+          path: 'questionnaireDetail',
+          name: 'questionnaireDetail',
+          component: () => import('../page/content/questionnaire/QuestionnaireDetail'),
+          redirect: 'questionnaireDetail/questionnaireBase',
+          meta: {
+            ppath: '/home/questionnaire'
+          },
+          children: [
+            {
+              path: 'questionnaireBase',
+              name: 'questionnaireBase',
+              component: () => import('../page/content/questionnaire/QuestionnaireBase'),
+              meta: {
+                ppath: '/home/questionnaire'
+              }
+            },
+            {
+              path: 'questionnaireStatistics',
+              name: 'questionnaireStatistics',
+              component: () => import('../page/content/questionnaire/QuestionnaireStatistics'),
+              meta: {
+                ppath: '/home/questionnaire'
+              }
+            }
+          ]
         },
         // 政府服务
         {
           path: 'ale',
           name: 'ale',
-          component: () => import('../page/governmentService/administrativeLawEnforcement/Ale')
+          component: () => import('../page/governmentService/administrativeLawEnforcement/Ale'),
+          meta: {
+            keepAlive: true
+          }
         },
         {
           path: 'aleAdd',
@@ -274,6 +355,181 @@ const router = new Router({
           meta: {
             ppath: '/home/school'
           }
+        },
+        {
+          path: 'lawyerServices',
+          name: 'lawyerServices',
+          component: () => import('../page/publicService/lawyerServices/LawyerServices'),
+        },
+        {
+          path: 'lawyerServicesAdd',
+          name: 'lawyerServicesAdd',
+          component: () => import('../page/publicService/lawyerServices/LawyerServicesAdd'),
+          meta: {
+            ppath: '/home/lawyerServices'
+          }
+        },
+        {
+          path: 'lsDetail',
+          name: 'lsDetail',
+          component: () => import('../page/publicService/lawyerServices/LSDetail'),
+          meta: {
+            ppath: '/home/lawyerServices'
+          },
+          children: [
+            {
+              path: 'lsBase',
+              name: 'lsBase',
+              component: () => import('../page/publicService/lawyerServices/LSBase'),
+              meta: {
+                ppath: '/home/lawyerServices'
+              }
+            },
+            {
+              path: 'lsLawyer',
+              name: 'lsLawyer',
+              component: () => import('../page/publicService/lawyerServices/LSLawyer'),
+              meta: {
+                ppath: '/home/lawyerServices'
+              }
+            },
+            {
+              path: 'lsLawyerAdd',
+              name: 'lsLawyerAdd',
+              component: () => import('../page/publicService/lawyerServices/LSLawyerAdd'),
+              meta: {
+                ppath: '/home/lawyerServices'
+              }
+            },
+            {
+              path: 'lsOrder',
+              name: 'lsOrder',
+              component: () => import('../page/publicService/lawyerServices/LSOrder'),
+              meta: {
+                ppath: '/home/lawyerServices'
+              }
+            },
+            {
+              path: 'lsOrderAdd',
+              name: 'lsOrderAdd',
+              component: () => import('../page/publicService/lawyerServices/LSOrderAdd'),
+              meta: {
+                ppath: '/home/lawyerServices'
+              }
+            },
+            {
+              path: 'lsBlacklist',
+              name: 'lsBlacklist',
+              component: () => import('../page/publicService/lawyerServices/LSBlacklist'),
+              meta: {
+                ppath: '/home/lawyerServices'
+              }
+            }
+          ]
+        },
+        // 司法鉴定
+        {
+          path: 'appraisalOffice',
+          name: 'appraisalOffice',
+          component: () => import('../page/publicService/judicialAppraisal/AppraisalOffice'),
+        },
+        {
+          path: 'appraisalOfficeAdd',
+          name: 'appraisalOfficeAdd',
+          component: () => import('../page/publicService/judicialAppraisal/AppraisalOfficeAdd'),
+          meta: {
+            ppath: '/home/appraisalOffice'
+          }
+        },
+        {
+          path: 'jaDetail',
+          name: 'jaDetail',
+          component: () => import('../page/publicService/judicialAppraisal/JADetail'),
+          meta: {
+            ppath: '/home/appraisalOffice'
+          },
+          children: [
+            {
+              path: 'jaBase',
+              name: 'jaBase',
+              component: () => import('../page/publicService/judicialAppraisal/JABase'),
+              meta: {
+                ppath: '/home/appraisalOffice'
+              }
+            },
+            {
+              path: 'jaOrder',
+              name: 'jaOrder',
+              component: () => import('../page/publicService/judicialAppraisal/JAOrder'),
+              meta: {
+                ppath: '/home/appraisalOffice'
+              }
+            },
+            {
+              path: 'jaOrderApproval',
+              name: 'jaOrderApproval',
+              component: () => import('../page/publicService/judicialAppraisal/JAOrderApproval'),
+              meta: {
+                ppath: '/home/appraisalOffice'
+              }
+            },
+            {
+              path: 'jaPersonnel',
+              name: 'jaPersonnel',
+              component: () => import('../page/publicService/judicialAppraisal/JAPersonnel'),
+              meta: {
+                ppath: '/home/appraisalOffice'
+              }
+            }
+          ]
+        },
+        // 公证服务
+        {
+          path: 'notaryServices',
+          name: 'notaryServices',
+          component: () => import('../page/publicService/notaryServices/NotaryServices'),
+        },
+        {
+          path: 'notaryServicesAdd',
+          name: 'notaryServicesAdd',
+          component: () => import('../page/publicService/notaryServices/NotaryServicesAdd'),
+          meta: {
+            ppath: '/home/notaryServices'
+          }
+        },
+        {
+          path: 'nsDetail',
+          name: 'nsDetail',
+          component: () => import('../page/publicService/notaryServices/NSDetail'),
+          meta: {
+            ppath: '/home/notaryServices'
+          },
+          children:[
+            {
+              path: 'nsBase',
+              name: 'nsBase',
+              component: () => import('../page/publicService/notaryServices/NSBase'),
+              meta: {
+                ppath: '/home/notaryServices'
+              }
+            },
+            {
+              path: 'nsOrder',
+              name: 'nsOrder',
+              component: () => import('../page/publicService/notaryServices/NSOrder'),
+              meta: {
+                ppath: '/home/notaryServices'
+              }
+            },
+            {
+              path: 'nsOrderApproval',
+              name: 'nsOrderApproval',
+              component: () => import('../page/publicService/notaryServices/NSOrderApproval'),
+              meta: {
+                ppath: '/home/notaryServices'
+              }
+            }
+          ]
         },
         // ---------------------------ly------------------------------------
         {

@@ -30,19 +30,22 @@ export default {
     Header, Sider
   },
   created () {
-    this.$store.state.ws = new WebSocket('ws://139.9.249.249:8087/ws/' + this.$store.state.user.id)
-    this.$store.state.ws.onmessage = (res) => {
-      console.log(res)
-      const data = JSON.parse(res.data)
-      if (data.type === '法律援助') {
-        this.flyz(data)
-      }
-      if (data.type === '人民调解') {
-        this.rmtj(data)
-      }
-    }
+    this.userTypeInit()
+    this.wsInit()
   },
   methods: {
+    wsInit () {
+      this.$store.state.ws = new WebSocket('ws://139.9.249.249:8087/ws/' + this.$store.state.user.id)
+      this.$store.state.ws.onmessage = (res) => {
+        const data = JSON.parse(res.data)
+        if (data.type === '法律援助') {
+          this.flyz(data)
+        }
+        if (data.type === '人民调解') {
+          this.rmtj(data)
+        }
+      }
+    },
     flyz (data) {
       const that = this
       sessionStorage.setItem('lawHelpId', data.applyId)
@@ -72,17 +75,38 @@ export default {
         }
       })
     },
-    // test () {
-    //   this.$notify({
-    //     duration: 0,
-    //     position: 'bottom-right',
-    //     message: `111`,
-    //     onClick () {
-    //       console.log(this)
-    //       this.type = 'success'
-    //     }
-    //   })
-    // }
+    userTypeInit () {
+      if (this.$store.state.user.userType === '4') {
+        this.setLawyerServices()
+      }
+      if (this.$store.state.user.userType === '5') {
+        this.setNotaryServices()
+      }
+      if (this.$store.state.user.userType === '6') {
+        this.setJudicialAppraisal()
+      }
+    },
+    setLawyerServices () {
+      this.$http.get(this.$url.Law_Firm_List, {userId:this.$store.state.user.id}).then(res => {
+        if (res.code === 200) {
+          sessionStorage.setItem('lawyerServicesId', res.data[0].id)
+        }
+      })
+    },
+    setNotaryServices () {
+      this.$http.get(this.$url.Notarial_Office_By_Id, {userId: this.$store.state.user.id}).then(res => {
+        if (res.code === 200) {
+          sessionStorage.setItem('notaryServicesId', res.data.id)
+        }
+      })
+    },
+    setJudicialAppraisal () {
+      this.$http.get(this.$url.Appraisal_Office_List, {userId:this.$store.state.user.id}).then(res => {
+        if (res.code === 200) {
+          sessionStorage.setItem('appraisalOfficeId', res.data[0].id)
+        }
+      })
+    }
   },
 }
 </script>
@@ -129,6 +153,11 @@ export default {
   /deep/ .y-page
     text-align center
     margin-top 20px
+  /deep/ .d-btns
+    margin-top 30px
+    text-align center
+    >*
+      margin 0 30px
 /*按钮*/
   /deep/ .text-danger
     color red

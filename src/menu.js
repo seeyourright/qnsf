@@ -54,12 +54,14 @@ const menu = [
     icon: 'icon-fuwu',
     path: '2',
     permission: 'public_service',
+    userType: ["1","4","5","6"],
     children: [
       {
         title: '人民调解',
         icon: '',
         path: '/home/adjust',
-        permission: 'adjust'
+        permission: 'adjust',
+        userType: ["1"]
       },
       {
         title: '法律援助',
@@ -67,12 +69,6 @@ const menu = [
         path: '/home/lawHelp',
         permission: 'lawHelp'
       },
-      // {
-      //   title: '法律咨询',
-      //   icon: '',
-      //   path: '/home/lawConsult',
-      //   permission: 'lawConsult'
-      // },
       {
         title: '司法所',
         icon: '',
@@ -80,10 +76,31 @@ const menu = [
         permission: 'judicial'
       },
       {
-        title: '法制学堂',
+        title: '法治学堂',
         icon: '',
         path: '/home/school',
         permission: 'school'
+      },
+      {
+        title: '律师服务',
+        icon: '',
+        path: '/home/lawyerServices',
+        permission: 'lawyerServices',
+        userType: ["4"]
+      },
+      {
+        title: '公证服务',
+        icon: '',
+        path: '/home/notaryServices',
+        permission: 'notaryServices',
+        userType: ["5"]
+      },
+      {
+        title: '司法鉴定',
+        icon: '',
+        path: '/home/AppraisalOffice',
+        permission: 'AppraisalOffice',
+        userType: ["6"]
       }
     ]
   },
@@ -93,18 +110,18 @@ const menu = [
     path: '3',
     permission: 'content',
     children: [
-      // {
-      //   title: 'Banner管理',
-      //   icon: '',
-      //   path: '/home/banner',
-      //   permission: 'banner'
-      // },
-      // {
-      //   title: '系统推送',
-      //   icon: '',
-      //   path: '/home/push',
-      //   permission: 'push'
-      // },
+      {
+        title: 'Banner管理',
+        icon: '',
+        path: '/home/banner',
+        permission: 'banner'
+      },
+      {
+        title: '系统推送',
+        icon: '',
+        path: '/home/push',
+        permission: 'push'
+      },
       {
         title: '法治政府',
         icon: '',
@@ -112,10 +129,16 @@ const menu = [
         permission: 'government'
       },
       {
-        title: '法制宣传',
+        title: '法治宣传',
         icon: '',
         path: '/home/propaganda',
         permission: 'propaganda'
+      },
+      {
+        title: '普法问卷',
+        icon: '',
+        path: '/home/questionnaire',
+        permission: 'questionnaire'
       }
     ]
   },
@@ -129,20 +152,20 @@ const menu = [
         title: '行政执法',
         icon: '',
         path: '/home/ale',
-        permission: ''
+        permission: 'ale'
       },
-      // {
-      //   title: '行政复议',
-      //   icon: '',
-      //   path: '/home/ar',
-      //   permission: 'ar'
-      // },
-      /*{
+      {
+        title: '行政复议',
+        icon: '',
+        path: '/home/ar',
+        permission: 'ar'
+      },
+      {
         title: '群众来信',
         icon: '',
         path: '/home/massesLetter',
-        permission: 'masses_letter'
-      }*/
+        permission: 'massesLetter'
+      }
     ]
   },
 ]

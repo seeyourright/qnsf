@@ -13,13 +13,13 @@
       <span slot="title">首页</span>
     </el-menu-item>
     <template v-for="(menu1,index1) in menu">
-      <el-submenu v-if="menu1.children && permissions.indexOf(menu1.permission) > -1" :key="index1" :index="menu1.path">
+      <el-submenu v-if="menu1.children && (permissions.indexOf(menu1.permission) > -1 || menu1.userType && menu1.userType.indexOf(userType) > -1)" :key="index1" :index="menu1.path">
         <template slot="title">
           <i v-if="menu1.icon" :class="'iconfont '+ menu1.icon"></i>
           <span>{{menu1.title}}</span>
         </template>
         <template v-for="(menu2,index2) in menu1.children">
-          <el-submenu v-if="menu2.children && permissions.indexOf(menu2.permission) > -1" :key="index2" :index="menu2.path">
+          <el-submenu v-if="menu2.children && (permissions.indexOf(menu2.permission) > -1 || menu2.userType && menu2.userType.indexOf(userType) > -1)" :key="index2" :index="menu2.path">
             <template slot="title">
               <i v-if="menu2.icon" :class="menu2.icon"></i>
               <span>{{menu2.title}}</span>
@@ -31,7 +31,7 @@
               </el-menu-item>
             </template>
           </el-submenu>
-          <el-menu-item v-else-if="permissions.indexOf(menu2.permission) > -1" :index="menu2.path" :key="index2">
+          <el-menu-item v-else-if="permissions.indexOf(menu2.permission) > -1 || menu2.userType && menu2.userType.indexOf(userType) > -1" :index="menu2.path" :key="index2">
             <i v-if="menu2.icon" :class="menu2.icon"></i>
             <span slot="title">{{menu2.title}}</span>
           </el-menu-item>
@@ -79,6 +79,9 @@ export default {
     },
     permissions () {
       return this.$store.state.permission
+    },
+    userType () {
+      return this.$store.state.user.userType
     }
   }
 }

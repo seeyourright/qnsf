@@ -34,7 +34,6 @@ export default {
           }
         })
         .then(function(res) {
-           console.log('用户信息',res)
            if(res.data.code == 200){
                sessionStorage.setItem('userType',res.data.data.userType)
                sessionStorage.setItem('userId',res.data.data.id)

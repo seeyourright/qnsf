@@ -134,6 +134,7 @@ export default {
     height 100%
     width 100%
   .mask
+    overflow hidden
     position absolute
     height 100%
     width 100%
@@ -169,6 +170,9 @@ export default {
       display flex
       align-items flex-end
       overflow hidden
+      @media screen and (max-width: 500px){
+        width 250px
+      }
       &+.item
         margin-top 10px
       .label
