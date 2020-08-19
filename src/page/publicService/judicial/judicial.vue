@@ -3,10 +3,22 @@
     <div class="condition">
       <div>公共服务—司法所</div>
       <el-form size="small" inline>
-        <el-form-item v-permission="'app_add'">
+        <el-form-item v-if="allper">
+          <el-select v-model="condition.cityNumber">
+            <el-option label="全部地区" :value="null"></el-option>
+            <el-option v-for="area in areas" :label="area.name" :value="area.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-input placeholder="输入司法所名称" v-model="condition.judicialName"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="getData(1)">查询</el-button>
+        </el-form-item>
+        <el-form-item>
           <el-button type="primary" @click="addHandler">新增</el-button>
         </el-form-item>
-        <el-form-item v-permission="'app_delete'">
+        <el-form-item>
           <el-button type="danger" @click="deleteAllHandler">批量删除</el-button>
         </el-form-item>
       </el-form>
@@ -78,7 +90,7 @@
       @current-change="getData"
       :current-page.sync="page"
       :page-size="size"
-      layout="prev, pager, next, jumper"
+      layout="total, prev, pager, next, jumper"
       :total="total"
     ></el-pagination>
     <el-dialog
@@ -150,7 +162,10 @@
         size: 10,
         total: 100,
         tableData: [],
-        condition: {},
+        condition: {
+          cityNumber: null,
+          judicialName: ''
+        },
         dialogVisible: false,
         form: {
           judicialName: '',
@@ -212,6 +227,10 @@
             this.tableData = res.data
             this.page = page
             this.total = res.totals
+          } else if(res.code === 203) {
+            this.tableData = []
+            this.page = 1
+            this.total = 0
           }
         }).finally(res => {
           this.$util.tableLoaded()
@@ -238,7 +257,7 @@
         })
       },
       imgValidator (rule, value, callback) {
-        if (!this.file) {
+        if (!this.imgUrl) {
           callback(new Error('图片不能为空'))
           return false
         }

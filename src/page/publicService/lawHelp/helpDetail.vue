@@ -185,7 +185,6 @@ export default {
   methods: {
     searchDetail() {
       const that = this;
-
       that.$http
         .axios({
           method: "post",
@@ -368,7 +367,6 @@ export default {
 <style scoped>
 .helpDetail {
   width: 95%;
-  min-width: 1100px;
   padding: 20px 2.5% 150px;
   position: relative;
 }
@@ -382,7 +380,7 @@ export default {
 
 .step0_low_item {
   /* width: 50%; */
-  height: 50px;
+  margin-bottom: 30px;
   display: flex;
   /* align-items: center; */
 }

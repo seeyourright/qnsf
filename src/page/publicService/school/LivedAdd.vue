@@ -49,8 +49,8 @@
       <el-form-item label="展示顺序" prop="vnumber">
         <el-input-number placeholder="数字越大越靠前" :controls="false" v-model="form.vnumber"></el-input-number>
       </el-form-item>
-      <div style="text-align: center;letter-spacing: 50px;margin-top: 30px">
-        <el-button>取消</el-button>
+      <div class="d-btns">
+        <el-button @click="$router.back()">取消</el-button>
         <el-button type="primary" @click="submit" :loading="loading">保存</el-button>
       </div>
     </el-form>

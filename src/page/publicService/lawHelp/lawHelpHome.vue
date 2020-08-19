@@ -53,7 +53,7 @@
         @current-change="handleCurrentChange"
         :current-page.sync="currentPage"
         :page-size="size"
-        layout="prev, pager, next, jumper"
+        layout="total, prev, pager, next, jumper"
         :total="totals"
       ></el-pagination>
     </div>
@@ -79,7 +79,7 @@ export default {
           phone: "",
           status: ""
         }
-      
+
       ]
     };
   },
@@ -111,7 +111,7 @@ export default {
                      value:val.id
                    })
               })
-            
+
               that.city = that.cityList[0].name
               that.getApplyList()
           }
@@ -147,7 +147,7 @@ export default {
                          city: val.city,
                          phone: val.phone,
                          status: val.status == 0?'未启用':'启用',
-                         roomNumber: val.roomNumber  
+                         roomNumber: val.roomNumber
                    })
               });
           }

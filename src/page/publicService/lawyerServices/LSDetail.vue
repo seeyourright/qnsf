@@ -1,7 +1,7 @@
 <template>
   <div class="mm">
     <div class="condition">
-      <div>内容管理—法治学堂</div>
+      <div>公共服务—律师服务—详情</div>
     </div>
     <div class="tabbar">
       <div v-for="(item, i) in arr" :key="item.name" :class="{'tabbar-item': true, 'active': i === active}" @click="tabChange(item, i)">{{item.name}}</div>
@@ -12,19 +12,26 @@
 
 <script>
   export default {
-    name: 'School',
+    name: 'LSDetail',
     data () {
       return {
+        id:null,
         arr: [
-          {name: '直播', path: '/home/school/live'},
-          {name: '录播', path: '/home/school/lived'}
+          {name: '基础信息', path: ['/home/lsDetail/lsBase']},
+          {name: '律师管理', path: ['/home/lsDetail/lsLawyer', '/home/lsDetail/lsLawyerAdd']},
+          {name: '订单管理', path: ['/home/lsDetail/lsOrder', '/home/lsDetail/lsOrderAdd']},
+          {name: '黑名单管理', path: ['/home/lsDetail/lsBlackList']}
         ],
         active: 0
       }
     },
     created () {
+      this.id = this.$route.query.id
+      if (this.$store.state.user.userType === '4') {
+        this.id = sessionStorage.getItem('lawyerServicesId')
+      }
       for (let i = 0; i < this.arr.length; i++) {
-        if (this.$route.fullPath === this.arr[i].path) {
+        if (this.arr[i].path.indexOf(this.$route.path) > -1) {
           this.active = i
         }
       }
@@ -32,7 +39,7 @@
     methods: {
       tabChange (item, i) {
         this.active = i
-        this.$router.push(item.path)
+        this.$router.push({path: item.path[0],query: {id: this.id}})
       }
     },
     watch: {

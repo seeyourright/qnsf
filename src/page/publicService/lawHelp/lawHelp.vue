@@ -55,7 +55,7 @@
         @current-change="handleCurrentChange"
         :current-page.sync="currentPage"
         :page-size="size"
-        layout="prev, pager, next, jumper"
+        layout="total, prev, pager, next, jumper"
         :total="totals"
       ></el-pagination>
     </div>
@@ -111,7 +111,7 @@ export default {
                         addr: val.applicationSite,
                         people: val.applyName,
                         time: moment(val.createTime).format('YYYY-MM-DD HH:mm:ss'),// that.$util.timeFormat(val.createTime),
-                        status: that.dealStatusShow(val.status)  
+                        status: that.dealStatusShow(val.status)
                    })
               });
           }

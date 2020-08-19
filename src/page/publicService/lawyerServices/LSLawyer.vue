@@ -27,40 +27,36 @@
       <el-table-column
         align="center"
         prop="id"
-        label="序号"
+        label="ID"
       ></el-table-column>
       <el-table-column
         align="center"
-        :show-overflow-tooltip="true"
-        prop="vlogo"
-        label="图片"
+        prop="lawName"
+        label="律师名称"
       >
-        <template slot-scope="scope">
-          <div style="line-height: 0">
-            <el-image :src="scope.row.vlogo" :preview-src-list="[scope.row.vlogo]"></el-image>
-          </div>
-        </template>
       </el-table-column>
       <el-table-column
         align="center"
-        prop="vname"
-        label="标题"
-      ></el-table-column>
+        prop="phone"
+        label="联系电话"
+      >
+      </el-table-column>
       <el-table-column
         align="center"
-        prop="vstatus"
+        prop="caseType"
+        label="案件类型"
+      >
+      </el-table-column>
+      <el-table-column
+        align="center"
+        prop="status"
         label="状态"
       >
         <template slot-scope="scope">
-          <span v-if="scope.row.vstatus === 0">停用</span>
-          <span v-if="scope.row.vstatus === 1">启用</span>
+          <span v-if="scope.row.status === 0">停用</span>
+          <span v-if="scope.row.status === 1">启用</span>
         </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-        prop="vcreate"
-        label="创建时间"
-      ></el-table-column>
       <el-table-column
         align="center"
         prop="a"
@@ -84,27 +80,31 @@
 
 <script>
   export default {
-    name: 'Lived',
+    name: 'LSLawyer',
     data () {
       return {
+        loading: false,
         page: 1,
         size: 10,
         total: 100,
-        tableData: []
+        tableData: [],
+        condition: {
+        },
+        areas: [],
       }
     },
-    created () {
+    mounted () {
       this.getData(1)
     },
     methods: {
       getData (page) {
         this.$util.tableLoading()
-        this.$http.get(this.$url.School_Lived_List, {page, limit: this.size}).then(res => {
+        this.$http.get(this.$url.Lawyer_List, {page, limit: this.size, lawyerServerId: this.$parent.id, ...this.condition}).then(res => {
           if (res.code === 200) {
             this.tableData = res.data
             this.page = page
             this.total = res.totals
-          } else if (res.code === 203) {
+          } else if(res.code === 203) {
             this.tableData = []
             this.page = 1
             this.total = 0
@@ -113,8 +113,11 @@
           this.$util.tableLoaded()
         })
       },
+      addHandler () {
+        this.$router.push('lsLawyerAdd?id=' + this.$parent.id)
+      },
       detailHandler (row) {
-        this.$router.push('LivedAdd?id=' + row.id)
+        this.$router.push('lsLawyerAdd?id=' + this.$parent.id + '&zid=' + row.id)
       },
       deleteAllHandler () {
         const selection = this.$refs.table.selection
@@ -127,18 +130,15 @@
           ids.push(selection[i].id)
         }
         this.$confirm('确定删除吗').then(() => {
-          this.$http.post(this.$url.Delete_School_Lived, {idList: ids.join(',')}).then(res => {
+          this.$http.post(this.$url.Delete_Lawyer, {ids: ids.join(',')}).then(res => {
             if (res.code === 200) {
               this.$message.success('删除成功')
               this.getData(this.page)
             }
           })
         }, () => {})
-      },
-      addHandler () {
-        this.$router.push('LivedAdd')
       }
-    }
+    },
   }
 </script>
 
@@ -147,4 +147,8 @@
     display flex
     align-items center
     justify-content space-between
+  .form
+    padding 0 20px
+    /deep/ textarea
+      height 150px
 </style>

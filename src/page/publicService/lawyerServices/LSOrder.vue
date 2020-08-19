@@ -4,9 +4,6 @@
       <div></div>
       <el-form size="small" inline>
         <el-form-item>
-          <el-button type="primary" @click="addHandler">新增</el-button>
-        </el-form-item>
-        <el-form-item>
           <el-button type="danger" @click="deleteAllHandler">批量删除</el-button>
         </el-form-item>
       </el-form>
@@ -26,41 +23,41 @@
       </el-table-column>
       <el-table-column
         align="center"
-        prop="id"
-        label="序号"
+        prop="orderNumber"
+        label="订单编号"
       ></el-table-column>
       <el-table-column
         align="center"
-        :show-overflow-tooltip="true"
-        prop="vlogo"
-        label="图片"
+        prop="entrustPerson"
+        label="委托人"
+      >
+      </el-table-column>
+      <el-table-column
+        align="center"
+        prop="phone"
+        label="联系电话"
+      >
+      </el-table-column>
+      <el-table-column
+        align="center"
+        prop="lawyerManagement"
+        label="办理律师"
       >
         <template slot-scope="scope">
-          <div style="line-height: 0">
-            <el-image :src="scope.row.vlogo" :preview-src-list="[scope.row.vlogo]"></el-image>
-          </div>
+          {{scope.row.lawyerManagement && scope.row.lawyerManagement.lawName}}
         </template>
       </el-table-column>
       <el-table-column
         align="center"
-        prop="vname"
-        label="标题"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        prop="vstatus"
-        label="状态"
+        prop="status"
+        label="订单状态"
       >
         <template slot-scope="scope">
-          <span v-if="scope.row.vstatus === 0">停用</span>
-          <span v-if="scope.row.vstatus === 1">启用</span>
+          <span v-if="scope.row.status === 0">未审核</span>
+          <span v-if="scope.row.status === 1">已通过</span>
+          <span v-if="scope.row.status === 2">已拒绝</span>
         </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-        prop="vcreate"
-        label="创建时间"
-      ></el-table-column>
       <el-table-column
         align="center"
         prop="a"
@@ -84,27 +81,29 @@
 
 <script>
   export default {
-    name: 'Lived',
+    name: 'LSOrder',
     data () {
       return {
+        loading: false,
         page: 1,
         size: 10,
         total: 100,
-        tableData: []
+        tableData: [1],
+        areas: [],
       }
     },
-    created () {
+    mounted () {
       this.getData(1)
     },
     methods: {
       getData (page) {
         this.$util.tableLoading()
-        this.$http.get(this.$url.School_Lived_List, {page, limit: this.size}).then(res => {
+        this.$http.get(this.$url.Law_Order_List, {page, limit: this.size,lawyerServerId: this.$parent.id, ...this.condition}).then(res => {
           if (res.code === 200) {
             this.tableData = res.data
             this.page = page
             this.total = res.totals
-          } else if (res.code === 203) {
+          } else if(res.code === 203) {
             this.tableData = []
             this.page = 1
             this.total = 0
@@ -114,7 +113,7 @@
         })
       },
       detailHandler (row) {
-        this.$router.push('LivedAdd?id=' + row.id)
+        this.$router.push('lsOrderAdd?id=' + this.$parent.id + '&zid=' + row.id)
       },
       deleteAllHandler () {
         const selection = this.$refs.table.selection
@@ -127,18 +126,15 @@
           ids.push(selection[i].id)
         }
         this.$confirm('确定删除吗').then(() => {
-          this.$http.post(this.$url.Delete_School_Lived, {idList: ids.join(',')}).then(res => {
+          this.$http.post(this.$url.Delete_Law_Order, {ids: ids.join(',')}).then(res => {
             if (res.code === 200) {
               this.$message.success('删除成功')
               this.getData(this.page)
             }
           })
         }, () => {})
-      },
-      addHandler () {
-        this.$router.push('LivedAdd')
       }
-    }
+    },
   }
 </script>
 
@@ -147,4 +143,8 @@
     display flex
     align-items center
     justify-content space-between
+  .form
+    padding 0 20px
+    /deep/ textarea
+      height 150px
 </style>
