@@ -23,7 +23,7 @@
       ></el-table-column>
       <el-table-column
         align="center"
-        prop="msgContent"
+        prop="replyContent"
         label="内容"
       >
       </el-table-column>
@@ -53,7 +53,7 @@
       @current-change="getData"
       :current-page.sync="page"
       :page-size="size"
-      layout="prev, pager, next, jumper"
+      layout="total, prev, pager, next, jumper"
       :total="total"
     ></el-pagination>
   </div>
@@ -68,7 +68,6 @@
         size: 10,
         total: 100,
         condition: {
-          msgType: '回复'
         },
         tableData: [],
       }
@@ -79,7 +78,7 @@
     methods: {
       getData (page) {
         this.$util.tableLoading()
-        this.$http.get(this.$url.Message_List, {page, limit: this.size, ...this.condition}).then(res => {
+        this.$http.get(this.$url.PeopleMsg_List, {page, limit: this.size, ...this.condition}).then(res => {
           if (res.code === 200) {
             this.tableData = res.data
             this.page = page

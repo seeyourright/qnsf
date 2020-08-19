@@ -39,8 +39,8 @@
           <el-image :src="imgUrl" :preview-src-list="[imgUrl]"></el-image>
         </div>
       </el-form-item>
-      <div style="text-align: center;letter-spacing: 50px;margin-top: 30px">
-        <el-button>取消</el-button>
+      <div class="d-btns">
+        <el-button @click="$router.back()">取消</el-button>
         <el-button type="primary" @click="submit" :loading="loading">保存</el-button>
       </div>
     </el-form>
@@ -82,7 +82,6 @@
       if (this.id) {
         this.init()
       }
-      this.areaInit()
     },
     methods: {
       init () {

@@ -19,8 +19,8 @@
           <el-option v-for="area in areas" :label="area.name" :value="area.name+'-'+area.id"></el-option>
         </el-select>
       </el-form-item>
-      <div style="text-align: center;letter-spacing: 50px;margin-top: 30px">
-        <el-button>取消</el-button>
+      <div class="d-btns">
+        <el-button @click="$router.back()">取消</el-button>
         <el-button type="primary" @click="submit" :loading="loading">保存</el-button>
       </div>
     </el-form>

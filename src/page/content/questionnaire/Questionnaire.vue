@@ -1,7 +1,7 @@
 <template>
-  <div style="margin-top: 20px">
+  <div class="mm">
     <div class="condition">
-      <div></div>
+      <div>内容管理—普法问卷</div>
       <el-form size="small" inline>
         <el-form-item>
           <el-button type="primary" @click="addHandler">新增</el-button>
@@ -26,32 +26,14 @@
       </el-table-column>
       <el-table-column
         align="center"
-        prop="id"
+        prop="questionnaireId"
         label="序号"
       ></el-table-column>
       <el-table-column
         align="center"
-        :show-overflow-tooltip="true"
-        prop="imgUrl"
-        label="图片"
-      >
-        <template slot-scope="scope">
-          <div style="line-height: 0">
-            <el-image :src="scope.row.imgUrl" :preview-src-list="[scope.row.imgUrl]"></el-image>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="title"
+        prop="titles"
         label="标题"
       ></el-table-column>
-      <el-table-column
-        align="center"
-        prop="city"
-        label="县/市"
-      >
-      </el-table-column>
       <el-table-column
         align="center"
         prop="status"
@@ -90,26 +72,22 @@
 
 <script>
   export default {
-    name: 'Information',
+    name: 'Questionnaire',
     data () {
       return {
         page: 1,
         size: 10,
         total: 100,
-        tableData: [],
-        condition: {},
+        tableData: []
       }
     },
     mounted () {
-      if (this.$store.state.user.userType === '2' && this.$store.state.user.unitId !== '5227000000') {
-        this.condition.cityNumber = this.$store.state.user.unitId
-      }
       this.getData(1)
     },
     methods: {
       getData (page) {
         this.$util.tableLoading()
-        this.$http.get(this.$url.Government_Information_List, {page, limit: this.size, ...this.condition}).then(res => {
+        this.$http.get(this.$url.Questionnaire_List, {page, limit: this.size, type: '普法问卷'}).then(res => {
           if (res.code === 200) {
             this.tableData = res.data
             this.page = page
@@ -124,7 +102,7 @@
         })
       },
       detailHandler (row) {
-        this.$router.push('informationAdd?id=' + row.id)
+        this.$router.push('questionnaireDetail?id=' + row.questionnaireId)
       },
       deleteAllHandler () {
         const selection = this.$refs.table.selection
@@ -134,10 +112,10 @@
         }
         const ids = []
         for (let i = 0; i < selection.length; i++) {
-          ids.push(selection[i].id)
+          ids.push(selection[i].questionnaireId)
         }
         this.$confirm('确定删除吗').then(() => {
-          this.$http.post(this.$url.Delete_Government_Information, {ids: ids.join(',')}).then(res => {
+          this.$http.post(this.$url.Delete_Questionnaire, {idList: ids}).then(res => {
             if (res.code === 200) {
               this.$message.success('删除成功')
               this.getData(this.page)
@@ -146,7 +124,7 @@
         }, () => {})
       },
       addHandler () {
-        this.$router.push('informationAdd')
+        this.$router.push('questionnaireAdd')
       }
     }
   }

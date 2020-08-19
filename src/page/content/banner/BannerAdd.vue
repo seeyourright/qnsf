@@ -43,8 +43,8 @@
         <el-form-item label="" prop="content">
           <textEditor ref="editor" :text.sync="form.content" @change="$refs['form'].validateField('content')"></textEditor>
         </el-form-item>
-        <div style="text-align: center;letter-spacing: 50px;margin-top: 30px">
-          <el-button>取消</el-button>
+        <div class="d-btns">
+          <el-button @click="$router.back()">取消</el-button>
           <el-button type="primary" @click="submit" :loading="loading">保存</el-button>
         </div>
       </el-form>

@@ -14,13 +14,13 @@
         <div>{{form.createTime}}</div>
       </el-form-item>
       <el-form-item label="内容">
+        <div>{{form.replyContent}}</div>
+      </el-form-item>
+      <el-form-item label="回复" v-if="form.msgContent">
         <div>{{form.msgContent}}</div>
       </el-form-item>
-      <el-form-item label="内容" v-if="form.replayContent">
-        <div>{{form.replayContent}}</div>
-      </el-form-item>
       <div v-else style="text-align: center;letter-spacing: 50px;margin-top: 30px">
-        <el-button>取消</el-button>
+        <el-button @click="$router.back()">取消</el-button>
         <el-button type="primary" @click="dialogVisible = true">回复</el-button>
       </div>
     </el-form>
@@ -67,9 +67,13 @@
         })
       },
       submit () {
-        this.$http.post(this.$url.Update_Message, {id: this.id, replyContent: this.reply}).then(res => {
+        if (!this.reply) {
+          this.$message.success('回复不能为空')
+        }
+        this.$http.post(this.$url.Update_Message, {id: this.id, msgContent: this.reply}).then(res => {
           if (res.code === 200) {
             this.$message.success('回复成功')
+            this.dialogVisible = false
             this.init()
           }
         })

@@ -35,7 +35,7 @@
         prop="imgUrl"
         label="图片"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <div style="line-height: 0">
             <el-image :src="scope.row.imgUrl" :preview-src-list="[scope.row.imgUrl]"></el-image>
           </div>
@@ -76,7 +76,7 @@
       @current-change="getData"
       :current-page.sync="page"
       :page-size="size"
-      layout="prev, pager, next, jumper"
+      layout="total, prev, pager, next, jumper"
       :total="total"
     ></el-pagination>
   </div>

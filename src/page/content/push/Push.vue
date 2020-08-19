@@ -26,29 +26,34 @@
       </el-table-column>
       <el-table-column
         align="center"
-        prop="a"
+        prop="id"
         label="序号"
       ></el-table-column>
       <el-table-column
         align="center"
         :show-overflow-tooltip="true"
-        prop="a"
+        prop="msgTitle"
         label="推送标题"
       >
       </el-table-column>
       <el-table-column
         align="center"
-        prop="a"
+        prop="userId"
         label="推送用户"
       ></el-table-column>
       <el-table-column
         align="center"
-        prop="a"
+        prop="createTime"
         label="状态"
-      ></el-table-column>
+      >
+        <template slot-scope="scope">
+          <span v-if="new Date() > new Date(scope.row.createTime)">已推送</span>
+          <span v-else>未推送</span>
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
-        prop="a"
+        prop="createTime"
         label="推送时间"
       ></el-table-column>
       <el-table-column
@@ -58,7 +63,6 @@
       >
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="detailHandler(scope.row)">详情</el-button>
-          <el-button type="text" size="small" class="text-danger" @click="deleteHandler(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -67,7 +71,7 @@
       @current-change="getData"
       :current-page.sync="page"
       :page-size="size"
-      layout="prev, pager, next, jumper"
+      layout="total, prev, pager, next, jumper"
       :total="total"
     ></el-pagination>
   </div>
@@ -81,35 +85,49 @@ export default {
       page: 1,
       size: 10,
       total: 100,
-      tableData: [
-        {a: 1, id: 1, img: 'http://demo.qfpffmp.cn/cssthemes6/cob_1_kiaalap/img/student/3.jpg'},
-        {a: 1, id: 1},
-        {a: 1, id: 1},
-        {a: 1, id: 1},
-        {a: 1, id: 1}
-      ]
+      tableData: []
     }
   },
-  created () {
+  mounted () {
+    this.getData(1)
   },
   methods: {
     getData (page) {
+      this.$util.tableLoading()
+      this.$http.get(this.$url.Message_List, {page, limit: this.size, msgType: '推送'}).then(res => {
+        if (res.code === 200) {
+          this.tableData = res.data
+          this.page = page
+          this.total = res.totals
+        } else if (res.code === 203) {
+          this.tableData = []
+          this.page = 1
+          this.total = 0
+        }
+      }).finally(res => {
+        this.$util.tableLoaded()
+      })
     },
     detailHandler (row) {
-      this.$router.push('bannerAdd?id=' + row.id)
-    },
-    deleteHandler (row) {
-      this.$confirm('确定删除吗').then(() => {
-        this.$message.success('删掉啦，开玩笑的ο(=•ω＜=)ρ⌒☆')
-      }, () => {})
+      this.$router.push('pushAdd?id=' + row.id)
     },
     deleteAllHandler () {
-      if (this.$refs.table.selection.length === 0) {
+      const selection = this.$refs.table.selection
+      if (selection.length === 0) {
         this.$message.warning('至少选择一条数据')
         return false
       }
+      const ids = []
+      for (let i = 0; i < selection.length; i++) {
+        ids.push(selection[i].id)
+      }
       this.$confirm('确定删除吗').then(() => {
-        this.$message.success('删掉啦，开玩笑的ο(=•ω＜=)ρ⌒☆')
+        this.$http.post(this.$url.Delete_Message, {ids: ids.join(',')}).then(res => {
+          if (res.code === 200) {
+            this.$message.success('删除成功')
+            this.getData(this.page)
+          }
+        })
       }, () => {})
     },
     addHandler () {

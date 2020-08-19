@@ -2,7 +2,7 @@
   <div class="mm">
     <div class="condition">
       <div>
-        内容管理-法制宣传
+        内容管理- 法治宣传
       </div>
       <el-form size="small" inline>
         <el-form-item>
@@ -78,7 +78,7 @@
       @current-change="getData"
       :current-page.sync="page"
       :page-size="size"
-      layout="prev, pager, next, jumper"
+      layout="total, prev, pager, next, jumper"
       :total="total"
     ></el-pagination>
   </div>
