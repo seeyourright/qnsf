@@ -4,6 +4,17 @@
       <div></div>
       <el-form size="small" inline>
         <el-form-item>
+          <el-select v-model="condition.status">
+            <el-option label="全部状态" :value="null"></el-option>
+            <el-option label="未审核" :value="0"></el-option>
+            <el-option label="已通过" :value="1"></el-option>
+            <el-option label="已拒绝" :value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="getData(1)">搜索</el-button>
+        </el-form-item>
+        <el-form-item>
           <el-button type="danger" @click="deleteAllHandler">批量删除</el-button>
         </el-form-item>
       </el-form>
@@ -79,8 +90,10 @@
         page: 1,
         size: 10,
         total: 100,
-        tableData: [1],
-        areas: [],
+        condition: {
+          status: null
+        },
+        tableData: [],
       }
     },
     mounted () {
@@ -89,7 +102,7 @@
     methods: {
       getData (page) {
         this.$util.tableLoading()
-        this.$http.get(this.$url.Appraisal_Order_List, {page, limit: this.size, appraisalOfficeId: this.id, ...this.condition}).then(res => {
+        this.$http.get(this.$url.Appraisal_Order_List, {page, limit: this.size, appraisalOfficeId: this.$parent.id, ...this.condition}).then(res => {
           if (res.code === 200) {
             this.tableData = res.data
             this.page = page

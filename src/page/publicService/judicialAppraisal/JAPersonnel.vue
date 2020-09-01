@@ -86,6 +86,9 @@
         <el-form-item label="联系电话" prop="phone">
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
+        <el-form-item label="执业证号" prop="licenseNumber">
+          <el-input v-model="form.licenseNumber"></el-input>
+        </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group  v-model="form.status">
             <el-radio :label="1">启用</el-radio>
@@ -118,6 +121,7 @@
         form: {
           nickname: '',
           phone: '',
+          licenseNumber: '',
           status: 1
         },
         file: null,
@@ -131,9 +135,11 @@
             {required: true, message: '姓名不能为空', trigger: 'blur'}
           ],
           phone: [
-            {required: true, message: '联系电话不能为空', trigger: 'blur'},
             {pattern: this.$util.phoneReg, message: '联系电话格式错误', trigger: 'blur'}
-          ]
+          ],
+          // licenseNumber: [
+          //   {required: true, message: '执业证号不能为空', trigger: 'blur'},
+          // ]
         },
         areas: [],
       }
@@ -144,7 +150,7 @@
     methods: {
       getData (page) {
         this.$util.tableLoading()
-        this.$http.get(this.$url.Appraisal_Person_List, {page, limit: this.size, ...this.condition}).then(res => {
+        this.$http.get(this.$url.Appraisal_Person_List, {page, limit: this.size, appraisalOfficeId: this.$parent.id, ...this.condition}).then(res => {
           if (res.code === 200) {
             this.tableData = res.data
             this.page = page
@@ -162,6 +168,7 @@
         this.form = {
           nickname: '',
           phone: '',
+          licenseNumber: '',
           status: 1
         },
         this.file = null
@@ -171,6 +178,9 @@
       },
       detailHandler (row) {
         this.form = {...row}
+        this.file = null
+        this.key = ''
+        this.imgUrl = this.form.imgUrl
         this.dialogVisible = true
       },
       deleteAllHandler () {

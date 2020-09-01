@@ -2,19 +2,19 @@
   <div class="mm">
     <el-form ref="form" class="form" label-width="150px" :rules="rules" :model="form">
       <el-form-item label="科室" prop="department">
-        <el-input placeholder="请输入标题" v-model="form.department"></el-input>
+        <el-input v-model="form.department"></el-input>
       </el-form-item>
       <el-form-item label="联系人" prop="chargePerson">
-        <el-input placeholder="请输入标题" v-model="form.chargePerson"></el-input>
+        <el-input v-model="form.chargePerson"></el-input>
       </el-form-item>
       <el-form-item label="联系电话" prop="phone">
-        <el-input placeholder="请输入标题" v-model="form.phone"></el-input>
+        <el-input v-model="form.phone"></el-input>
       </el-form-item>
       <el-form-item label="房间号" prop="roomNumber">
-        <el-input placeholder="请输入标题" v-model="form.roomNumber"></el-input>
+        <el-input v-model="form.roomNumber"></el-input>
       </el-form-item>
       <el-form-item label="主要业务" prop="introduction">
-        <el-input type="textarea" placeholder="请输入标题" v-model="form.introduction"></el-input>
+        <el-input type="textarea" v-model="form.introduction"></el-input>
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-switch
@@ -32,7 +32,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="地址" prop="address">
-        <el-input placeholder="请输入标题" v-model="form.address"></el-input>
+        <el-input v-model="form.address"></el-input>
       </el-form-item>
       <div style="text-align: center;letter-spacing: 50px;margin-top: 30px">
         <el-button @click="$router.back()">取消</el-button>
@@ -68,22 +68,22 @@
           cityNumber: [
             {required: true, message: '所属县市不能为空', trigger: 'blur'}
           ],
-          chargePerson: [
-            {required: true, message: '联系人不能为空', trigger: 'blur'}
-          ],
-          phone: [
-            {required: true, message: '联系电话不能为空', trigger: 'blur'},
-            {pattern: this.$util.phoneReg, message: '联系电话格式错误', trigger: 'blur'}
-          ],
-          roomNumber: [
-            {required: true, message: '房间号不能为空', trigger: 'blur'}
-          ],
-          address: [
-            {required: true, message: '地址不能为空', trigger: 'blur'}
-          ],
-          introduction: [
-            {required: true, message: '主要业务不能为空', trigger: 'blur'}
-          ],
+          // chargePerson: [
+          //   {required: true, message: '联系人不能为空', trigger: 'blur'}
+          // ],
+          // phone: [
+          //   {required: true, message: '联系电话不能为空', trigger: 'blur'},
+          //   {pattern: this.$util.phoneReg, message: '联系电话格式错误', trigger: 'blur'}
+          // ],
+          // roomNumber: [
+          //   {required: true, message: '房间号不能为空', trigger: 'blur'}
+          // ],
+          // address: [
+          //   {required: true, message: '地址不能为空', trigger: 'blur'}
+          // ],
+          // introduction: [
+          //   {required: true, message: '主要业务不能为空', trigger: 'blur'}
+          // ],
         },
         areas: []
       }

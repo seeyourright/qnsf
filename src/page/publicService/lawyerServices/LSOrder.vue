@@ -4,6 +4,23 @@
       <div></div>
       <el-form size="small" inline>
         <el-form-item>
+          <el-select v-model="condition.lawyerId">
+            <el-option label="全部律师" :value="null"></el-option>
+            <el-option v-for="lawyer in lawyers" :label="lawyer.lawName" :value="lawyer.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-select v-model="condition.status">
+            <el-option label="全部状态" :value="null"></el-option>
+            <el-option label="未审核" :value="0"></el-option>
+            <el-option label="已通过" :value="1"></el-option>
+            <el-option label="已拒绝" :value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="getData(1)">搜索</el-button>
+        </el-form-item>
+        <el-form-item>
           <el-button type="danger" @click="deleteAllHandler">批量删除</el-button>
         </el-form-item>
       </el-form>
@@ -88,12 +105,17 @@
         page: 1,
         size: 10,
         total: 100,
-        tableData: [1],
-        areas: [],
+        condition: {
+          status: null,
+          lawyerId: null
+        },
+        tableData: [],
+        lawyers: [],
       }
     },
     mounted () {
       this.getData(1)
+      this.lawyerInit()
     },
     methods: {
       getData (page) {
@@ -110,6 +132,13 @@
           }
         }).finally(res => {
           this.$util.tableLoaded()
+        })
+      },
+      lawyerInit () {
+        this.$http.get(this.$url.Lawyer_List, {page: 1, limit: 100, lawyerServerId: this.$parent.id}).then(res => {
+          if (res.code === 200) {
+            this.lawyers = res.data
+          }
         })
       },
       detailHandler (row) {

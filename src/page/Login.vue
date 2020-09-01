@@ -1,7 +1,7 @@
 <template>
   <div class='container'>
     <img v-if='$store.state.isIE' class='image' src='http://img.yangrq.com/qnsfbgimg2' alt=''>
-    <video v-else class='video' autoplay muted loop src='http://img.yangrq.com/qnsfbgvd2'></video>
+    <video v-else class='video' webkit-playsinline playsinline x-webkit-airplay x5-video-player-type='h5' x5-video-player-fullscreen x5-video-ignore-metadata preload autoplay muted loop src='http://img.yangrq.com/qnsfbgvd2'></video>
     <div class='mask'>
       <div class='box'>
         <form>

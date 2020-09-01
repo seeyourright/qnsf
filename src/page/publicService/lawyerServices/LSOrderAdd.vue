@@ -101,6 +101,7 @@
         this.$http.get(this.$url.Law_Order_By_Id, {id: this.id}).then(res => {
           if (res.code === 200) {
             this.form = res.data
+            this.lawyer = this.form.lawyerId
           }
         })
       },

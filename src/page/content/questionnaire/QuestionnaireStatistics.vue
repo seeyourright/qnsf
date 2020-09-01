@@ -9,9 +9,9 @@
             <el-option v-for="area in areas" :label="area.name" :value="area.id"></el-option>
           </el-select>
         </el-form-item>
-<!--        <el-form-item>-->
-<!--          <el-button type="primary" @click="downloadHandler">下载问卷</el-button>-->
-<!--        </el-form-item>-->
+        <el-form-item>
+          <el-button type="primary" @click="downloadAllHandler">下载问卷</el-button>
+        </el-form-item>
       </el-form>
     </div>
     <el-table
@@ -223,6 +223,18 @@
       },
       downloadHandler (row) {
         open(this.$url.Questionnaire_Answer_Download+'?opid='+this.$parent.id+'&answerId='+row.answerId, '_blank')
+      },
+      downloadAllHandler() {
+        const selection = this.$refs.table.selection
+        if (selection.length === 0) {
+          this.$message.warning('至少选择一条数据')
+          return false
+        }
+        const ids = []
+        for (let i = 0; i < selection.length; i++) {
+          ids.push(selection[i].answerId)
+        }
+        open(this.$url.Questionnaire_Answer_Download+'?opid='+this.$parent.id+'&answerId='+ids, '_blank')
       }
     }
   }

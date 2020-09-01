@@ -11,10 +11,6 @@ import ObsClient from './utils/hwobs'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
-// if (store.state.isIE) {
-//   require('./assets/css/ie.css')
-// }
-
 Vue.directive('permission', {
   bind (el, binding) {
     if (store.state.permission.indexOf(binding.value) === -1) {

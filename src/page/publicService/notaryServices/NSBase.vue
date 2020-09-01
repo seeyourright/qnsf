@@ -131,40 +131,40 @@
           gzcName: [
             {required: true, message: '公证处名称不能为空', trigger: 'blur'}
           ],
-          gzcLinkmanName: [
-            {required: true, message: '联系人不能为空', trigger: 'blur'}
-          ],
-          gzcLinkmanPhone: [
-            {required: true, message: '联系电话不能为空', trigger: 'blur'},
-            {pattern: this.$util.phoneReg, message: '联系电话格式错误', trigger: 'blur'}
-          ],
-          gzcAccount: [
-            {required: true, message: '账号不能为空', trigger: 'blur'}
-          ],
-          gzcPassword: [
-            {required: true, message: '密码不能为空', trigger: 'blur'}
-          ],
+          // gzcLinkmanName: [
+          //   {required: true, message: '联系人不能为空', trigger: 'blur'}
+          // ],
+          // gzcLinkmanPhone: [
+          //   {required: true, message: '联系电话不能为空', trigger: 'blur'},
+          //   {pattern: this.$util.phoneReg, message: '联系电话格式错误', trigger: 'blur'}
+          // ],
+          // gzcAccount: [
+          //   {required: true, message: '账号不能为空', trigger: 'blur'}
+          // ],
+          // gzcPassword: [
+          //   {required: true, message: '密码不能为空', trigger: 'blur'}
+          // ],
           gzcEmail: [
             {pattern: this.$util.emailReg, message: '邮箱格式错误', trigger: 'blur'}
           ],
           city: [
             {required: true, message: '县/市不能为空', trigger: 'change'}
           ],
-          gzcRoom: [
-            {required: true, message: '房间号不能为空', trigger: 'blur'}
-          ],
-          gzcSynopsis: [
-            {required: true, message: '简介不能为空', trigger: 'blur'}
-          ],
-          gzcBusiness: [
-            {required: true, message: '业务类型不能为空', trigger: 'blur'}
-          ],
-          gzcSite: [
-            {required: true, message: '公证处地址不能为空', trigger: 'blur'}
-          ],
-          materials: [
-            {required: true, message: '公证类型所需材料不能为空', trigger: 'blur'}
-          ]
+          // gzcRoom: [
+          //   {required: true, message: '房间号不能为空', trigger: 'blur'}
+          // ],
+          // gzcSynopsis: [
+          //   {required: true, message: '简介不能为空', trigger: 'blur'}
+          // ],
+          // gzcBusiness: [
+          //   {required: true, message: '业务类型不能为空', trigger: 'blur'}
+          // ],
+          // gzcSite: [
+          //   {required: true, message: '公证处地址不能为空', trigger: 'blur'}
+          // ],
+          // materials: [
+          //   {required: true, message: '公证类型所需材料不能为空', trigger: 'blur'}
+          // ]
         },
         areas: [],
         allper: true,
@@ -189,7 +189,9 @@
             this.form = res.data
             this.area = this.form.cityName + '-' + this.form.city
             this.imgUrl = this.form.gzcLogo
-            this.dynamicTags = this.form.gzcBusiness.split('\u0888')
+            if(this.form.gzcBusiness) {
+              this.dynamicTags = this.form.gzcBusiness.split('\u0888')
+            }
           }
         })
       },

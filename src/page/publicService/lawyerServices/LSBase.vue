@@ -69,11 +69,11 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="律所地址" prop="phone">
-          <el-input type="textarea" v-model="form.phone"></el-input>
+        <el-form-item label="律所地址" prop="address">
+          <el-input type="textarea" v-model="form.address"></el-input>
         </el-form-item>
-        <el-form-item label="律所简介" prop="phone">
-          <el-input type="textarea" v-model="form.phone"></el-input>
+        <el-form-item label="律所简介" prop="introduction">
+          <el-input type="textarea" v-model="form.introduction"></el-input>
         </el-form-item>
         <div class="d-btns">
           <el-button @click="$router.back()">取消</el-button>
@@ -119,19 +119,18 @@
           lawFirmName: [
             {required: true, message: '律所名称不能为空', trigger: 'blur'}
           ],
-          chargePerson: [
-            {required: true, message: '联系人不能为空', trigger: 'blur'}
-          ],
-          phone: [
-            {required: true, message: '联系人不能为空', trigger: 'blur'},
-            {pattern: this.$util.phoneReg, message: '联系电话格式错误', trigger: 'blur'}
-          ],
-          uname: [
-            {required: true, message: '账号不能为空', trigger: 'blur'}
-          ],
-          passw: [
-            {required: true, message: '密码不能为空', trigger: 'blur'}
-          ],
+          // chargePerson: [
+          //   {required: true, message: '联系人不能为空', trigger: 'blur'}
+          // ],
+          // phone: [
+          //   {required: true, message: '联系人不能为空', trigger: 'blur'},
+          // ],
+          // uname: [
+          //   {required: true, message: '账号不能为空', trigger: 'blur'}
+          // ],
+          // passw: [
+          //   {required: true, message: '密码不能为空', trigger: 'blur'}
+          // ],
           email: [
             {pattern: this.$util.emailReg, message: '邮箱格式错误', trigger: 'blur'}
           ],
@@ -140,18 +139,6 @@
           ],
           roomNumber: [
             {required: true, message: '房间号不能为空', trigger: 'blur'}
-          ],
-          licenceNumber: [
-            {required: true, message: '职业许可证号不能为空', trigger: 'blur'}
-          ],
-          organizationalForm: [
-            {required: true, message: '组织形式不能为空', trigger: 'blur'}
-          ],
-          address: [
-            {required: true, message: '律所地址不能为空', trigger: 'blur'}
-          ],
-          introduction: [
-            {required: true, message: '律所简介不能为空', trigger: 'blur'}
           ]
         },
         areas: [],

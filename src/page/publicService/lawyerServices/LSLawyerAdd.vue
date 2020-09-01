@@ -31,7 +31,7 @@
             <el-input v-model="form.practiceNumber"></el-input>
           </el-form-item>
           <el-form-item label="展示顺序" prop="sort">
-            <el-input-number :controls="false" placeholder="数字越大越靠前" v-model="form.sort"></el-input-number>
+            <el-input :controls="false" placeholder="数字越大越靠前" v-model.number="form.sort"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -80,30 +80,17 @@
         key: '',
         imgUrl: '',
         rules: {
-          imgUrl: [
-            {validator: this.imgValidator, trigger: 'blur'}
-          ],
+          // imgUrl: [
+          //   {validator: this.imgValidator, trigger: 'blur'}
+          // ],
           lawName: [
             {required: true, message: '姓名不能为空', trigger: 'blur'}
           ],
-          chargePerson: [
-            {required: true, message: '联系人不能为空', trigger: 'blur'}
-          ],
-          phone: [
-            {required: true, message: '联系人不能为空', trigger: 'blur'},
-            {pattern: this.$util.phoneReg, message: '联系电话格式错误', trigger: 'blur'}
-          ],
-          caseType: [
-            {required: true, message: '案件类型不能为空', trigger: 'blur'}
-          ],
-          practiceNumber: [
-            {required: true, message: '执业证号不能为空', trigger: 'blur'}
-          ],
+          // phone: [
+          //   {pattern: this.$util.phoneReg, message: '联系电话格式错误', trigger: 'blur'}
+          // ],
           email: [
             {pattern: this.$util.emailReg, message: '邮箱格式错误', trigger: 'blur'}
-          ],
-          sort: [
-            {required: true, message: '展示顺序不能为空', trigger: 'change'}
           ]
         },
       }

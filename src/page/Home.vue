@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     wsInit () {
-      this.$store.state.ws = new WebSocket('ws://139.9.249.249:8087/ws/' + this.$store.state.user.id)
+      this.$store.state.ws = new WebSocket('ws://139.9.249.249:8091/ws/' + this.$store.state.user.id)
       this.$store.state.ws.onmessage = (res) => {
         const data = JSON.parse(res.data)
         if (data.type === '法律援助') {
