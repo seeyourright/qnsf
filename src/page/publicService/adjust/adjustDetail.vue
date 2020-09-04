@@ -258,7 +258,7 @@ export default {
   },
   created() {
     this.orderNum = sessionStorage.getItem('adjustObj')
-    this.role = sessionStorage.getItem('userType')
+    this.role = this.$store.state.user.userType
     this.getDetail()
   },
   mounted() {},
@@ -273,7 +273,6 @@ export default {
           }
         })
         .then(function(res) {
-           console.log('人民调解申请详情',res)
            if(res.data.code == 200){
                  let r = res.data.data
                  that.obj = res.data.data
@@ -318,7 +317,6 @@ export default {
 
                 })
                 }
-                // console.log(that.srcList)
                 //查询预约和被预约人列表
                 that.lookMorePeople()
 
@@ -335,7 +333,6 @@ export default {
           }
         })
         .then(function(res) {
-          //  console.log('预约人被预约人列表',res)
             that.applyMan = []
             that.oppositeMan = []
            if(res.data.code == 200){
@@ -363,7 +360,6 @@ export default {
           }
         })
         .then(function(res) {
-          // console.log("重置人民调解信息", res);
           if (res.data.code == 200) {
                 that.getDetail()
           }

@@ -234,7 +234,7 @@ export default {
   },
   created() {
     this.upUrl = this.$url.upUrl  //初始化上传地址
-    this.role = sessionStorage.getItem('userType')
+    this.role = this.$store.state.user.userType
 
     this.getApplyList();
     this.getCity()
@@ -254,7 +254,7 @@ export default {
           method: "get",
           url: that.$url.lawConsult.getList,
           params: {
-            addressNumber: sessionStorage.getItem('userType') == 3?null:sessionStorage.getItem('unitId'),  //管理员查询需加上归属单位编码
+            addressNumber: that.$store.state.user.userType == 3?null:that.$store.state.user.unitId,  //管理员查询需加上归属单位编码
             page: that.currentPage,
             limit: that.size
           }
@@ -377,7 +377,7 @@ export default {
       this.form = {
         roomId: "",
         city: "",
-        cityId: sessionStorage.getItem('userType') == 3?'':sessionStorage.getItem('unitId'),   //管理员新增时候不可选择区县  所以要初始化
+        cityId: this.$store.state.user.userType == 3?'':this.$store.state.user.unitId,   //管理员新增时候不可选择区县  所以要初始化
         phone: "",
         email: "",
         intro: "",
@@ -410,7 +410,7 @@ export default {
           method: "post",
           url: that.$url.lawConsult.add,
           params: {
-            city: sessionStorage.getItem('userType') == 3?that.form.city:that.tableData[0].city,
+            city: that.$store.state.user.userType == 3?that.form.city:that.tableData[0].city,
             addressNumber: that.form.cityId,
             phone: that.form.phone,
             roomNumber: that.form.roomId,
@@ -448,7 +448,7 @@ export default {
           url: that.$url.lawConsult.update,
           params: {
             id:that.form.id,
-            city: sessionStorage.getItem('userType') == 3?that.form.city:that.tableData[0].city,
+            city: that.$store.state.user.userType == 3?that.form.city:that.tableData[0].city,
             addressNumber: that.form.cityId,
             phone: that.form.phone,
             roomNumber: that.form.roomId,

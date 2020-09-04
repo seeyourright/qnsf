@@ -37,6 +37,10 @@
                 label='全部'
               ></el-option>
               <el-option
+                value=""
+                :label="unitName+'内调解组织'"
+              ></el-option>
+              <el-option
                 :value="item.id"
                 v-for="(item,index) in towns"
                 :key="index"
@@ -49,13 +53,18 @@
                 label='全部'
               ></el-option>
               <el-option
+                v-if="townName"
+                value=""
+                :label="townName+'内调解组织'"
+              ></el-option>
+              <el-option
                 :value="item.id"
                 v-for="(item,index) in communities"
                 :key="index"
                 :label='item.institutionalName'
               ></el-option>
             </el-select>
-            <el-select v-model="upPeopleId" placeholder="请选择" size="small" @change="upChange1">
+            <el-select v-model="upPeopleId" filterable placeholder="请选择" size="small" @change="upChange1">
               <el-option
                 :value="item.id"
                 v-for="(item,index) in upPeopleList"
@@ -200,6 +209,8 @@ export default {
       unitId: null,
       townId: null,
       communityId: null,
+      unitName: '',
+      townName: '',
       //线下审批
       lowPass: "", //线上审批通过   线上审批拒绝
       lowReason: "", //线下审批拒绝原因
@@ -251,6 +262,7 @@ export default {
             for (let i = 0; i < this.units.length; i++) {
               if (this.units[i].id === arr[0]) {
                 this.unitId = this.units[i].id
+                this.unitName = this.units[i].institutionalName
                 this.towns = this.units[i].children
                 this.units = [this.units[i]]
                 break
@@ -258,6 +270,25 @@ export default {
             }
           }
           this.getTJYlist(); //获取调解员列表
+          this.committeeInit()
+        }
+      })
+    },
+    committeeInit () {
+      this.$http.get(this.$url.Adjust_Committee).then(res => {
+        if (res.code === 200) {
+          const units = this.units
+          for (let i = 0; i < res.data.length; i++) {
+            for (let j = 0; j < units.length; j++) {
+              if (res.data[i].unitId === units[j].id && units[j].children) {
+                units[j].children.splice(0,0,{
+                  id: res.data[i].id,
+                  institutionalName: res.data[i].townName
+                })
+                break;
+              }
+            }
+          }
         }
       })
     },
@@ -283,10 +314,12 @@ export default {
       this.upPeopleId = null
       if (!value) {
         this.communities = null
+        this.townName = ""
       } else {
         for (let i = 0; i < this.towns.length; i++) {
           if (this.towns[i].id === value) {
             this.communities = this.towns[i].children
+            this.townName = this.towns[i].institutionalName
             break
           }
         }
@@ -304,7 +337,7 @@ export default {
         unitId: this.unitId,
         townId: this.townId,
         communityId: this.communityId,
-        limit: 100,
+        limit: 5000,
       }
       that.$http
         .axios({

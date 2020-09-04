@@ -73,6 +73,9 @@
       }
     },
     created () {
+      if (this.$store.state.user.userType === '2' && this.$store.state.user.unitId !== '5227000000') {
+        this.condition.cityNumber = this.$store.state.user.unitId
+      }
       this.getData(1)
     },
     methods: {

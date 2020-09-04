@@ -209,7 +209,26 @@ export default {
           }
         }
         this.filterChildren(areas)
+        this.committeeInit()
         this.areas = areas
+      })
+    },
+    committeeInit () {
+      this.$http.get(this.$url.Adjust_Committee).then(res => {
+        if (res.code === 200) {
+          const units = this.areas
+          for (let i = 0; i < res.data.length; i++) {
+            for (let j = 0; j < units.length; j++) {
+              if (res.data[i].unitId === units[j].id && units[j].children) {
+                units[j].children.push({
+                  id: res.data[i].id,
+                  institutionalName: res.data[i].townName
+                })
+                break;
+              }
+            }
+          }
+        }
       })
     },
     filterChildren (arr) {
@@ -282,8 +301,8 @@ export default {
       const form = {...this.form}
       if (form.userType === '1') {
         form.unitId = this.area[0]
-        form.townId = this.area[1] || null
-        form.communityId = this.area[2] || null
+        form.townId = this.area[1] || ""
+        form.communityId = this.area[2] || ""
       }
       form.username = form.phone
       this.$http.post(this.$url.Add_User, form).then(res => {

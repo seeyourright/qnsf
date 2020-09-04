@@ -191,6 +191,8 @@ const url = {
 
   // 群众来信
 
+  // 人民调解
+  Adjust_Committee: `${path}/api/system-management/unitTown/findlist`, // 人民调解委员会列表
   doNotDelete: 'doNotDelete', // 别删
   // ----------------------------------ly---------------------------------------
   getUserInfo:`${path}/api/system-management/sysuser/select_user_one`,

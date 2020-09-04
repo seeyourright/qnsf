@@ -35,14 +35,33 @@ export default {
   },
   methods: {
     wsInit () {
+      const permissions = this.$store.state.permission
+      const user = this.$store.state.user
       this.$store.state.ws = new WebSocket('ws://139.9.249.249:8091/ws/' + this.$store.state.user.id)
       this.$store.state.ws.onmessage = (res) => {
         const data = JSON.parse(res.data)
-        if (data.type === '法律援助') {
-          this.flyz(data)
+        if (data.type === '法律援助'&&permissions.indexOf('lawHelp') > -1) {
+          if (user.userType === '2' && (data.cityNumber === user.unitId || user.unitId === '5227000000')) {
+            this.flyz(data)
+          }
         }
         if (data.type === '人民调解') {
-          this.rmtj(data)
+          if (user.userType.indexOf('1') > -1) {
+            this.rmtj(data)
+          } else if (user.userType === '2' && user.unitId === '5227000000'&& permissions.indexOf('adjust') > -1 ) {
+            this.rmtj(data)
+          } else if (user.userType === '2' && permissions.indexOf('adjust') > -1){
+            const cityArr = data.cityNumber.split('-')
+            if (!user.townId && user.unitId === cityArr[0]) {
+              this.rmtj(data)
+            }
+            if (!user.communityId && user.townId === cityArr[1]) {
+              this.rmtj(data)
+            }
+            if (user.communityId && user.communityId === cityArr[2]) {
+              this.rmtj(data)
+            }
+          }
         }
       }
     },

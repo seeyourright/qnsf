@@ -10,6 +10,10 @@ import util from './utils/util'
 import ObsClient from './utils/hwobs'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import BaiduMap from 'vue-baidu-map'
+Vue.use(BaiduMap, {
+  ak: '2G3pTlQtmtBwmXGKEuszRGw0WzE7QHqP'
+})
 
 Vue.directive('permission', {
   bind (el, binding) {

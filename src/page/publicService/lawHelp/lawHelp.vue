@@ -91,7 +91,7 @@ export default {
           method: "post",
           url: that.$url.lawHelp.getList,
           params: {
-            addressNumber:sessionStorage.getItem('userType') == 2?sessionStorage.getItem('unitId'):null,
+            addressNumber:that.$store.state.user.userType == 2?that.$store.state.user.unitId:null,
             status: that.status,
             applyName: that.condition?that.condition:null,
             page:that.currentPage,

@@ -113,6 +113,7 @@ export default {
           }
         }
         this.filterChildren(areas)
+        this.committeeInit ()
         this.areas = areas
       })
     },
@@ -124,6 +125,24 @@ export default {
           arr[i].children = null
         }
       }
+    },
+    committeeInit () {
+      this.$http.get(this.$url.Adjust_Committee).then(res => {
+        if (res.code === 200) {
+          const units = this.areas
+          for (let i = 0; i < res.data.length; i++) {
+            for (let j = 0; j < units.length; j++) {
+              if (res.data[i].unitId === units[j].id && units[j].children) {
+                units[j].children.push({
+                  id: res.data[i].id,
+                  institutionalName: res.data[i].townName
+                })
+                break;
+              }
+            }
+          }
+        }
+      })
     },
     submit () {
       this.$refs.form.validate(valid => {
@@ -144,8 +163,8 @@ export default {
       if (params.userType === '1') {
         params.roleid = 2
         params.unitId = this.area[0]
-        params.townId = this.area[1] || null
-        params.communityId = this.area[2] || null
+        params.townId = this.area[1] || ""
+        params.communityId = this.area[2] || ""
       } else {
         params.roleid = 0
       }

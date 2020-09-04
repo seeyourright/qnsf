@@ -93,6 +93,7 @@ export default {
       that.loading = true
       let reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
 　　  let isHz = reg.test(that.condition)  //判断输入框输入是不是汉字   是汉字按预约人筛选查询   不是则按预约号筛选查询
+      const {userType, id: userId, unitId} = this.$store.state.user
       that.$http.axios({
           method: "post",
           url: that.$url.adjust.getList,
@@ -100,9 +101,9 @@ export default {
             applyForStatus: that.status === ''?null:that.status,
             yyrName:isHz?that.condition:null,
             reservationNumber:isHz?null:that.condition,
-            recordAffiliation:sessionStorage.getItem('userType') == 2?sessionStorage.getItem('unitId'):null,  //管理员按归属单位查找  超级管理员可查看所有
-            reconcileId: sessionStorage.getItem('userType') == 1?sessionStorage.getItem('userId'):null,  //调解员按id查找
-            reconcileWay: sessionStorage.getItem('userType') != 1 && that.status === '0'?'线上调解':null,  //查询审批状态的数据时   调解员只能获取线下调解的  管理员和超级管理员只能获取线上
+            recordAffiliation:userType == 2?unitId:null,  //管理员按归属单位查找  超级管理员可查看所有
+            reconcileId: userType == 1?userId:null,  //调解员按id查找
+            reconcileWay: userType != 1 && that.status === '0'?'线上调解':null,  //查询审批状态的数据时   调解员只能获取线下调解的  管理员和超级管理员只能获取线上
             page:that.currentPage,
             limit:that.size
           }
