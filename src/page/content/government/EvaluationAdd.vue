@@ -26,12 +26,6 @@
         >
         </el-switch>
       </el-form-item>
-      <el-form-item label="新增题目">
-        <el-button @click="addProblem(1)">单选题</el-button>
-        <el-button @click="addProblem(4)">下拉单选题</el-button>
-        <el-button @click="addProblem(2)">多选题</el-button>
-        <el-button @click="addProblem(3)">简答题</el-button>
-      </el-form-item>
       <el-form-item label="问卷" prop="problemList">
         <div v-for="(problem, i) in problemList" style="margin-bottom: 20px">
           <div>
@@ -51,6 +45,12 @@
             <el-button v-if="j>0" type="text" @click="deleteOption(problem, j)" style="color: red">删除</el-button>
           </div>
         </div>
+      </el-form-item>
+      <el-form-item label="新增题目">
+        <el-button @click="addProblem(1)">单选题</el-button>
+        <el-button @click="addProblem(4)">下拉单选题</el-button>
+        <el-button @click="addProblem(2)">多选题</el-button>
+        <el-button @click="addProblem(3)">简答题</el-button>
       </el-form-item>
       <div class="d-btns">
         <el-button @click="$router.back()">取消</el-button>

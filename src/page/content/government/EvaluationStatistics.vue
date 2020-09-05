@@ -106,7 +106,6 @@
     mounted () {
       this.getData(1)
       this.questionnaireInit()
-      this.areaInit()
     },
     methods: {
       getData (page) {

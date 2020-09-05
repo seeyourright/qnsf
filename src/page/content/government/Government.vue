@@ -32,7 +32,7 @@ export default {
   methods: {
     tabChange (item, i) {
       this.active = i
-      this.$router.push(item.path)
+      this.$router.replace(item.path)
     }
   },
   watch: {

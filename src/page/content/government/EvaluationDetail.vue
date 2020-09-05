@@ -35,7 +35,7 @@
     methods: {
       tabChange (item, i) {
         this.active = i
-        this.$router.push({path: item.path[0],query: {id: this.id}})
+        this.$router.replace({path: item.path[0],query: {id: this.id}})
       }
     },
     watch: {
