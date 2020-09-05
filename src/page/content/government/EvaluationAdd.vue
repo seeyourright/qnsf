@@ -30,10 +30,10 @@
         <div v-for="(problem, i) in problemList" style="margin-bottom: 20px">
           <div>
             <span>第{{i+1}}题</span>
-            <span style="color: deepskyblue" v-if="problem.problemType === 1">单选题</span>
-            <span style="color: deepskyblue" v-if="problem.problemType === 2">多选题</span>
-            <span style="color: deepskyblue" v-if="problem.problemType === 3">简答题</span>
-            <span style="color: deepskyblue" v-if="problem.problemType === 4">下拉单选题</span>
+            <span style="color: deepskyblue" v-if="problem.problemType === '1'">单选题</span>
+            <span style="color: deepskyblue" v-if="problem.problemType === '2'">多选题</span>
+            <span style="color: deepskyblue" v-if="problem.problemType === '3'">简答题</span>
+            <span style="color: deepskyblue" v-if="problem.problemType === '4'">下拉单选题</span>
             <el-button @click="deleteProblem(i)" type="text" style="color: red">删除</el-button>
           </div>
           <div>
@@ -47,10 +47,10 @@
         </div>
       </el-form-item>
       <el-form-item label="新增题目">
-        <el-button @click="addProblem(1)">单选题</el-button>
-        <el-button @click="addProblem(4)">下拉单选题</el-button>
-        <el-button @click="addProblem(2)">多选题</el-button>
-        <el-button @click="addProblem(3)">简答题</el-button>
+        <el-button @click="addProblem('1')">单选题</el-button>
+        <el-button @click="addProblem('4')">下拉单选题</el-button>
+        <el-button @click="addProblem('2')">多选题</el-button>
+        <el-button @click="addProblem('3')">简答题</el-button>
       </el-form-item>
       <div class="d-btns">
         <el-button @click="$router.back()">取消</el-button>
@@ -154,7 +154,7 @@
           problemTitle: '',
           optionsList: []
         }
-        if (i !== 3) {
+        if (i !== '3') {
           problem.optionsList.push({optionsValue: ''})
         }
         this.problemList.push(problem)

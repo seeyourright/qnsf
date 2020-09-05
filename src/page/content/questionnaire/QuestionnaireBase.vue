@@ -46,10 +46,10 @@
         </div>
       </el-form-item>
       <el-form-item v-if="editable" label="新增题目">
-        <el-button @click="addProblem(1)">单选题</el-button>
-        <el-button @click="addProblem(4)">下拉单选题</el-button>
-        <el-button @click="addProblem(2)">多选题</el-button>
-        <el-button @click="addProblem(3)">简答题</el-button>
+        <el-button @click="addProblem('1')">单选题</el-button>
+        <el-button @click="addProblem('4')">下拉单选题</el-button>
+        <el-button @click="addProblem('2')">多选题</el-button>
+        <el-button @click="addProblem('3')">简答题</el-button>
       </el-form-item>
       <div class="d-btns" v-if="editable">
         <el-button @click="init(),editable=false">取消</el-button>
@@ -129,10 +129,11 @@
           problemTitle: '',
           optionsList: []
         }
-        if (i !== 3) {
+        if (i !== '3') {
           problem.optionsList.push({optionsValue: ''})
         }
         this.problemList.push(problem)
+        console.log(this.problemList)
       },
       deleteProblem (i) {
         this.problemList.splice(i, 1)
