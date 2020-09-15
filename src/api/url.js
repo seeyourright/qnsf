@@ -44,6 +44,21 @@ const url = {
   Update_Room: `${path}/api/system-management/room/updateRoom`, // 房间修改
   Distribution_Room: `${path}/api/system-management/room/updateRoom2`, // 房间修改
   Delete_Room: `${path}/api/system-management/room/deleteRoom`, // 房间删除
+  // 组织架构
+  Organization_Children: `${path}/api/system-management/sysOrganizationUnit/findUserAndOrg`, //获取子部门和所属用户
+  Organization_Tree: `${path}/api/system-management/sysOrganizationUnit/findlist`, // 获取部门树形结构
+  Organization_Update: `${path}/api/system-management/sysOrganizationUnit/updateOrganization`, // 修改部门信息
+  Organization_User: `${path}/api/system-management/sysOrganizationUnit/findForUser`, // 获取部门用户
+  Organization_User_Move: `${path}/api/system-management/sysOrganizationUnit/updateUser`, // 用户移动到其他部门
+  Organization_User_Remove: `${path}/api/system-management/sysOrganizationUnit/removeUser`, // 用户移动到其他部门
+  Organization_User_Add: `${path}/api/system-management/sysOrganizationUnit/addUser`, // 部门添加用户
+  Organization_Find_User: `${path}/api/system-management/sysOrganizationUnit/findUser`, // 查找用户
+  Organization_Add: `${path}/api/system-management/sysOrganizationUnit/addOrganization`, // 新增部门
+  Organization_Remove: `${path}/api/system-management/sysOrganizationUnit/removeOrganization`, // 新增部门
+  Organization_See: `${path}/api/system-management/sysOrganizationUnit/findOrganizationPermissionToYou`, // 自己可以查看的组织
+  Organization_Seen: `${path}/api/system-management/sysOrganizationUnit/findOrganizationPermissionYouTo`, // 可以查看自己的组织
+  Organization_Update_Seen: `${path}/api/system-management/sysOrganizationUnit/updateOrganizationPermission`, // 修改自己可以查看的组织
+  Organization_Update_See: `${path}/api/system-management/sysOrganizationUnit/updateOrganizationPermissionYouTo`, // 修改可以查看自己的组织
   // 地区管理
   Area_All: `${path}/api/system-management/sysunit/getUnitAll`, // 地区列表
   Area_Tree: `${path}/api/system-management/sysunit/getUnitTree`, // 地区列表
@@ -188,7 +203,6 @@ const url = {
   Questionnaire_Answer_List: `${path}/api/fzxt/answer/selectAll`, // 答案列表
   Questionnaire_Answer_By_Id: `${path}/api/fzxt/answer/selectOne`, // 答案根据id查询
   Questionnaire_Answer_Download: `${path}/api/fzxt/answer/download`,// 答案下载
-
   // 群众来信
 
   // 人民调解

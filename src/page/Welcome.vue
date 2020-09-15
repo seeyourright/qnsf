@@ -11,19 +11,25 @@
 <!--      </div>-->
 <!--      <baidu-map :center="center" :zoom="zoom" @ready="mapReady" style="height:1080px" @click="mapClick" :scroll-wheel-zoom='true'>-->
 <!--      </baidu-map>-->
+      <dv></dv>
     </div>
 </template>
 
 <script>
-import baiduMap from '../api/baiduMap'
+import dv from '../page/dataVisualization/DVmain'
 export default {
   name: 'Welcome',
+  components: {
+    dv
+  },
   data () {
     return {
       time: '',
       dis: '',
       center: {lng: 107.528328, lat: 26.266253},
-      zoom: 13
+      zoom: 13,
+      map: null,
+      BMap: null,
     }
   },
   mounted () {
@@ -32,15 +38,16 @@ export default {
   },
   methods: {
     mapReady ({BMap, map}) {
-      console.log(BMap, map)
-      this.etBoundary(BMap, map)
+      this.map = map
+      this.BMap = BMap
     },
     mapClick () {
 
     },
-    etBoundary (BMap, map) {
+    etBoundary (BMap, map, district) {
       var bdary = new BMap.Boundary();
-      bdary.get("黔南布依族苗族自治州", function(rs){
+      bdary.get(district, function(rs){
+        console.log(rs)
         map.clearOverlays()
         let count = rs.boundaries.length
         if (count === 0) {
@@ -59,18 +66,23 @@ export default {
     createW () {
       const params = {
         keyword: this.dis,
-        dngashjdb: 1
+        dngashjdb: 1,
+        pengbing: '大傻逼'
       }
-      this.$http.post('http://192.168.0.145:8080/api/community/test/test', params).then(res => {
+      this.$http.post('http://192.168.0.145:8080/api/community/test/test/entity/add', params).then(res => {
         console.log(res)
       })
     },
     getW () {
       const params = {
-        fenceIds: '7'
+        fence_ids: 2,
       }
-      this.$http.get('http://192.168.0.145:8080/api/community/test/test1', params).then(res => {
+      this.$http.get('http://192.168.0.145:8080/api/community/test/test/fence/list', params).then(res => {
         console.log(res)
+        for (let i = 0; i < res.fences.length; i++) {
+          this.etBoundary (this.BMap, this.map, res.fences[i].district)
+
+        }
       })
     },
     getTime () {

@@ -27,7 +27,7 @@
         </el-switch>
       </el-form-item>
       <el-form-item label="所属县市" prop="cityNumber">
-        <el-select v-model="area">
+        <el-select :disabled="!allper" v-model="area">
           <el-option v-for="area in areas" :label="area.name" :value="area.name+'-'+area.id"></el-option>
         </el-select>
       </el-form-item>
@@ -85,11 +85,15 @@
           //   {required: true, message: '主要业务不能为空', trigger: 'blur'}
           // ],
         },
-        areas: []
+        areas: [],
+        allper: true
       }
     },
     created () {
       this.id = this.$route.query.id
+      if (this.$store.state.user.userType === '2' && this.$store.state.user.unitId !== '5227000000') {
+        this.allper = false
+      }
       if (this.id) {
         this.init()
       }
@@ -121,6 +125,14 @@
               }
             }
             this.areas = area
+            if (!this.allper) {
+              for (let i = 0; i < this.areas.length; i++) {
+                if (this.areas[i].id === this.$store.state.user.unitId) {
+                  this.area = this.areas[i].name + '-' + this.areas[i].id
+                  break
+                }
+              }
+            }
           }
         })
       },

@@ -119,6 +119,19 @@ const router = new Router({
           name: 'permission',
           component: () => import('../page/system/permission/Permission')
         },
+        {
+          path: 'directories',
+          name: 'directories',
+          component: () => import('../page/system/directories/Directories')
+        },
+        {
+          path: 'directoriesPerson',
+          name: 'directoriesPerson',
+          component: () => import('../page/system/directories/DirectoriesPerson'),
+          meta: {
+            ppath: '/home/directories '
+          }
+        },
         // 内容管理
         {
           path: 'banner',

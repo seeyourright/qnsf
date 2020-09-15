@@ -3,13 +3,13 @@
     <div class="condition">
       <div>政府服务—行政复议</div>
       <el-form size="small" inline>
-        <el-form-item>
+        <el-form-item v-if="allper">
           <el-select v-model="condition.cityNumber">
             <el-option label="全部地区" :value="null"></el-option>
             <el-option v-for="area in areas" :label="area.institutionalName" :value="area.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-if="allper">
           <el-button @click="getData(1)">查询</el-button>
         </el-form-item>
         <el-form-item>
@@ -33,7 +33,6 @@
         type="selection"
       >
       </el-table-column>
-
       <el-table-column
         align="center"
         prop="city"
@@ -92,10 +91,15 @@
           cityNumber: null
         },
         tableData: [],
-        areas: []
+        areas: [],
+        allper: true,
       }
     },
     created () {
+      if (this.$store.state.user.userType === '2' && this.$store.state.user.unitId !== '5227000000') {
+        this.condition.cityNumber = this.$store.state.user.unitId
+        this.allper = false
+      }
       this.getData(1)
       this.areaInit()
     },

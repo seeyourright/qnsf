@@ -46,6 +46,12 @@ const menu = [
         icon: '',
         path: '/home/room',
         permission: 'room'
+      },
+      {
+        title: '组织架构',
+        icon: '',
+        path: '/home/directories',
+        permission: 'directories'
       }
     ]
   },
@@ -101,7 +107,7 @@ const menu = [
         path: '/home/AppraisalOffice',
         permission: 'AppraisalOffice',
         userType: ["6"]
-      }
+      },
     ]
   },
   {
