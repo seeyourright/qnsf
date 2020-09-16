@@ -153,7 +153,7 @@ export default {
       })
     },
     roleInit () {
-      this.$http.get(this.$url.Role_List).then(res => {
+      this.$http.get(this.$url.Role_List, {page: 1, limit: 1000}).then(res => {
         if (res.code === 200) {
           this.roles = res.data
         }

@@ -46,11 +46,11 @@ export default {
           }
         }
         if (data.type === '人民调解') {
-          if (user.userType.indexOf('1') > -1) {
+          if (user.userType === '1') {
             this.rmtj(data)
           } else if (user.userType === '2' && user.unitId === '5227000000'&& permissions.indexOf('adjust') > -1 ) {
             this.rmtj(data)
-          } else if (user.userType === '2' && permissions.indexOf('adjust') > -1){
+          } else if (user.userType === '2' && permissions.indexOf('adjust') > -1) {
             const cityArr = data.cityNumber.split('-')
             if (!user.townId && user.unitId === cityArr[0]) {
               this.rmtj(data)

@@ -77,7 +77,6 @@ export default {
       this.$http.axios.post(this.$url.login, qs.stringify(params)).then(res => {
         if (res) {
           this.getPermission(res.data.userId)
-          this.getUser(res.data.userId)
           localStorage.setItem('userInfo', JSON.stringify(res.data))
           localStorage.setItem('token', res.data.token_type + res.data.access_token)
           this.$store.state.userInfo = res.data
@@ -97,6 +96,7 @@ export default {
           }
           localStorage.setItem('permission', JSON.stringify(permissions))
           this.$store.state.permission = permissions
+          this.getUser(uid)
         } else {
           localStorage.setItem('permission', JSON.stringify(['']))
         }

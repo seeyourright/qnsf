@@ -24,6 +24,7 @@ export default {
       localStorage.removeItem('userInfo')
       localStorage.removeItem('token')
       localStorage.removeItem('user')
+      localStorage.removeItem('permission')
       this.$store.state.userInfo = {}
       this.$router.push('login')
     }
