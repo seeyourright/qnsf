@@ -47,14 +47,16 @@
           {name: '未达成', number: 3213, img: require('../../../assets/image/dv/rmtj/notreach.png')}
         ],
         types: [
-          {name: '婚姻纠纷', number: 2113},
-          {name: '婚姻纠纷1', number: 213},
-          {name: '婚姻纠纷2', number: 213},
-          {name: '婚姻纠纷3', number: 213},
-          {name: '婚姻纠纷4', number: 213},
-          {name: '婚姻纠纷5', number: 213},
-          {name: '婚姻纠纷6', number: 213},
-          {name: '婚姻纠纷7', number: 213}
+          {name: '婚姻纠纷', number: 9956},
+          {name: '医患纠纷', number: 213},
+          {name: '山林土地', number: 23},
+          {name: '损害赔偿', number: 453},
+          {name: '劳动争议', number: 245},
+          {name: '生产经营', number: 213},
+          {name: '交通事故', number: 565},
+          {name: '征地拆迁', number: 344},
+          {name: '消费', number: 234},
+          {name: '其他', number: 213},
         ]
       }
     },

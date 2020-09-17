@@ -588,6 +588,11 @@ const router = new Router({
       ]
     },
     {
+      path: '/dv',
+      name: 'dv',
+      component: () => import('../page/dataVisualization/DVmain')
+    },
+    {
       path: '/*',
       name: '404',
       component: () => import('../page/404')

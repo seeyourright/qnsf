@@ -6,6 +6,8 @@ const url = {
   login: `${path}/api/auth/oauth/token`, // 登录获取token
   // obs
   OBS_Path: `https://zhsf.obs.cn-east-3.myhuaweicloud.com/`, // 获取obs上传url
+  // 天气
+  Get_Weather: `${path}/api/community/weather/test`,
   // 用户
   User_List: `${path}/api/system-management/sysuser/select_user_all`, // 用户列表
   User_List_No_Admin: `${path}/api/system-management/sysuser/selectUserByUserType`, // 用户列表(不含管理员)

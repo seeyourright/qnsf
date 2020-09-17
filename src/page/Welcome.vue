@@ -11,7 +11,7 @@
 <!--      </div>-->
 <!--      <baidu-map :center="center" :zoom="zoom" @ready="mapReady" style="height:1080px" @click="mapClick" :scroll-wheel-zoom='true'>-->
 <!--      </baidu-map>-->
-      <dv></dv>
+<!--      <dv></dv>-->
     </div>
 </template>
 
@@ -78,7 +78,6 @@ export default {
         fence_ids: 2,
       }
       this.$http.get('http://192.168.0.145:8080/api/community/test/test/fence/list', params).then(res => {
-        console.log(res)
         for (let i = 0; i < res.fences.length; i++) {
           this.etBoundary (this.BMap, this.map, res.fences[i].district)
 

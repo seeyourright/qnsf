@@ -1,14 +1,29 @@
 <template>
     <div ref="dv" class="father">
       <div class="header">
-        <div class="header-left"></div>
+        <div class="header-left">
+<!--          <div>-->
+<!--            <div>-->
+<!--              开始时间-->
+<!--              <el-date-picker></el-date-picker>-->
+<!--            </div>-->
+<!--          </div>-->
+        </div>
         <div class="header-center">
           <div class="header-title">法治黔南.智慧司法大数据平台</div>
           <div class="header-title-en">
             RULE OF LAW QIANNAN. SMART JUDICIAL BIG DATA PLATFORM
           </div>
         </div>
-        <div class="header-right"></div>
+        <div class="header-right">
+          <div>
+            <div class="header-date">
+              <img :src="require('../../assets/image/dv/date.png')" alt="">
+              <span>{{date|timefilter}}</span>
+            </div>
+            <div></div>
+          </div>
+        </div>
       </div>
       <div class="box1">
         <div class="box1-item" v-for="item in list">
@@ -22,13 +37,13 @@
       <div class="box2">
         <div class="box2-item1">
           <div class="sffw container">
-            <ctitle title="司法服务数据统计"></ctitle>
+            <ctitle title="司法服务机构"></ctitle>
             <div class="sffw-items">
               <sffw></sffw>
             </div>
           </div>
           <div class="sjry container">
-            <ctitle title="社矫人员数据统计"></ctitle>
+            <ctitle title="社区矫正对象"></ctitle>
             <div class="sjry-items">
               <sjry></sjry>
             </div>
@@ -42,13 +57,13 @@
         <div class="box2-item3">
           <div class="box2-item3-3">
             <div class="yhzx container">
-              <ctitle title="用户及咨询数量统计"></ctitle>
+              <ctitle title="用户及咨询数量"></ctitle>
               <div class="yhzx-items">
                 <yhzx></yhzx>
               </div>
             </div>
             <div class="flyz container">
-              <ctitle title="法律援助数量统计"></ctitle>
+              <ctitle title="法律援助数量"></ctitle>
               <div class="flyz-items">
                 <flyz></flyz>
               </div>
@@ -61,7 +76,7 @@
             </div>
           </div>
           <div class="rmtj container">
-            <ctitle title="人民调解数量统计"></ctitle>
+            <ctitle title="人民调解数量"></ctitle>
             <div class="rmtj-items">
               <rmtj></rmtj>
             </div>
@@ -96,7 +111,9 @@ export default {
     ICountUp
   },
   mounted () {
-    let time = 1000
+    // this.getWeather()
+    setInterval(() => { this.date = new Date()}, 1000)
+    this.$refs.dv.style.transform = `scale(${window.innerWidth / 1920}, ${window.innerHeight / 1080})`
     window.addEventListener('resize', this.dvResize())
   },
   beforeDestroy () {
@@ -104,13 +121,14 @@ export default {
   },
   data () {
     return {
+      date: new Date(),
       background: require('../../assets/image/dv/background.png'),
       list: [
         {name: '司法局', number: 233, img: require('../../assets/image/dv/tongji/sfj.png')},
         {name: '司法所', number: 4533, img: require('../../assets/image/dv/tongji/sfs.png')},
-        {name: '调解人员数量', number: 34534, img: require('../../assets/image/dv/tongji/tjy.png')},
-        {name: '人民调解案件总量', number: 232413, img: require('../../assets/image/dv/tongji/rmtj.png')},
-        {name: '法律援助总量', number: 23213, img: require('../../assets/image/dv/tongji/flyz.png')}
+        {name: '调解人员', number: 34534, img: require('../../assets/image/dv/tongji/tjy.png')},
+        {name: '人民调解案件', number: 232413, img: require('../../assets/image/dv/tongji/rmtj.png')},
+        {name: '法律援助', number: 23213, img: require('../../assets/image/dv/tongji/flyz.png')}
       ]
     }
   },
@@ -125,7 +143,41 @@ export default {
           }
         },500)
       }
+    },
+    getWeather () {
+      this.$http.get(this.$url.Get_Weather, {appsecret: 'J1uFgDRP', city: '都匀'}).then(res => {
+
+      })
     }
+  },
+  filters: {
+    timefilter (date) {
+      let a = ''
+      const hours = date.getHours()
+      const minutes = date.getMinutes()
+      const seconds = date.getSeconds()
+      const day = date.getDay()
+      if (hours < 12) {
+        a += 'AM'
+      } else {
+        a += 'PM'
+      }
+      function pluszero (n)  {
+        if ( n < 10) return '0' + n;
+        return n
+      }
+      a += ` ${pluszero(hours)}:${pluszero(minutes)}:${pluszero(seconds)} `
+      switch (day) {
+        case 0: a += '星期日'; break
+        case 1: a += '星期一'; break
+        case 2: a += '星期二'; break
+        case 3: a += '星期三'; break
+        case 4: a += '星期四'; break
+        case 5: a += '星期五'; break
+        case 6: a += '星期六'; break
+      }
+      return a
+    },
   }
 }
 </script>
@@ -141,9 +193,9 @@ export default {
     width 1920px
     height 1080px
     background url('../../assets/image/dv/background.png')
-    z-index 9999
+    z-index 2000
     background-size 100% 100%
-    transform scale(1, .8)
+    transform scale(.8, .8)
     transform-origin 0 0
     .container
       position relative
@@ -193,6 +245,16 @@ export default {
           margin-top 21px
       .header-right
         flex 1
+        box-sizing border-box
+        .header-date
+          color #07EDF2
+          display flex
+          align-items center
+          font-family baotuculangti
+          height 42px
+          margin-left 200px
+          img
+            margin-right 10px
     .box1
       height 120px
       width 96%
@@ -206,6 +268,7 @@ export default {
         padding 0 20px
         display flex
         align-items center
+        justify-content center
         img
           margin-right 20px
         .box1-item-name
@@ -268,7 +331,6 @@ export default {
           height 350px
           background url('../../assets/image/dv/bg/rmtj.png')
           background-size 100% 100%
-
   .sffw-items
     flex 1
   .sjry-items

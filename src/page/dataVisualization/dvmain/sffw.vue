@@ -7,10 +7,13 @@
           <img :src="item.img"/>
           <div>
             <div class="sffw-item-name">{{item.name}}</div>
-            <ICountUp
-              class="sffw-item-number"
-              :endVal="item.number"
-            >{{item.number}}</ICountUp>
+            <div>
+              <ICountUp
+                class="sffw-item-number"
+                :endVal="item.number"
+              >{{item.number}}</ICountUp>
+              <span class="sffw-item-unit">/个</span>
+            </div>
           </div>
         </div>
       </div>
@@ -40,14 +43,14 @@
     computed: {
       sffwlist () {
         return [
-          {img: require('../../../assets/image/dv/sffw/rmtj.png'), name: '人民调解委员会数量', number: this.sffw.a},
-          {img: require('../../../assets/image/dv/sffw/flyz.png'), name: '法律援助服务中心数量', number: this.sffw.b},
-          {img: require('../../../assets/image/dv/sffw/ydfp.png'), name: '异地扶贫搬迁数量', number: this.sffw.c},
-          {img: require('../../../assets/image/dv/sffw/flfw.png'), name: '公共法律服务中心数量', number: this.sffw.d},
-          {img: require('../../../assets/image/dv/sffw/lvsuo.png'), name: '律所数量', number: this.sffw.e},
-          {img: require('../../../assets/image/dv/sffw/lvshi.png'), name: '律师数量', number: this.sffw.f},
-          {img: require('../../../assets/image/dv/sffw/gzc.png'), name: '公证处数量', number: this.sffw.g},
-          {img: require('../../../assets/image/dv/sffw/jds.png'), name: '鉴定所数量', number: this.sffw.h}
+          {img: require('../../../assets/image/dv/sffw/rmtj.png'), name: '人民调解委员会', number: this.sffw.a},
+          {img: require('../../../assets/image/dv/sffw/flyz.png'), name: '法律援助中心', number: this.sffw.b},
+          {img: require('../../../assets/image/dv/sffw/ydfp.png'), name: '异地扶贫搬迁点', number: this.sffw.c},
+          {img: require('../../../assets/image/dv/sffw/flfw.png'), name: '公共法律服务中心', number: this.sffw.d},
+          {img: require('../../../assets/image/dv/sffw/lvsuo.png'), name: '律师事务所', number: this.sffw.e},
+          {img: require('../../../assets/image/dv/sffw/lvshi.png'), name: '律师', number: this.sffw.f},
+          {img: require('../../../assets/image/dv/sffw/gzc.png'), name: '公证处', number: this.sffw.g},
+          {img: require('../../../assets/image/dv/sffw/jds.png'), name: '鉴定所', number: this.sffw.h}
         ]
       }
     },
@@ -83,6 +86,10 @@
         color rgba(71, 227, 255, 1)
         font-size 32px
         font-family baotuculangti
+      .sffw-item-unit
+        color rgba(71, 227, 255, 1)
+        font-size 20px
+        font-family "Source Han Sans CN"
     .sffw-line1
       width 450px
       height 2px

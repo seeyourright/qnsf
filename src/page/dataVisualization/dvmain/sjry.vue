@@ -57,24 +57,12 @@ export default {
         {
           name: '社矫人员',
           type: 'pie',
-          radius: ['70%', '85%'],
+          radius: ['60%', '73%'],
           avoidLabelOverlap: false,
           data: [
-            {value: 2344, name: 'asd',itemStyle: {color: '#DC5200'}},
-          ],
-          label: {
-            show: false
-          },
-          animation: false,
-        },
-        {
-          name: '社矫人员',
-          type: 'pie',
-          radius: ['70%', '85%'],
-          avoidLabelOverlap: false,
-          data: [
-            {value: 335, name: 'asd',itemStyle: {color: '#0CFF84', opacity: 0}},
+            {value: 3335, name: 'asd',itemStyle: {color: '#0CFF84'}},
             {value: 2344, name: 'asd',itemStyle: {color: '#FAD400'}},
+            {value: 2344, name: 'asd',itemStyle: {color: '#DC5200'}},
           ],
           label: {
             show: false

@@ -7,7 +7,7 @@
     </div>
     <div>
       <div class="sfbl-row" v-for="(item, i) in list">
-        <div class="sfbl-index">{{i}}</div>
+        <div class="sfbl-index">{{i+1}}</div>
         <div class="sfbl-name">{{item.name}}</div>
         <div class="sfbl-number">{{item.number}}</div>
       </div>
@@ -20,7 +20,7 @@
     data () {
       return {
         list: [
-          {name: '律所', number: '21321'},
+          {name: '律师事务所', number: '21321'},
           {name: '鉴定所', number: '21321'},
           {name: '公证处', number: '21321'}
         ]
